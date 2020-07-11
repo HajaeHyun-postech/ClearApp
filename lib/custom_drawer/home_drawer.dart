@@ -1,5 +1,5 @@
 import 'package:best_flutter_ui_templates/app_theme.dart';
-import 'package:best_flutter_ui_templates/popup_widgets/PopupGenerator.dart';
+import 'package:best_flutter_ui_templates/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -154,7 +154,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Column(
             children: <Widget>[
               ListTile(
-                //TODO : Logout Implement
                 title: Text(
                   'Sign Out',
                   style: TextStyle(

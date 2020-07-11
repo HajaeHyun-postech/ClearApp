@@ -8,3 +8,4 @@ Application for postech badminton club CLEAR
  - assets : Img files folder
  - .gitignore : don't touch it
  - pubspec.yaml : code setting xml
+ - popup_widgets : providing pop up widgets. see https://pub.dev/packages/rflutter_alert
