@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
 import 'Widgets/FormCard.dart';
+import 'login_info.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -175,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
     //TODO : Google spread sheet
     print("Login : $name, $studentId");
     if (name == "admin" && studentId == "admin") {
+      LoginInfo().setName(name).setStudentId(studentId);
       return true;
     } else {
       return false;

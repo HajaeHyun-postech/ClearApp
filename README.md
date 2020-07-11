@@ -1,4 +1,4 @@
-# Clear Application Development
+# Clear Application Develoasdfpment
 
 Application for postech badminton club CLEAR
 
@@ -9,3 +9,41 @@ Application for postech badminton club CLEAR
  - .gitignore : don't touch it
  - pubspec.yaml : code setting xml
  - popup_widgets : providing pop up widgets. see https://pub.dev/packages/rflutter_alert
+ - login/login_info.dart : return name & student id as String format
+
+## 역할 분담
+
+ - 하재현 :
+    - 프로젝트 관리
+    - 로그인 구현
+    - 메인 페이지 구현
+    - 리팩토링 (코드 간결화)
+
+ - 이상오 :
+    - 장부 구현
+    - 대진표 조회 (윤주형과 상의해서 format을 정확하게 정하고 난 다음 개발에 들어갈 것)
+    - 참고할 사이트 (UI) : 
+        https://github.com/sergiandreplace/planets-flutter
+        https://github.com/mitesh77/Best-Flutter-UI-Templates
+        https://github.com/leoelstin/Flutter-UI-Kits
+        
+ - 윤주형 :
+    - 정모 참가 (이걸 먼저 구현하도록)
+    - 대진표 생성& 수정 (백엔드 구현) (어떤 format을 기반으로 구현할 건지 명확하게 정해놓고 들어갈 것)
+
+## 브랜치
+
+<u>__commit을 자주 할 것!!!!!!!!!!__</u>
+
+각자의 브랜치에서 clone 받을 것.
+각자의 브랜치로만 push 할 것 !!!
+
+이후에 필요할 때 pull request를 통해 dev로 합쳐준다.
+
+master는 손대지 말 것.
+
+만약에 dev에 수정사항이 생기면, 웬만해선 pull 을 통해 dev 걸 받아온 다음 개발에 착수할 것. 안그러면 나중에 merge 할 때 문제가 발생할 가능성이 높아짐.
+
+ - 하재현 : Login_Main_Branch
+ - 이상오 : Menus_UI_Branch
+ - 윤주형 : Match_System_Branch
