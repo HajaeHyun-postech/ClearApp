@@ -1,7 +1,6 @@
 import 'package:best_flutter_ui_templates/app_theme.dart';
+import 'package:best_flutter_ui_templates/popup_widgets/PopupGenerator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -172,33 +171,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   focusColor: Colors.red,
                   hoverColor: Colors.red,
                   onPressed: () {
-                    Alert(
-                      context: context,
-                      type: AlertType.warning,
-                      title: "ALERT",
-                      desc: "Program will be closed",
-                      buttons: [
-                        DialogButton(
-                          child: Text(
-                            "OK",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          onPressed: () => SystemNavigator.pop(),
-                          color: Color.fromRGBO(0, 179, 134, 1.0),
-                        ),
-                        DialogButton(
-                          child: Text(
-                            "Cancel",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          gradient: LinearGradient(colors: [
-                            Color.fromRGBO(116, 116, 191, 1.0),
-                            Color.fromRGBO(52, 138, 199, 1.0)
-                          ]),
-                        )
-                      ],
-                    ).show();
+                    PopupGenerator.closingPopup(context).show();
                   },
                 ),
                 onTap: () {},
