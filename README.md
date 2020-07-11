@@ -13,6 +13,8 @@ Application for postech badminton club CLEAR
 
 ## 역할 분담
 
+각자 것 구현할 때, model/homelist.dart에 가서 navigate screen 변경해야 올바르게 타짐.
+
  - 하재현 :
     - 프로젝트 관리
     - 로그인 구현

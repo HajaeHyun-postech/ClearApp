@@ -12,6 +12,7 @@ class HomeList {
   Widget navigateScreen;
   String imagePath;
 
+  //TODO : fix nagigateScreen
   static List<HomeList> homeList = [
     HomeList(
       imagePath: 'assets/hotel/hotel_booking.png',
@@ -23,6 +24,38 @@ class HomeList {
     ),
     HomeList(
       imagePath: 'assets/design_course/design_course.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/shuttleExcel.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/racketExcel.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/apply.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/matchRetrieve.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/opgg.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/tongdolli.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/matchMake.png',
+      navigateScreen: DesignCourseHomeScreen(),
+    ),
+    HomeList(
+      imagePath: 'assets/menu/matchFix.png',
       navigateScreen: DesignCourseHomeScreen(),
     ),
   ];
