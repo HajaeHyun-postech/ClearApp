@@ -41,7 +41,7 @@ class PopupGenerator {
       isOverlayTapDismiss: false,
       descStyle: TextStyle(
         fontSize: 15,
-        fontFamily: "Poppins-Medium",
+        fontFamily: "Roboto-Regular",
       ),
       animationDuration: Duration(milliseconds: 200),
       alertBorder: RoundedRectangleBorder(
@@ -52,7 +52,7 @@ class PopupGenerator {
       ),
       titleStyle: TextStyle(
         color: Colors.red,
-        fontFamily: "Poppins-Bold",
+        fontFamily: "Roboto-Bold",
         fontSize: 20,
       ),
     );

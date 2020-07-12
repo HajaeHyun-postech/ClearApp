@@ -10,6 +10,7 @@ class LoginInfo {
   String name;
   String povisId;
   String studentId;
+  bool isAdmin;
 
   factory LoginInfo() {
     return _loginInfo;
@@ -29,6 +30,10 @@ class LoginInfo {
     return studentId;
   }
 
+  bool getIsAdmin() {
+    return isAdmin;
+  }
+
   LoginInfo setName(String _name) {
     name = _name;
     return this;
@@ -42,5 +47,12 @@ class LoginInfo {
   LoginInfo setStudentId(String _studentId) {
     studentId = _studentId;
     return this;
+  }
+
+  LoginInfo setIsAdmin(String _isAdmin) {
+    if (_isAdmin == '1')
+      isAdmin = true;
+    else
+      isAdmin = false;
   }
 }

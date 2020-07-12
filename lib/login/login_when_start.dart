@@ -147,14 +147,15 @@ class _LoginScreenState extends State<LoginScreen>
                                   LoginAuth.loginAuth(povisId, studentId)
                                       .then((value) {
                                     print(
-                                        "Login : $studentId, $povisId, $value");
+                                        "Login : $studentId, $povisId, ${value.substring(1)}, ${value[0]}");
                                     setState(() {
                                       onAnimation = false;
                                     });
                                     LoginInfo()
                                         .setPovisId(povisId)
                                         .setStudentId(studentId)
-                                        .setName(value);
+                                        .setName(value.substring(1))
+                                        .setIsAdmin(value[0]);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -13,11 +13,12 @@ class LoginAuth {
     final studentIdList = await sheet.values.column(1);
     final povisIdList = await sheet.values.column(2);
     final nameList = await sheet.values.column(3);
+    final adminList = await sheet.values.column(4);
     for (var i = 0; i < studentIdList.length; i++) {
       if (studentIdList[i] == studentId && povisIdList[i] == povisId) {
-          return nameList[i];
-        }
+        return adminList[i] + nameList[i];
       }
+    }
 
     return Future.error("not exist member");
   }
