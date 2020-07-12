@@ -11,10 +11,17 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => new _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   bool _isSelected = false;
+  bool onAnimation = false;
   String povisId;
   String studentId;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _radio() {
     setState(() {
@@ -114,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       InkWell(
                         child: Container(
-                          width: ScreenUtil.getInstance().setWidth(330),
+                          width: ScreenUtil.getInstance().setHeight(330),
                           height: ScreenUtil.getInstance().setHeight(100),
                           decoration: BoxDecoration(
                               gradient: LinearGradient(colors: [
@@ -132,9 +139,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  onAnimation = true;
+                                });
                                 LoginAuth.loginAuth(povisId, studentId)
                                     .then((value) {
                                   print("Login : $studentId, $povisId, $value");
+                                  setState(() {
+                                    onAnimation = false;
+                                  });
                                   LoginInfo()
                                       .setPovisId(povisId)
                                       .setStudentId(studentId)
@@ -145,6 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           builder: (context) =>
                                               NavigationHomeScreen()));
                                 }).catchError((e) {
+                                  setState(() {
+                                    onAnimation = false;
+                                  });
                                   PopupGenerator.loginErrorPopUp(context)
                                       .show();
                                   print(e);
@@ -152,13 +168,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                               child: Center(
-                                child: Text("SIGNIN",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "Poppins-Bold",
-                                        fontSize: 18,
-                                        letterSpacing: 1.0)),
-                              ),
+                                  child: !onAnimation
+                                      ? new Text("SIGNIN",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "Poppins-Bold",
+                                            fontSize: 18,
+                                            letterSpacing: 1.0,
+                                          ))
+                                      : new CircularProgressIndicator(
+                                          valueColor:
+                                              new AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
+                                        )),
                             ),
                           ),
                         ),
