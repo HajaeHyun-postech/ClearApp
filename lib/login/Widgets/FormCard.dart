@@ -45,8 +45,9 @@ class FormCard extends StatelessWidget {
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) =>
-                  {povisIdChanged(value.replaceAll("\t", ""))},
+              onChanged: (value) => {
+                povisIdChanged(value.replaceAll("\t", "").replaceAll(" ", ""))
+              },
               decoration: InputDecoration(
                   hintText: "Povis Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
@@ -59,8 +60,9 @@ class FormCard extends StatelessWidget {
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) =>
-                  {studentIdChanged(value.replaceAll("\t", ""))},
+              onChanged: (value) => {
+                studentIdChanged(value.replaceAll("\t", "").replaceAll(" ", ""))
+              },
               decoration: InputDecoration(
                   hintText: "Student Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
