@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FormCard extends StatelessWidget {
-  final Function(String name) nameChanged;
+  final Function(String name) povisIdChanged;
   final Function(String studentId) studentIdChanged;
 
-  const FormCard({Key key, this.nameChanged, this.studentIdChanged})
+  const FormCard({Key key, this.povisIdChanged, this.studentIdChanged})
       : super(key: key);
 
   @override
@@ -40,14 +40,15 @@ class FormCard extends StatelessWidget {
             SizedBox(
               height: ScreenUtil.getInstance().setHeight(30),
             ),
-            Text("Name",
+            Text("Povis Id",
                 style: TextStyle(
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) => {nameChanged(value.replaceAll("\t", ""))},
+              onChanged: (value) =>
+                  {povisIdChanged(value.replaceAll("\t", ""))},
               decoration: InputDecoration(
-                  hintText: "Name",
+                  hintText: "Povis Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
             ),
             SizedBox(

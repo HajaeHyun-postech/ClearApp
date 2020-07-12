@@ -11,7 +11,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isSelected = false;
-  String name;
+  String povisId;
   String studentId;
 
   void _radio() {
@@ -78,9 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: ScreenUtil.getInstance().setHeight(300),
                   ),
                   FormCard(
-                    nameChanged: (String _name) {
+                    povisIdChanged: (String _povisId) {
                       setState(() {
-                        name = _name;
+                        povisId = _povisId;
                       });
                     },
                     studentIdChanged: (String _studentId) {
@@ -173,9 +173,9 @@ class _LoginScreenState extends State<LoginScreen> {
    */
   bool loginAuth() {
     //TODO : Google spread sheet
-    print("Login : $name, $studentId");
-    if (name == "admin" && studentId == "admin") {
-      LoginInfo().setName(name).setStudentId(studentId);
+    print("Login : $povisId, $studentId");
+    if (povisId == "admin" && studentId == "admin") {
+      LoginInfo().setPovisId(povisId).setStudentId(studentId).setName("admin");
       return true;
     } else {
       return false;
