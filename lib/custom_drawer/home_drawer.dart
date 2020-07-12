@@ -2,6 +2,9 @@ import 'package:best_flutter_ui_templates/app_theme.dart';
 import 'package:best_flutter_ui_templates/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 
+import '../login/login_info.dart';
+import '../login/login_when_start.dart';
+
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
       {Key key,
@@ -118,7 +121,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 4),
                     child: Text(
-                      '20180673 / Ha Jae Hyun',
+                      '${LoginInfo().getStudentId()} / ${LoginInfo().getName()}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: AppTheme.grey,
@@ -155,7 +158,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  'Sign Out',
+                  'Logout',
                   style: TextStyle(
                     fontFamily: AppTheme.fontName,
                     fontWeight: FontWeight.w600,
@@ -166,14 +169,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.power_settings_new),
-                  color: Colors.black,
-                  focusColor: Colors.red,
-                  hoverColor: Colors.red,
+                  color: Colors.red,
                   onPressed: () {
                     PopupGenerator.closingPopup(context).show();
                   },
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
