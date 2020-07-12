@@ -3,6 +3,7 @@ import 'package:best_flutter_ui_templates/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 
 import '../login/login_info.dart';
+import '../login/login_when_start.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -157,7 +158,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  'Sign Out',
+                  'Logout',
                   style: TextStyle(
                     fontFamily: AppTheme.fontName,
                     fontWeight: FontWeight.w600,
@@ -173,7 +174,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     PopupGenerator.closingPopup(context).show();
                   },
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
