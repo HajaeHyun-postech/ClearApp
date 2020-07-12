@@ -25,10 +25,10 @@ Application for postech badminton club CLEAR
     - 장부 구현
     - 대진표 조회 (윤주형과 상의해서 format을 정확하게 정하고 난 다음 개발에 들어갈 것)
     - 참고할 사이트 (UI) : 
-     - https://github.com/mitesh77/Best-Flutter-UI-Template
-     - https://github.com/leoelstin/Flutter-UI-Kits
-     - https://github.com/nb312/flutter-ui-nice
-     - https://github.com/singhbhavneet/Flutter-Dribbble-Challenge
+      - https://github.com/mitesh77/Best-Flutter-UI-Template
+      - https://github.com/leoelstin/Flutter-UI-Kits
+      - https://github.com/nb312/flutter-ui-nice
+      - https://github.com/singhbhavneet/Flutter-Dribbble-Challenge
      
         
  - 윤주형 :
