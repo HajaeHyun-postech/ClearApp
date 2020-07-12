@@ -29,10 +29,12 @@ Application for postech badminton club CLEAR
       - https://github.com/leoelstin/Flutter-UI-Kits
       - https://github.com/nb312/flutter-ui-nice
       - https://github.com/singhbhavneet/Flutter-Dribbble-Challenge
+      - https://www.youtube.com/channel/UCJm7i4g4z7ZGcJA_HKHLCVw/videos
      
         
  - 윤주형 :
     - 정모 참가 (이걸 먼저 구현하도록)
+      - https://github.com/abuanwar072/Food-App (이걸 그대로 써도 됨. 언더바 만 추가로 구현하면 될듯)
     - 대진표 생성& 수정 (백엔드 구현) (어떤 format을 기반으로 구현할 건지 명확하게 정해놓고 들어갈 것)
 
 ## 브랜치
