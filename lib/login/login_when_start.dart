@@ -1,6 +1,8 @@
+import 'package:best_flutter_ui_templates/login/login_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
+import '../popup_widgets/popup_generator.dart';
 import 'Widgets/FormCard.dart';
 import 'login_info.dart';
 
@@ -130,16 +132,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {
-                                if (loginAuth()) {
+                                LoginAuth.loginAuth(povisId, studentId)
+                                    .then((value) {
+                                  print("Login : $studentId, $povisId, $value");
+                                  LoginInfo()
+                                      .setPovisId(povisId)
+                                      .setStudentId(studentId)
+                                      .setName(value);
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            NavigationHomeScreen()),
-                                  );
-                                } else {
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NavigationHomeScreen()));
+                                }).catchError((e) {
+                                  PopupGenerator.loginErrorPopUp(context)
+                                      .show();
+                                  print(e);
                                   return;
-                                }
+                                });
                               },
                               child: Center(
                                 child: Text("SIGNIN",
@@ -165,20 +175,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-  }
-
-  /*
-   * True : Auth passed
-   * False : Auth failed
-   */
-  bool loginAuth() {
-    //TODO : Google spread sheet
-    print("Login : $povisId, $studentId");
-    if (povisId == "admin" && studentId == "admin") {
-      LoginInfo().setPovisId(povisId).setStudentId(studentId).setName("admin");
-      return true;
-    } else {
-      return false;
-    }
   }
 }

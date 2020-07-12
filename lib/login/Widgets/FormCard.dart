@@ -61,7 +61,6 @@ class FormCard extends StatelessWidget {
             TextField(
               onChanged: (value) =>
                   {studentIdChanged(value.replaceAll("\t", ""))},
-              obscureText: true,
               decoration: InputDecoration(
                   hintText: "Student Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
