@@ -1,4 +1,6 @@
-const _credentials = r'''
+library constants;
+
+const CREDENTIAL = r'''
 {
   "type": "service_account",
   "project_id": "gsheets-283102",
