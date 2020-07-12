@@ -58,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           return const SizedBox();
                         } else {
                           return GridView(
-                            //TODO Menu add
                             padding: const EdgeInsets.only(
                                 top: 0, left: 12, right: 12),
                             physics: const BouncingScrollPhysics(),
