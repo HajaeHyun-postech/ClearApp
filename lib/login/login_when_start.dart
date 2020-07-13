@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
 import '../popup_widgets/popup_generator.dart';
-import '../popup_widgets/popup_generator.dart';
 import 'Widgets/FormCard.dart';
 import 'login_info.dart';
 
@@ -147,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   LoginAuth.loginAuth(povisId, studentId)
                                       .then((value) {
                                     print(
-                                        "Login : $studentId, $povisId, ${value.substring(1)}, ${value[0]}");
+                                        "Login : $studentId, $povisId, ${value.substring(1)}, Admin? ${value[0] == '1'}");
                                     setState(() {
                                       onAnimation = false;
                                     });
