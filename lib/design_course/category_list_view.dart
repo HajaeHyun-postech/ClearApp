@@ -1,7 +1,8 @@
-import 'package:best_flutter_ui_templates/design_course/design_course_app_theme.dart';
-import 'package:best_flutter_ui_templates/design_course/models/category.dart';
-import 'package:best_flutter_ui_templates/main.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
+import 'design_course_app_theme.dart';
+import 'models/category.dart';
 
 class CategoryListView extends StatefulWidget {
   const CategoryListView({Key key, this.callBack}) : super(key: key);

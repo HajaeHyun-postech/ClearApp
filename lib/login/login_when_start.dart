@@ -1,9 +1,9 @@
-import 'package:best_flutter_ui_templates/login/login_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
 import '../popup_widgets/popup_generator.dart';
 import 'Widgets/FormCard.dart';
+import 'login_auth.dart';
 import 'login_info.dart';
 
 class LoginScreen extends StatefulWidget {
