@@ -1,7 +1,7 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
-import 'package:best_flutter_ui_templates/popup_widgets/popup_generator.dart';
+import 'package:clearApp/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 
+import '../app_theme.dart';
 import '../login/login_info.dart';
 import '../login/login_when_start.dart';
 

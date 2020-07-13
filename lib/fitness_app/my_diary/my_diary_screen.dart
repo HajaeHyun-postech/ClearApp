@@ -1,11 +1,14 @@
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/body_measurement.dart';
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/glass_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/mediterranesn_diet_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/ui_view/title_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/fintness_app_theme.dart';
-import 'package:best_flutter_ui_templates/fitness_app/my_diary/meals_list_view.dart';
-import 'package:best_flutter_ui_templates/fitness_app/my_diary/water_view.dart';
+import '../fintness_app_theme.dart';
+import '../ui_view/glass_view.dart';
+
+import '../ui_view/body_measurement.dart';
+
+import '../ui_view/title_view.dart';
+import '../ui_view/mediterranesn_diet_view.dart';
 import 'package:flutter/material.dart';
+
+import 'meals_list_view.dart';
+import 'water_view.dart';
 
 class MyDiaryScreen extends StatefulWidget {
   const MyDiaryScreen({Key key, this.animationController}) : super(key: key);
