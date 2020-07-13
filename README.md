@@ -30,11 +30,19 @@ Application for postech badminton club CLEAR
       - https://github.com/nb312/flutter-ui-nice
       - https://github.com/singhbhavneet/Flutter-Dribbble-Challenge
       - https://www.youtube.com/channel/UCJm7i4g4z7ZGcJA_HKHLCVw/videos
+      - https://github.com/JoonasN/Flutter-speed-coding---bank-screen
+      - https://www.youtube.com/watch?v=JIUBznr0bEk
+      - https://github.com/slackvishal/flutter_jobfinder_app (위로 올라가는거)
+      - https://www.youtube.com/watch?v=IyFUW7JAvTQ
+      - https://www.youtube.com/watch?v=80vWzQB0Eto
+      - https://www.youtube.com/watch?v=pDBjEmYU0nw (bottom sheet 만드는 법)
      
         
  - 윤주형 :
     - 정모 참가 (이걸 먼저 구현하도록)
       - https://github.com/abuanwar072/Food-App (이걸 그대로 써도 됨. 언더바 만 추가로 구현하면 될듯)
+      - https://www.youtube.com/watch?v=pAhxtz491TA
+      
     - 대진표 생성& 수정 (백엔드 구현) (어떤 format을 기반으로 구현할 건지 명확하게 정해놓고 들어갈 것)
 
 ## 브랜치
