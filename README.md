@@ -40,6 +40,8 @@ Application for postech badminton club CLEAR
       - https://www.youtube.com/watch?v=5KbiU-93-yU&t=11s (도로로록 2)
       - https://www.youtube.com/watch?v=UNeXQVXd6oE (카드 도로로록)
       - https://github.com/josealvaradoo/card-wallet-flutter (카드)
+      - https://stackoverflow.com/questions/52227846/how-can-i-add-shadow-to-the-widget-in-flutter (box shadow)
+      - https://levelup.gitconnected.com/credit-card-slider-flutter-1edec451103a (카드 도오오오오록)
      
         
  - 윤주형 :
