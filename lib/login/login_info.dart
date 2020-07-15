@@ -11,6 +11,7 @@ class LoginInfo {
   String povisId;
   String studentId;
   bool isAdmin;
+  int rowNum;
 
   factory LoginInfo() {
     return _loginInfo;

@@ -1,9 +1,11 @@
-import 'package:clearApp/app_theme.dart';
+import 'package:clearApp/shuttle_menu/data_manage/shuttle_data_subject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
+import 'data_manage/shuttle_data.dart';
+import '../util/constants.dart' as Constants;
 
 var orange = Color(0xFFfc9f6a);
 var pink = Color(0xFFee528c);
@@ -18,7 +20,14 @@ class ShuttleMenuHomePage extends StatefulWidget {
 
 class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     with SingleTickerProviderStateMixin {
+  ShuttleDataSubject shuttleDataSubject;
+
+  List<int> shuttleListToRcv;
+  int moneyToPay;
+  List<ShuttleData> shuttleDataList;
+
   final ScrollController _scrollController = ScrollController();
+
   TabController _tabController;
   final List<Widget> _tabs = [
     Tab(
@@ -41,31 +50,23 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     ),
   ];
 
-  List<int> shuttleListToRcv = [1, 2, 3, 4];
-  int moneyToPay;
-  int shuttleRemain;
-
   @override
   void initState() {
     super.initState();
-    moneyToPay = 1000;
-    shuttleRemain = 1;
-    _tabController = TabController(length: _tabs.length, vsync: this);
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+    shuttleDataSubject = ShuttleDataSubject.initial((data) {
+      setState(() {
+        shuttleDataList = data;
+        moneyToPayCal();
+        shuttleListToRcvCal();
+      });
+    });
+
+    _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        switch (_tabController.index) {
-          case 0:
-            break;
-          case 1:
-            break;
-          case 2:
-            break;
-        }
+        shuttleDataSubject.updateTabChanged(
+            Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });
   }
@@ -74,6 +75,20 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void moneyToPayCal() {
+    moneyToPay = 0;
+    shuttleDataList.forEach((element) {
+      element.approved ? moneyToPay += 0 : moneyToPay += element.price;
+    });
+  }
+
+  void shuttleListToRcvCal() {
+    shuttleListToRcv = new List<int>();
+    shuttleDataList.forEach((element) {
+      if (element.received) shuttleListToRcv.addAll(element.shuttleList);
+    });
   }
 
   @override

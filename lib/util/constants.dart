@@ -14,3 +14,5 @@ const CREDENTIAL = r'''
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheets%40gsheets-283102.iam.gserviceaccount.com"
 }
 ''';
+
+enum ShuttleMenuCurrentTab { Total, Not_Rcved, Admin }
