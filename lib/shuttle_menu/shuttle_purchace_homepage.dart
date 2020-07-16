@@ -1,10 +1,10 @@
-import 'package:clearApp/shuttle_menu/data_manage/shuttle_data_subject.dart';
+import 'package:clearApp/shuttle_menu/data_manage/shuttle_history_subject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
-import 'data_manage/shuttle_data.dart';
+import 'data_manage/shuttle_purchace_history.dart';
 import '../util/constants.dart' as Constants;
 
 var orange = Color(0xFFfc9f6a);
@@ -20,11 +20,11 @@ class ShuttleMenuHomePage extends StatefulWidget {
 
 class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     with SingleTickerProviderStateMixin {
-  ShuttleDataSubject shuttleDataSubject;
+  ShuttlePrchHstrSubject shuttlePrchHstrSubject;
 
   List<int> shuttleListToRcv;
   int moneyToPay;
-  List<ShuttleData> shuttleDataList;
+  List<ShuttlePrchHstr> shuttlePrchHstrList;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -54,9 +54,9 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
   void initState() {
     super.initState();
 
-    shuttleDataSubject = ShuttleDataSubject.initial((data) {
+    shuttlePrchHstrSubject = ShuttlePrchHstrSubject.initial((data) {
       setState(() {
-        shuttleDataList = data;
+        shuttlePrchHstrList = data;
         moneyToPayCal();
         shuttleListToRcvCal();
       });
@@ -65,7 +65,7 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        shuttleDataSubject.updateTabChanged(
+        shuttlePrchHstrSubject.updateTabChanged(
             Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });
@@ -79,14 +79,14 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
 
   void moneyToPayCal() {
     moneyToPay = 0;
-    shuttleDataList.forEach((element) {
+    shuttlePrchHstrList.forEach((element) {
       element.approved ? moneyToPay += 0 : moneyToPay += element.price;
     });
   }
 
   void shuttleListToRcvCal() {
     shuttleListToRcv = new List<int>();
-    shuttleDataList.forEach((element) {
+    shuttlePrchHstrList.forEach((element) {
       if (element.received) shuttleListToRcv.addAll(element.shuttleList);
     });
   }
