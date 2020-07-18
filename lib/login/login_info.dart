@@ -9,7 +9,7 @@ class LoginInfo {
   static final LoginInfo _loginInfo = LoginInfo._internal();
   String name;
   String povisId;
-  String studentId;
+  int studentId;
   bool isAdmin;
   int rowNum;
 
@@ -18,8 +18,8 @@ class LoginInfo {
   }
 
   LoginInfo._internal() {
-    //TODO: debug
-    studentId = '20180673';
+    //FOR DEBUG
+    studentId = 20180673;
   }
 
   String getName() {
@@ -30,7 +30,7 @@ class LoginInfo {
     return povisId;
   }
 
-  String getStudentId() {
+  int getStudentId() {
     return studentId;
   }
 
@@ -48,7 +48,7 @@ class LoginInfo {
     return this;
   }
 
-  LoginInfo setStudentId(String _studentId) {
+  LoginInfo setStudentId(int _studentId) {
     studentId = _studentId;
     return this;
   }

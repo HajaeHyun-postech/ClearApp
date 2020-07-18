@@ -34,7 +34,8 @@ class PopupGenerator {
     );
   }
 
-  static Alert loginErrorPopUp(BuildContext context) {
+  static Alert ErrorPopupWidget(BuildContext context, String title,
+      String description, Function clickHandler) {
     var alertStyle = AlertStyle(
       animationType: AnimationType.fromTop,
       isCloseButton: false,
@@ -61,8 +62,8 @@ class PopupGenerator {
       context: context,
       style: alertStyle,
       type: AlertType.info,
-      title: "Login Failed",
-      desc: "Please check your povis Id and student Id",
+      title: title,
+      desc: description,
       buttons: [
         DialogButton(
           child: Text(
@@ -73,7 +74,7 @@ class PopupGenerator {
               fontFamily: "Poppins-Medium",
             ),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: clickHandler,
           color: Color.fromRGBO(0, 179, 134, 1.0),
           radius: BorderRadius.circular(0.0),
         ),

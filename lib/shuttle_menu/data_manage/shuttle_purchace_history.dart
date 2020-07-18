@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:core';
 
 import '../../login/login_info.dart';
-import '../../login/login_info.dart';
 
 class ShuttlePrchHstr {
   String key;
-  String studentId;
+  int studentId;
   String usage;
   DateTime date;
   int price;
@@ -27,22 +26,22 @@ class ShuttlePrchHstr {
     approved = false;
     deleted = false;
 
-    key = studentId + date.toString().replaceAll(new RegExp('\\D'), '');
+    key = studentId.toString() +
+        'W' +
+        date.toString().replaceAll(new RegExp('\\D'), '');
   }
 
-  ShuttlePrchHstr.fromMap(Map<String, String> map)
-      : key = jsonDecode(map['key']),
-        studentId = jsonDecode(map['studentId']),
-        usage = jsonDecode(map['usage']),
+  ShuttlePrchHstr.fromMap(Map<String, dynamic> map)
+      : key = (jsonDecode(map['key']) as String),
+        studentId = (jsonDecode(map['studentId']) as int),
+        usage = jsonDecode(map['usage'] as String),
         date = DateTime.parse(jsonDecode(map['date'])),
-        price = jsonDecode(map['price']),
-        amount = jsonDecode(map['amount']),
-        shuttleList = (jsonDecode(map['shuttleList']) as List)
-            ?.map((e) => e as int)
-            ?.toList(),
-        deleted = jsonDecode(map['deleted']),
-        received = jsonDecode(map['received']),
-        approved = jsonDecode(map['approved']);
+        price = (jsonDecode(map['price']) as int),
+        amount = (jsonDecode(map['amount']) as int),
+        shuttleList = (jsonDecode(map['shuttleList'])).cast<int>(),
+        deleted = (jsonDecode(map['deleted']) as bool),
+        received = (jsonDecode(map['received']) as bool),
+        approved = (jsonDecode(map['approved']) as bool);
 
   Map<String, dynamic> toMap() => {
         'key': key,

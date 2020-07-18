@@ -1,7 +1,7 @@
+import 'package:clearApp/util/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
-import '../popup_widgets/popup_generator.dart';
 import 'Widgets/FormCard.dart';
 import 'login_auth.dart';
 import 'login_info.dart';
@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen>
   bool _isSelected = false;
   bool onAnimation = false;
   String povisId;
-  String studentId;
+  int studentId;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen>
                           povisId = _povisId;
                         });
                       },
-                      studentIdChanged: (String _studentId) {
+                      studentIdChanged: (int _studentId) {
                         setState(() {
                           studentId = _studentId;
                         });
@@ -164,8 +164,12 @@ class _LoginScreenState extends State<LoginScreen>
                                     setState(() {
                                       onAnimation = false;
                                     });
-                                    PopupGenerator.loginErrorPopUp(context)
-                                        .show();
+                                    PopupGenerator.ErrorPopupWidget(
+                                        context,
+                                        'Login Error',
+                                        'Please check your povis Id and studend Id',
+                                        () => Navigator.pop(context)).show();
+                                    //TODO: logging
                                     print(e);
                                     return;
                                   });

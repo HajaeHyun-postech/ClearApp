@@ -1,9 +1,9 @@
-import 'package:clearApp/shuttle_menu/data_manage/shuttle_history_subject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
+import 'data_manage/shuttle_hitsory_handler.dart';
 import 'data_manage/shuttle_purchace_history.dart';
 import '../util/constants.dart' as Constants;
 
@@ -20,7 +20,7 @@ class ShuttleMenuHomePage extends StatefulWidget {
 
 class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     with SingleTickerProviderStateMixin {
-  ShuttlePrchHstrSubject shuttlePrchHstrSubject;
+  ShuttlePrchHstrHandler shuttlePrchHstrHandler;
 
   List<int> shuttleListToRcv;
   int moneyToPay;
@@ -66,7 +66,7 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        shuttlePrchHstrSubject.updateTabChanged(
+        shuttlePrchHstrHandler.updateTabChanged(
             Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });

@@ -1,5 +1,7 @@
+import 'package:f_logs/f_logs.dart';
 import 'package:flutter/material.dart';
 
+import 'util/constants.dart' as Constants;
 import 'app_theme.dart';
 import 'model/homelist.dart';
 
@@ -35,6 +37,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Constants.homeContext = context;
+
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: FutureBuilder<bool>(

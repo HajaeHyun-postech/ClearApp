@@ -1,4 +1,4 @@
-import 'package:clearApp/popup_widgets/popup_generator.dart';
+import 'package:clearApp/util/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 
 import '../app_theme.dart';
