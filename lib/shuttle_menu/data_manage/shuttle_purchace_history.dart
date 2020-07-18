@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:core';
 
+import '../../login/login_info.dart';
 import '../../login/login_info.dart';
 
 class ShuttlePrchHstr {
@@ -25,28 +27,30 @@ class ShuttlePrchHstr {
     approved = false;
     deleted = false;
 
-    key = studentId + date.toString();
+    key = studentId + date.toString().replaceAll(new RegExp('\\D'), '');
   }
 
-  ShuttlePrchHstr.fromMap(Map<String, dynamic> map)
-      : key = map['key'],
-        studentId = map['studentId'],
-        usage = map['usage'],
-        date = map['date'],
-        price = map['price'],
-        amount = map['amount'],
-        shuttleList = map['shuttleList'],
-        deleted = map['deleted'],
-        received = map['received'],
-        approved = map['approved'];
+  ShuttlePrchHstr.fromMap(Map<String, String> map)
+      : key = jsonDecode(map['key']),
+        studentId = jsonDecode(map['studentId']),
+        usage = jsonDecode(map['usage']),
+        date = DateTime.parse(jsonDecode(map['date'])),
+        price = jsonDecode(map['price']),
+        amount = jsonDecode(map['amount']),
+        shuttleList = (jsonDecode(map['shuttleList']) as List)
+            ?.map((e) => e as int)
+            ?.toList(),
+        deleted = jsonDecode(map['deleted']),
+        received = jsonDecode(map['received']),
+        approved = jsonDecode(map['approved']);
 
   Map<String, dynamic> toMap() => {
         'key': key,
         'studentId': studentId,
         'usage': usage,
-        'date': date,
+        'date': date.toIso8601String(),
         'price': price,
-        'amount': amount,
+        'amount': (amount),
         'shuttleList': shuttleList,
         'deleted': deleted,
         'received': received,

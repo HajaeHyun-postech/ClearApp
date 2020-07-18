@@ -1,16 +1,26 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:gsheets/gsheets.dart';
 import '../../login/login_info.dart';
-import '../../login/login_info.dart';
 import '../../util/constants.dart' as Constants;
+import 'package:http/http.dart' as http;
 
 const _spreadsheetId = '1AbK660l9RUdCTJbg-KHZyhwnIM9sOs0gi6B8Ujt2jEU';
 
 //validate (갯수)
+//Action 종류
+//get my history (action: getMyHstr)
+//get all unproved history (action: getAllUnapprHstr)
+//reload approved (action: getMyHstr (received all, and processing))
+//update rec/app (post, action: updateRec/Appr)
+//add new Hstr (post, action: addNewPrchHstr)
+//getAvailableShuttleList ()
+//get action key studentId
+//post action key studentId (data)
 
-class ShuttlePrchHstrSubject {
+class ShuttlePrchHstrHandler {
   List<ShuttlePrchHstr> shuttlePrchHstrList;
   List<ShuttlePrchHstr> totalUserShuttlePrchHstrList;
   Function(List<ShuttlePrchHstr>) notifyHandler;
@@ -18,7 +28,7 @@ class ShuttlePrchHstrSubject {
   Worksheet shuttlecockMngSheet;
 
   /**singleton pattern**/
-  ShuttlePrchHstrSubject(Function(List<ShuttlePrchHstr>) _notifyHandler) {
+  ShuttlePrchHstrHandler(Function(List<ShuttlePrchHstr>) _notifyHandler) {
     notifyHandler = _notifyHandler;
   }
 
@@ -70,17 +80,21 @@ class ShuttlePrchHstrSubject {
     //TODO: shuttle List get
     ShuttlePrchHstr newHstr = ShuttlePrchHstr(_usage, _price, _amount);
     newHstr.shuttleList = [1, 2, 3];
+    shuttlePrchHstrList = new List<ShuttlePrchHstr>(); //TODO: debug
     shuttlePrchHstrList.add(newHstr);
-    int lastRow;
-    print("Write in");
-    do {
-      lastRow =
-          int.parse(await prchHstrSheet.values.value(column: 13, row: 1)) + 2;
-      print("Degbug [lastRow] : $lastRow");
-      await prchHstrSheet.values.map.insertRow(lastRow, newHstr.toMap());
-    } while ((await prchHstrSheet.values.map.row(lastRow))['key'] !=
-        newHstr.toMap()['key']);
-    print("Write out $_amount");
+
+    //string -> json -> utf8 byte -> base64
+    String url = Constants.shuttlePrchHstrSheetURL +
+        '?action=addNewPrchHstr' +
+        '&studentId=${LoginInfo().studentId}' +
+        '&body=${base64Encode(utf8.encode(jsonEncode(newHstr.toMap())))}';
+
+    print('$url');
+
+    var response = await http.get(url);
+
+    print('Debug[Response status: ${response.statusCode}]');
+    print('Debug[Response body: ${response.body}]');
   }
 
   void updateReceived(String _key) {

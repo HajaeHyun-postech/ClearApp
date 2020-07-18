@@ -53,14 +53,15 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
   @override
   void initState() {
     super.initState();
-
-    shuttlePrchHstrSubject = ShuttlePrchHstrSubject.initial((data) {
+    /*
+    shuttlePrchHstrSubject = ShuttlePrchHstrSubject.getInstance()((data) {
       setState(() {
         shuttlePrchHstrList = data;
         moneyToPayCal();
         shuttleListToRcvCal();
       });
     });
+    */
 
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {

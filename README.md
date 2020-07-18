@@ -19,7 +19,10 @@ Application for postech badminton club CLEAR
     - 프로젝트 관리
     - 로그인 구현
     - 메인 페이지 구현
+    - 셔틀콕 장부 구현
     - 리팩토링 (코드 간결화)
+    - 로거 구현
+    - 업데이트 확인 구현
 
  - 이상오 :
     - 장부 구현
