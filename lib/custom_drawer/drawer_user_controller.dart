@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
+import '../util/app_theme.dart';
 import 'home_drawer.dart';
 
 class DrawerUserController extends StatefulWidget {
@@ -95,7 +95,7 @@ class _DrawerUserControllerState extends State<DrawerUserController>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.white,
+      backgroundColor: ClearAppTheme.white,
       body: SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
@@ -139,10 +139,10 @@ class _DrawerUserControllerState extends State<DrawerUserController>
                 //full-screen Width with widget.screenView
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.white,
+                    color: ClearAppTheme.white,
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                          color: AppTheme.grey.withOpacity(0.6),
+                          color: ClearAppTheme.grey.withOpacity(0.6),
                           blurRadius: 24),
                     ],
                   ),

@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^1.6.11
   f_logs: ^1.2.2
   logger: ^0.9.1
+  async: ^2.3.0
 
 dev_dependencies:
   flutter_test:

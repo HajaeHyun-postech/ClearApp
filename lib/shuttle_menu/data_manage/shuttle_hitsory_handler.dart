@@ -57,8 +57,7 @@ class ShuttlePrchHstrHandler {
       addNewPrchHstr(newHstr);
       changeEditingState(false);
     } catch (error) {
-      Logger().e(
-          'class: ShuttlePrchHstrHandler, method: submitEvnetHandle, error: $error');
+      Logger().e('error: $error');
     }
   }
 
@@ -79,8 +78,7 @@ class ShuttlePrchHstrHandler {
     Map<String, dynamic> body = jsonDecode(response.body);
 
     if (statusCode != 200 || body.containsKey('error')) {
-      Logger().e(
-          'class: ShuttlePrchHstrHandler, method: doAction, error: ${body['error'].toString()}');
+      Logger().e('error: ${body['error'].toString()}');
       if (popupWhenError) {
         PopupGenerator.ErrorPopupWidget(
             Constants.homeContext,
@@ -90,8 +88,7 @@ class ShuttlePrchHstrHandler {
       }
       throw ('error: ${body['error'].toString()}');
     } else {
-      Logger()
-          .i('class: ShuttlePrchHstrHandler, method: doAction, text: success');
+      Logger().i('success');
     }
     return response.body;
   }
@@ -112,8 +109,7 @@ class ShuttlePrchHstrHandler {
       shuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(_map));
     });
 
-    Logger()
-        .i('class: ShuttlePrchHstrHandler, method: getMyHstr, text: finished');
+    Logger().i('finished');
   }
 
   Future<void> getAllUnapprHstr() async {
@@ -128,8 +124,7 @@ class ShuttlePrchHstrHandler {
       totalUserShuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(element));
     });
 
-    Logger().i(
-        'class: ShuttlePrchHstrHandler, method: getAllUnapprHstr, text: finished');
+    Logger().i(' finished');
   }
 
   Future<void> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
@@ -145,10 +140,9 @@ class ShuttlePrchHstrHandler {
     };
 
     doAction(Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map,
-        popupWhenError: true,
-        errorHander: () =>
-            Navigator.pop(Constants.homeContext)).then((value) => Logger().i(
-        'class: ShuttlePrchHstrHandler, method: addNewPrchHistory, text: sheet updated finished handled'));
+            popupWhenError: true,
+            errorHander: () => Navigator.pop(Constants.homeContext))
+        .then((value) => Logger().i('sheet updated finished handled'));
   }
 
   void updateRcved(String _key) {
@@ -160,9 +154,8 @@ class ShuttlePrchHstrHandler {
       "key": _key,
     };
 
-    doAction(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map).then(
-        (value) => Logger().i(
-            'class: ShuttlePrchHstrHandler, method: updateRcved, text: sheet updated finished handled'));
+    doAction(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map)
+        .then((value) => Logger().i('sheet updated finished handled'));
   }
 
   void updateAppr(String _key) {
@@ -174,31 +167,27 @@ class ShuttlePrchHstrHandler {
       "key": _key,
     };
 
-    doAction(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map).then(
-        (value) => Logger().i(
-            'class: ShuttlePrchHstrHandler, method: updateAppr, text: sheet updated finished handled'));
+    doAction(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map)
+        .then((value) => Logger().i('sheet updated finished handled'));
   }
 
   //tab update
   void updateTabChanged(Constants.ShuttleMenuCurrentTab tab) {
     switch (tab) {
       case Constants.ShuttleMenuCurrentTab.Total:
-        Logger().i(
-            'class: ShuttlePrchHstrHandler, method: updateTabChanged, text: changed to Total');
+        Logger().i('Tab changed to Total');
         getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList));
         break;
 
       case Constants.ShuttleMenuCurrentTab.Not_Rcved:
-        Logger().i(
-            'class: ShuttlePrchHstrHandler, method: updateTabChanged, text: changed to Not rcved');
+        Logger().i('Tab changed to Not rcved');
         getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList
             .where((element) => element.received == false)
             .toList()));
         break;
 
       case Constants.ShuttleMenuCurrentTab.Admin:
-        Logger().i(
-            'class: ShuttlePrchHstrHandler, method: updateTabChanged, text: changed to Admin');
+        Logger().i('Tab changed to Admin');
         getAllUnapprHstr()
             .then((value) => dataUpdateCallback(totalUserShuttlePrchHstrList));
     }

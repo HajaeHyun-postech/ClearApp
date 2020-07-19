@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
 import 'app_theme.dart';
 
 class CustomAppBar {
@@ -48,7 +47,7 @@ class CustomAppBar {
                     'Clear App',
                     style: TextStyle(
                       fontSize: 22,
-                      color: AppTheme.darkText,
+                      color: ClearAppTheme.darkText,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

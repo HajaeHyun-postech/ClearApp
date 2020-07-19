@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:async/async.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/shuttle_menu/usage_select_button.dart';
@@ -9,7 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../util/constants.dart' as Constants;
 
-enum UsageLists { Regular_Meeting, Personal_Use, Event }
+enum UsageLists {
+  Regular_Meeting,
+  Personal_Use,
+  Training,
+  Official_Event,
+  Prize
+}
 
 class AddPrchForm extends StatefulWidget {
   //screen size
@@ -24,24 +30,28 @@ class AddPrchForm extends StatefulWidget {
 }
 
 class AddPrchFormState extends State<AddPrchForm>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _textController;
   AnimationController _animCntroller;
   ScrollController _scrollController;
   Animation<RelativeRect> _rectAnimation;
+  AnimationController _remainingController;
   bool editing;
+  bool amountOverflowed;
+  int selectedAmount;
+  int remainAmount;
   UsageLists selectedUsage;
-  Map<String, dynamic> formData = {
-    'text': null,
-    'usage': null,
-    'amount': null,
-  };
+  String selectedUsageString;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   void _setInitial() {
-    formData['text'] = '';
-    formData['usage'] = '';
-    formData['amount'] = 0;
+    selectedAmount = 0;
+    remainAmount = 0;
+    selectedUsage = null;
+    selectedUsageString = '';
+    editing = false;
+    amountOverflowed = false;
   }
 
   @override
@@ -52,6 +62,8 @@ class AddPrchFormState extends State<AddPrchForm>
     _textController = TextEditingController();
     _animCntroller = AnimationController(
         duration: Duration(milliseconds: 300), value: 0.0, vsync: this);
+    _remainingController = AnimationController(
+        duration: const Duration(milliseconds: 100), vsync: this);
 
     final Size size = widget.size;
     _rectAnimation = RelativeRectTween(
@@ -82,21 +94,41 @@ class AddPrchFormState extends State<AddPrchForm>
         _scrollController.animateTo(0.0,
             curve: Curves.ease, duration: Duration(microseconds: 100));
         _animCntroller.fling(velocity: -1.0);
+        return newHstr;
       } catch (error) {
         throw (error);
       }
     };
   }
 
+  Future<dynamic> getRemainingShuttleAmount() async {
+    return this._memoizer.runOnce(() async {
+      try {
+        String response = await ShuttlePrchHstrHandler().doAction(
+            Constants.shuttleStorageSheetURL, 'getRemainingCount', new Map());
+
+        Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
+        int count = rcvedMap['shuttleCount'] as int;
+        Logger().i('count : $count');
+        return count;
+      } catch (error) {
+        throw (error);
+      }
+    });
+  }
+
   Future<ShuttlePrchHstr> validateNewPrch() async {
     //TODO : add some callbacks. Like focus, send error... etc
     //form validation check
-    if (formData['usage'].isEmpty) throw ('invalid input');
-    if (formData['amount'] < 1) throw ('invalid input');
+    if (selectedUsageString == '') throw ('invalid usage input');
+    if (selectedAmount < 1) throw ('invalid amount input');
+
+    Logger()
+        .i('validation start.. Usage: $selectedUsage, Amount: $selectedAmount');
 
     //make instance
     ShuttlePrchHstr newHstr =
-        new ShuttlePrchHstr(formData['usage'], 0, formData['amount']);
+        new ShuttlePrchHstr(selectedUsageString, 0, selectedAmount);
 
     Map<String, dynamic> map = {
       'studentId': newHstr.studentId,
@@ -107,6 +139,8 @@ class AddPrchFormState extends State<AddPrchForm>
     try {
       String response = await ShuttlePrchHstrHandler()
           .doAction(Constants.shuttleStorageSheetURL, 'validateNewPrch', map);
+
+      Logger().i('validateNewPrch received response : $response');
 
       Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
       newHstr.shuttleList = rcvedMap['shuttleList'].cast<String>();
@@ -125,33 +159,11 @@ class AddPrchFormState extends State<AddPrchForm>
     super.dispose();
   }
 
-  Widget _buildTodoTextInput() {
-    return TextFormField(
-      controller: _textController,
-      decoration: InputDecoration(
-        hintText: 'NEEDED FILED??? (THINKGING..)',
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-      ),
-      onSaved: (String text) {
-        formData['text'] = text;
-      },
-    );
-  }
-
-  Row _buildUsageSelectionRow() {
-    return Row(
+  Wrap _buildUsageSelectionRow() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      runSpacing: 10.0,
       children: <Widget>[
-        UsageSelectButton(
-          text: 'Regular Meeting',
-          selected: selectedUsage == UsageLists.Regular_Meeting,
-          onChange: (bool selected) {
-            _handleUsageChange(
-                selected, 'Regular Meeting', UsageLists.Regular_Meeting);
-          },
-        ),
-        SizedBox(width: 10.0),
         UsageSelectButton(
           text: 'Personal Use',
           selected: selectedUsage == UsageLists.Personal_Use,
@@ -162,12 +174,38 @@ class AddPrchFormState extends State<AddPrchForm>
         ),
         SizedBox(width: 10.0),
         UsageSelectButton(
-          text: 'For Event',
-          selected: selectedUsage == UsageLists.Event,
+          text: 'Regular Meeting',
+          selected: selectedUsage == UsageLists.Regular_Meeting,
           onChange: (bool selected) {
-            _handleUsageChange(selected, 'Event', UsageLists.Event);
+            _handleUsageChange(
+                selected, 'Regular Meeting', UsageLists.Regular_Meeting);
           },
         ),
+        SizedBox(width: 10.0),
+        UsageSelectButton(
+          text: 'Training',
+          selected: selectedUsage == UsageLists.Training,
+          onChange: (bool selected) {
+            _handleUsageChange(selected, 'Training', UsageLists.Training);
+          },
+        ),
+        SizedBox(width: 10.0),
+        UsageSelectButton(
+          text: 'Offical Event',
+          selected: selectedUsage == UsageLists.Official_Event,
+          onChange: (bool selected) {
+            _handleUsageChange(
+                selected, 'Offical event', UsageLists.Official_Event);
+          },
+        ),
+        SizedBox(width: 10.0),
+        UsageSelectButton(
+          text: 'Prize',
+          selected: selectedUsage == UsageLists.Prize,
+          onChange: (bool selected) {
+            _handleUsageChange(selected, 'Prize', UsageLists.Prize);
+          },
+        )
       ],
     );
   }
@@ -176,17 +214,153 @@ class AddPrchFormState extends State<AddPrchForm>
       bool selected, String usage, UsageLists _selectedUsage) {
     setState(() {
       if (selected) {
-        formData['usage'] = usage;
+        selectedUsageString = usage;
         selectedUsage = _selectedUsage;
       } else {
-        formData['usage'] = null;
+        selectedUsageString = '';
         selectedUsage = null;
       }
     });
   }
 
+  Column _buildAmountSelection(Animation<double> animation) {
+    return Column(children: <Widget>[
+      AnimatedBuilder(
+        animation: animation,
+        builder: (buildContext, child) {
+          return Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(
+                    left: animation.value + 20.0,
+                    right: (20.0 - animation.value) < 0
+                        ? 0
+                        : 20.0 - animation.value),
+                child: Text('Remaining',
+                    style: TextStyle(
+                        fontFamily: ClearAppTheme.fontName,
+                        fontSize: 15,
+                        color: amountOverflowed
+                            ? ClearAppTheme.lightRed
+                            : ClearAppTheme.grey)),
+              ),
+              FutureBuilder<int>(
+                  future: getRemainingShuttleAmount()
+                      .then((value) => remainAmount = value),
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    return Container(
+                        padding: EdgeInsets.only(
+                            top: 10,
+                            left: animation.value + 20.0,
+                            right: (20.0 - animation.value) < 0
+                                ? 0
+                                : 20.0 - animation.value),
+                        child: snapshot.connectionState ==
+                                    ConnectionState.none ||
+                                snapshot.connectionState ==
+                                    ConnectionState.waiting
+                            ? new CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    ClearAppTheme.grey),
+                              )
+                            : Text(snapshot.data.toString(),
+                                style: TextStyle(
+                                    fontFamily: ClearAppTheme.fontName,
+                                    fontSize: 30,
+                                    color: amountOverflowed
+                                        ? ClearAppTheme.lightRed
+                                        : ClearAppTheme.grey)));
+                  }),
+            ],
+          );
+        },
+      ),
+      SizedBox(height: 20.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              if (selectedAmount - 1 >= 0)
+                setState(() {
+                  amountOverflowed = false;
+                  selectedAmount = selectedAmount - 1;
+                });
+              else {
+                setState(() {
+                  _remainingController.forward(from: 0.0);
+                  amountOverflowed = true;
+                });
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: ClearAppTheme.white.withOpacity(0),
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Icon(
+                  Icons.remove,
+                  color: ClearAppTheme.black,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 25.0),
+          Container(
+            child: Text(
+              selectedAmount.toString(),
+              style: TextStyle(fontFamily: 'Roboto', fontSize: 20),
+            ),
+          ),
+          SizedBox(width: 25.0),
+          GestureDetector(
+            onTap: () {
+              if (selectedAmount + 1 <= remainAmount)
+                setState(() {
+                  amountOverflowed = false;
+                  selectedAmount = selectedAmount + 1;
+                });
+              else {
+                setState(() {
+                  _remainingController.forward(from: 0.0);
+                  amountOverflowed = true;
+                });
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: ClearAppTheme.white..withOpacity(0),
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Icon(
+                  Icons.add,
+                  color: ClearAppTheme.black,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 24.0)
+        .chain(CurveTween(curve: Curves.elasticIn))
+        .animate(_remainingController)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _remainingController.reverse();
+            }
+          });
+
     return PositionedTransition(
       rect: _rectAnimation,
       child: Column(
@@ -215,13 +389,13 @@ class AddPrchFormState extends State<AddPrchForm>
                   shrinkWrap: true,
                   children: <Widget>[
                     Text(
-                      'DEBUG TEXT FIELD',
-                      style:
-                          ClearAppTheme.buildLightTheme().textTheme.bodyText1,
+                      'Select Usage',
+                      style: TextStyle(fontFamily: 'Roboto', fontSize: 20),
                     ),
-                    _buildTodoTextInput(),
-                    SizedBox(height: 25.0),
+                    SizedBox(height: 20.0),
                     _buildUsageSelectionRow(),
+                    SizedBox(height: 25.0),
+                    _buildAmountSelection(offsetAnimation)
                   ],
                 ),
               ),

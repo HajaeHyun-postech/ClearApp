@@ -7,12 +7,6 @@ import 'data_manage/shuttle_hitsory_handler.dart';
 import 'data_manage/shuttle_purchace_history.dart';
 import '../util/constants.dart' as Constants;
 
-var orange = Color(0xFFfc9f6a);
-var pink = Color(0xFFee528c);
-var blue = Color(0xFF8bccd6);
-var darkBlue = Color(0xFF60a0d7);
-var valueBlue = Color(0xFF5fa0d6);
-
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
   ShuttleHstrHomePageState createState() => ShuttleHstrHomePageState();
@@ -125,10 +119,11 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                         SizedBox(
                                           height: 10.0,
                                         ),
-                                        ItemCard(
-                                            'Unapproved',
-                                            moneyToPay.toString() + ' \₩',
-                                            [orange, pink]),
+                                        ItemCard('Unapproved',
+                                            moneyToPay.toString() + ' \₩', [
+                                          ClearAppTheme.orange,
+                                          ClearAppTheme.pink
+                                        ]),
                                         SizedBox(
                                           height: 8.0,
                                         ),
@@ -138,7 +133,10 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                                 .toString()
                                                 .replaceAll('[', '')
                                                 .replaceAll(']', ''),
-                                            [blue, darkBlue]),
+                                            [
+                                              ClearAppTheme.blue,
+                                              ClearAppTheme.darkBlue
+                                            ]),
                                         SizedBox(
                                           height: 10.0,
                                         ),
