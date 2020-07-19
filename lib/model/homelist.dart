@@ -1,4 +1,4 @@
-import 'package:clearApp/shuttle_menu/shuttle_purchace_homepage.dart';
+import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/widgets.dart';
 
 import '../design_course/home_design_course.dart';

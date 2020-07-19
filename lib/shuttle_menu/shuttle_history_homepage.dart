@@ -13,18 +13,17 @@ var blue = Color(0xFF8bccd6);
 var darkBlue = Color(0xFF60a0d7);
 var valueBlue = Color(0xFF5fa0d6);
 
-class ShuttleMenuHomePage extends StatefulWidget {
+class ShuttleHstrHomePage extends StatefulWidget {
   @override
-  ShuttleMenuHomePageState createState() => ShuttleMenuHomePageState();
+  ShuttleHstrHomePageState createState() => ShuttleHstrHomePageState();
 }
 
-class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
+class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
     with SingleTickerProviderStateMixin {
-  ShuttlePrchHstrHandler shuttlePrchHstrHandler;
+  List<ShuttlePrchHstr> shuttlePrchHstrList = new List<ShuttlePrchHstr>();
 
-  List<int> shuttleListToRcv;
+  List<String> shuttleListToRcv;
   int moneyToPay;
-  List<ShuttlePrchHstr> shuttlePrchHstrList;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -53,23 +52,22 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
   @override
   void initState() {
     super.initState();
-    /*
-    shuttlePrchHstrSubject = ShuttlePrchHstrSubject.getInstance()((data) {
-      setState(() {
-        shuttlePrchHstrList = data;
-        moneyToPayCal();
-        shuttleListToRcvCal();
-      });
-    });
-    */
-
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        shuttlePrchHstrHandler.updateTabChanged(
+        ShuttlePrchHstrHandler().updateTabChanged(
             Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });
+
+    ShuttlePrchHstrHandler().dataUpdateCallback = (list) {
+      setState(() {
+        shuttlePrchHstrList = list;
+      });
+    };
+
+    ShuttlePrchHstrHandler()
+        .updateTabChanged(Constants.ShuttleMenuCurrentTab.Total);
   }
 
   @override
@@ -86,7 +84,7 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
   }
 
   void shuttleListToRcvCal() {
-    shuttleListToRcv = new List<int>();
+    shuttleListToRcv = new List<String>();
     shuttlePrchHstrList.forEach((element) {
       if (element.received) shuttleListToRcv.addAll(element.shuttleList);
     });
@@ -94,6 +92,9 @@ class ShuttleMenuHomePageState extends State<ShuttleMenuHomePage>
 
   @override
   Widget build(BuildContext context) {
+    moneyToPayCal();
+    shuttleListToRcvCal();
+
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
         child: Container(

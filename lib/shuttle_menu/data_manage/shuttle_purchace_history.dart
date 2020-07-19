@@ -10,7 +10,7 @@ class ShuttlePrchHstr {
   DateTime date;
   int price;
   int amount;
-  List<int> shuttleList;
+  List<String> shuttleList;
   bool deleted;
   bool received;
   bool approved;
@@ -21,7 +21,7 @@ class ShuttlePrchHstr {
     date = new DateTime.now();
     price = _price;
     amount = _amount;
-    shuttleList = new List<int>();
+    shuttleList = new List<String>();
     received = false;
     approved = false;
     deleted = false;
@@ -38,7 +38,7 @@ class ShuttlePrchHstr {
         date = DateTime.parse(jsonDecode(map['date'])),
         price = (jsonDecode(map['price']) as int),
         amount = (jsonDecode(map['amount']) as int),
-        shuttleList = (jsonDecode(map['shuttleList'])).cast<int>(),
+        shuttleList = (jsonDecode(map['shuttleList'])).cast<String>(),
         deleted = (jsonDecode(map['deleted']) as bool),
         received = (jsonDecode(map['received']) as bool),
         approved = (jsonDecode(map['approved']) as bool);

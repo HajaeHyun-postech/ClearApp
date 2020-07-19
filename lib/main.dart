@@ -1,8 +1,4 @@
 import 'dart:io';
-
-import 'package:f_logs/model/flog/flog.dart';
-import 'package:f_logs/model/flog/flog_config.dart';
-import 'package:f_logs/utils/timestamp/timestamp_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,11 +6,6 @@ import 'app_theme.dart';
 import 'login/login_when_start.dart';
 
 void main() async {
-  LogsConfig config = FLog.getDefaultConfigurations()
-    ..isLogsEnabled = true
-    ..timestampFormat = TimestampFormat.TIME_FORMAT_FULL_2;
-  FLog.applyConfigurations(config);
-
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,

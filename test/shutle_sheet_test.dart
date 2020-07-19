@@ -5,6 +5,7 @@ import 'package:clearApp/util/constants.dart' as Constants;
 
 void main() {
   test('shuttle buy menu data transfer test', () async {
+    /*
     List<ShuttlePrchHstr> testList;
     ShuttlePrchHstrHandler instance = ShuttlePrchHstrHandler((list) {
       testList = list;
@@ -29,5 +30,6 @@ void main() {
     testList.forEach((element) {
       print(element.key);
     });
+    */
   });
 }
