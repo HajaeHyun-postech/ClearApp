@@ -104,12 +104,13 @@ class AddPrchFormState extends State<AddPrchForm>
   Future<dynamic> getRemainingShuttleAmount() async {
     return this._memoizer.runOnce(() async {
       try {
+        Logger().i('trying to get remaining counts..');
         String response = await ShuttlePrchHstrHandler().doAction(
             Constants.shuttleStorageSheetURL, 'getRemainingCount', new Map());
 
         Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
         int count = rcvedMap['shuttleCount'] as int;
-        Logger().i('count : $count');
+        Logger().i('got count : $count');
         return count;
       } catch (error) {
         throw (error);
@@ -283,11 +284,13 @@ class AddPrchFormState extends State<AddPrchForm>
             onTap: () {
               if (selectedAmount - 1 >= 0)
                 setState(() {
+                  Logger().i('- button clicked, succeed');
                   amountOverflowed = false;
                   selectedAmount = selectedAmount - 1;
                 });
               else {
                 setState(() {
+                  Logger().i('- button clicked, failed');
                   _remainingController.forward(from: 0.0);
                   amountOverflowed = true;
                 });
@@ -320,11 +323,13 @@ class AddPrchFormState extends State<AddPrchForm>
             onTap: () {
               if (selectedAmount + 1 <= remainAmount)
                 setState(() {
+                  Logger().i('+ button clicked, succeed');
                   amountOverflowed = false;
                   selectedAmount = selectedAmount + 1;
                 });
               else {
                 setState(() {
+                  Logger().i('+ button clicked, failed');
                   _remainingController.forward(from: 0.0);
                   amountOverflowed = true;
                 });

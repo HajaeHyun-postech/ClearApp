@@ -2,6 +2,7 @@ import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class AddPrchButton extends StatefulWidget {
   //screen size
@@ -23,11 +24,13 @@ class _AddPrchButtonState extends State<AddPrchButton>
   Animation<RelativeRect> _buttonAnimation;
   Animation<double> _buttonTextAnimation;
   bool editing;
+  bool adding;
 
   @override
   void initState() {
     super.initState();
     editing = false;
+    adding = false;
 
     _controller =
         AnimationController(duration: Duration(milliseconds: 450), vsync: this);
@@ -37,12 +40,15 @@ class _AddPrchButtonState extends State<AddPrchButton>
 
     ShuttlePrchHstrHandler().editingChangedCallback.add((_editing) {
       if (!mounted) return;
+      Logger().i('editing call back in button called with editing: $editing');
       setState(() {
         editing = _editing;
-        if (editing)
+        if (_editing)
           _controller.forward();
-        else
+        else {
+          adding = false;
           _controller.reverse();
+        }
       });
     });
   }
@@ -69,51 +75,59 @@ class _AddPrchButtonState extends State<AddPrchButton>
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
         child: PositionedTransition(
-          rect: _buttonAnimation,
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              shape: editing ? BoxShape.rectangle : BoxShape.circle,
-              gradient: LinearGradient(
-                colors: <Color>[Color(0xFF60a0d7), Color(0xFF5fa0d6)],
+            rect: _buttonAnimation,
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                shape: editing ? BoxShape.rectangle : BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: <Color>[Color(0xFF60a0d7), Color(0xFF5fa0d6)],
+                ),
               ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  if (editing)
-                    ShuttlePrchHstrHandler().submitEventHandle();
-                  else
-                    ShuttlePrchHstrHandler().changeEditingState(true);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    SizeTransition(
-                      sizeFactor: _buttonTextAnimation,
-                      axis: Axis.horizontal,
-                      axisAlignment: -1.0,
-                      child: Center(
-                        child: Text(
-                          'BUY',
-                          style: TextStyle(
-                            color: Colors.white,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Logger().i('Shuttle button clicked');
+                    if (editing) {
+                      setState(() {
+                        adding = true;
+                      });
+                      ShuttlePrchHstrHandler().submitEventHandle();
+                    } else
+                      ShuttlePrchHstrHandler().changeEditingState(true);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      !adding
+                          ? Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            )
+                          : new CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  ClearAppTheme.white),
+                            ),
+                      SizeTransition(
+                        sizeFactor: _buttonTextAnimation,
+                        axis: Axis.horizontal,
+                        axisAlignment: -1.0,
+                        child: Center(
+                          child: Text(
+                            !adding ? 'BUY' : '',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ));
+            )));
   }
 }
 

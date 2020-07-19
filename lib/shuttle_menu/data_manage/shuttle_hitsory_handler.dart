@@ -57,6 +57,7 @@ class ShuttlePrchHstrHandler {
       addNewPrchHstr(newHstr);
       changeEditingState(false);
     } catch (error) {
+      changeEditingState(false);
       Logger().e('error: $error');
     }
   }
