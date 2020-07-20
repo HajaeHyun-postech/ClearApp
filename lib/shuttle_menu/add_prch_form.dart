@@ -72,7 +72,7 @@ class AddPrchFormState extends State<AddPrchForm>
     ).animate(_animCntroller);
 
     ShuttlePrchHstrHandler().errorCallback.add(() {
-      Logger().i('errir call back in form');
+      Logger().i('error call back in form');
       if (!mounted) return;
       _remainingController.forward(from: 0.0);
       setState(() {

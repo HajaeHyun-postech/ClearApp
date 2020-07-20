@@ -186,20 +186,34 @@ class ShuttlePrchHstrHandler {
         true;
 
     shuttlePrchHstrList.removeWhere((element) => element.deleted == true);
+    dataUpdateCallback(shuttlePrchHstrList);
 
     Map<String, dynamic> map = {
       "key": _key,
     };
 
-    doAction(Constants.shuttleStorageSheetURL, 'deleteHstr', map)
-        .then((value) => Logger().i('sheet updated finished handled'));
+    try {
+      doAction(Constants.shuttleStorageSheetURL, 'deleteHstr', map)
+          .then((value) => Logger().i('sheet updated finished handled'));
 
-    doAction(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map)
-        .then((value) => Logger().i('sheet updated finished handled'));
+      doAction(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map)
+          .then((value) => Logger().i('sheet updated finished handled'));
+    } catch (error) {
+      Logger().e('delete error : $error');
+      Fluttertoast.showToast(
+          msg: "ERROR. Pleay retry",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Color(0xFFF45C43).withOpacity(1),
+          textColor: Colors.white,
+          fontSize: 13.0);
+    }
   }
 
   //tab update
   void updateTabChanged(Constants.ShuttleMenuCurrentTab tab) {
+    //TODO : update when back arrow
     switch (tab) {
       case Constants.ShuttleMenuCurrentTab.Total:
         Logger().i('Tab changed to Total');
