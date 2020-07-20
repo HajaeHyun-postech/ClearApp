@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FormCard extends StatelessWidget {
   final Function(String name) povisIdChanged;
-  final Function(String studentId) studentIdChanged;
+  final Function(int studentId) studentIdChanged;
 
   const FormCard({Key key, this.povisIdChanged, this.studentIdChanged})
       : super(key: key);
@@ -60,9 +60,7 @@ class FormCard extends StatelessWidget {
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) => {
-                studentIdChanged(value.replaceAll("\t", "").replaceAll(" ", ""))
-              },
+              onChanged: (value) => {studentIdChanged(int.parse(value))},
               decoration: InputDecoration(
                   hintText: "Student Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),

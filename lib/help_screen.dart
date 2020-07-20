@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'app_theme.dart';
+import 'util/app_theme.dart';
 
 class HelpScreen extends StatefulWidget {
   @override
@@ -16,11 +15,11 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.nearlyWhite,
+      color: ClearAppTheme.nearlyWhite,
       child: SafeArea(
         top: false,
         child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
+          backgroundColor: ClearAppTheme.nearlyWhite,
           body: Column(
             children: <Widget>[
               Container(

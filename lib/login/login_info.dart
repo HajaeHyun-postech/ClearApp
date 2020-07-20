@@ -9,8 +9,9 @@ class LoginInfo {
   static final LoginInfo _loginInfo = LoginInfo._internal();
   String name;
   String povisId;
-  String studentId;
+  int studentId;
   bool isAdmin;
+  int rowNum;
 
   factory LoginInfo() {
     return _loginInfo;
@@ -26,7 +27,7 @@ class LoginInfo {
     return povisId;
   }
 
-  String getStudentId() {
+  int getStudentId() {
     return studentId;
   }
 
@@ -44,7 +45,7 @@ class LoginInfo {
     return this;
   }
 
-  LoginInfo setStudentId(String _studentId) {
+  LoginInfo setStudentId(int _studentId) {
     studentId = _studentId;
     return this;
   }

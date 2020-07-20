@@ -1,10 +1,11 @@
 import 'dart:io';
-
+import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'app_theme.dart';
+import 'util/app_theme.dart';
 import 'login/login_when_start.dart';
+import 'navigation_home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +32,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        textTheme: AppTheme.textTheme,
+        textTheme: ClearAppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: LoginScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/homescreen': (context) => NavigationHomeScreen(),
+        '/homescreen/shuttlemenu': (context) => ShuttleMenuHomePage(),
+      }, //use this route by Navigator.pushNamed(context, address)
     );
   }
 }

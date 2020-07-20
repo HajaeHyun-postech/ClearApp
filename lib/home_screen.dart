@@ -1,6 +1,8 @@
+import 'package:f_logs/f_logs.dart';
 import 'package:flutter/material.dart';
 
-import 'app_theme.dart';
+import 'util/constants.dart' as Constants;
+import 'util/app_theme.dart';
 import 'model/homelist.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -35,8 +37,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Constants.homeContext = context;
+
     return Scaffold(
-      backgroundColor: AppTheme.white,
+      backgroundColor: ClearAppTheme.white,
       body: FutureBuilder<bool>(
         future: getData(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -134,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   'Clear App',
                   style: TextStyle(
                     fontSize: 22,
-                    color: AppTheme.darkText,
+                    color: ClearAppTheme.darkText,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -154,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       BorderRadius.circular(AppBar().preferredSize.height),
                   child: Icon(
                     multiple ? Icons.dashboard : Icons.view_agenda,
-                    color: AppTheme.dark_grey,
+                    color: ClearAppTheme.dark_grey,
                   ),
                   onTap: () {
                     setState(() {

@@ -17,9 +17,11 @@ Application for postech badminton club CLEAR
 
  - 하재현 :
     - 프로젝트 관리
-    - 로그인 구현
-    - 메인 페이지 구현
     - 리팩토링 (코드 간결화)
+    - 업데이트 확인 구현
+    - pop up widget 종류 다양화
+    - 각종 에러에 대비
+    - 탭 전환할 때 로컬 데이터 사용하도록.
 
  - 이상오 :
     - 장부 구현

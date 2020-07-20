@@ -1,5 +1,7 @@
 library constants;
 
+import 'package:flutter/cupertino.dart';
+
 const CREDENTIAL = r'''
 {
   "type": "service_account",
@@ -14,3 +16,13 @@ const CREDENTIAL = r'''
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheets%40gsheets-283102.iam.gserviceaccount.com"
 }
 ''';
+
+enum ShuttleMenuCurrentTab { Total, Not_Rcved, Admin }
+
+const shuttlePrchHstrSheetURL =
+    'https://script.google.com/macros/s/AKfycbwIDa1QhrWjn1aYK9WsTvIgXg5sfKOuo8Y9uGhq_rkkYq1BMQ/exec';
+
+const shuttleStorageSheetURL =
+    'https://script.google.com/macros/s/AKfycbzaIBll8G-6rtUgSDzBPfWbDIg3mfPrhNjKajZjXY-sOkv-KsA/exec';
+
+BuildContext homeContext;

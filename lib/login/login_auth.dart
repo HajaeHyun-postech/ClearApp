@@ -1,10 +1,11 @@
 import 'package:gsheets/gsheets.dart';
 import '../util/constants.dart' as Constants;
+import 'login_info.dart';
 
 const _spreadsheetId = '1N1fHuGuZdoLy10QQiBzDxXDBI67RnDk-N0gOZgIfF5A';
 
 class LoginAuth {
-  static Future<String> loginAuth(String povisId, String studentId) async {
+  static Future<String> loginAuth(String povisId, int studentId) async {
     final gsheets = GSheets(Constants.CREDENTIAL);
     final ss = await gsheets.spreadsheet(_spreadsheetId);
     var sheet = await ss.worksheetByTitle('sheet');
@@ -15,7 +16,9 @@ class LoginAuth {
     final nameList = await sheet.values.column(3);
     final adminList = await sheet.values.column(4);
     for (var i = 0; i < studentIdList.length; i++) {
-      if (studentIdList[i] == studentId && povisIdList[i] == povisId) {
+      if (int.parse(studentIdList[i]) == studentId &&
+          povisIdList[i] == povisId) {
+        LoginInfo().rowNum = i + 1;
         return adminList[i] + nameList[i];
       }
     }
