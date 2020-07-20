@@ -1,3 +1,5 @@
+import 'package:clearApp/login/login_info.dart';
+import 'package:clearApp/shuttle_menu/prch_hstr_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +15,11 @@ class ShuttleHstrHomePage extends StatefulWidget {
 }
 
 class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<ShuttlePrchHstr> shuttlePrchHstrList = new List<ShuttlePrchHstr>();
-
+  AnimationController animationController;
   List<String> shuttleListToRcv;
+  bool loading;
   int moneyToPay;
 
   final ScrollController _scrollController = ScrollController();
@@ -35,28 +38,40 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
         child: Text('NOT RCVED'),
       ),
     ),
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('ADMIN'),
-      ),
-    ),
+    if (LoginInfo().isAdmin)
+      Tab(
+        child: Align(
+          alignment: Alignment.center,
+          child: Text('ADMIN'),
+        ),
+      )
   ];
 
   @override
   void initState() {
     super.initState();
+    loading = true;
+
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
+        setState(() {
+          loading = true;
+        });
         ShuttlePrchHstrHandler().updateTabChanged(
             Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });
 
     ShuttlePrchHstrHandler().dataUpdateCallback = (list) {
+      if (!mounted) return;
+
       setState(() {
         shuttlePrchHstrList = list;
+        loading = false;
       });
     };
 
@@ -80,7 +95,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   void shuttleListToRcvCal() {
     shuttleListToRcv = new List<String>();
     shuttlePrchHstrList.forEach((element) {
-      if (element.received) shuttleListToRcv.addAll(element.shuttleList);
+      if (!element.received) shuttleListToRcv.addAll(element.shuttleList);
     });
   }
 
@@ -129,10 +144,18 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                         ),
                                         ItemCard(
                                             'List to rcv',
-                                            shuttleListToRcv
-                                                .toString()
-                                                .replaceAll('[', '')
-                                                .replaceAll(']', ''),
+                                            shuttleListToRcv.length > 5
+                                                ? shuttleListToRcv
+                                                        .getRange(0, 5)
+                                                        .toList()
+                                                        .toString()
+                                                        .replaceAll('[', '')
+                                                        .replaceAll(']', '') +
+                                                    ' ...'
+                                                : shuttleListToRcv
+                                                    .toString()
+                                                    .replaceAll('[', '')
+                                                    .replaceAll(']', ''),
                                             [
                                               ClearAppTheme.blue,
                                               ClearAppTheme.darkBlue
@@ -155,7 +178,62 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                             body: Container(
                               color: ClearAppTheme.buildLightTheme()
                                   .backgroundColor,
-                              child: Text(''),
+                              child: ListView.builder(
+                                  itemCount:
+                                      !loading ? shuttlePrchHstrList.length : 1,
+                                  padding: const EdgeInsets.only(bottom: 1),
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: !loading
+                                      ? (BuildContext context, int index) {
+                                          final int count =
+                                              shuttlePrchHstrList.length;
+                                          final Animation<double>
+                                              animation = Tween<double>(
+                                                      begin: 0.0, end: 1.0)
+                                                  .animate(CurvedAnimation(
+                                                      parent:
+                                                          animationController,
+                                                      curve: Interval(
+                                                          (1 / count) * index,
+                                                          1.0,
+                                                          curve: Curves
+                                                              .fastOutSlowIn)));
+                                          animationController.forward();
+                                          return PrchHstrTile(
+                                            prchHstr:
+                                                shuttlePrchHstrList[index],
+                                            isAdminTab: Constants
+                                                        .ShuttleMenuCurrentTab
+                                                        .values[
+                                                    _tabController.index] ==
+                                                Constants.ShuttleMenuCurrentTab
+                                                    .Admin,
+                                          );
+                                        }
+                                      : (BuildContext context, int index) {
+                                          return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 30,
+                                                    margin: EdgeInsets.all(5),
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 3.0,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation(
+                                                              ClearAppTheme
+                                                                  .darkBlue),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]);
+                                        }),
                             )))
                   ],
                 ),

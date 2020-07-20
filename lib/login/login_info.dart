@@ -17,10 +17,7 @@ class LoginInfo {
     return _loginInfo;
   }
 
-  LoginInfo._internal() {
-    //FOR DEBUG
-    studentId = 20180673;
-  }
+  LoginInfo._internal();
 
   String getName() {
     return name;

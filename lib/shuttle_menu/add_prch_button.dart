@@ -2,6 +2,7 @@ import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 
 class AddPrchButton extends StatefulWidget {
@@ -51,6 +52,14 @@ class _AddPrchButtonState extends State<AddPrchButton>
         }
       });
     });
+
+    ShuttlePrchHstrHandler().errorCallback.add(() {
+      if (!mounted) return;
+      Logger().i('error call back in button');
+      setState(() {
+        adding = false;
+      });
+    });
   }
 
   @override
@@ -62,7 +71,7 @@ class _AddPrchButtonState extends State<AddPrchButton>
   @override
   Widget build(BuildContext context) {
     final Size size = widget.size;
-    final Size buttonSize = Size(75.0, 75.0);
+    final Size buttonSize = Size(65.0, 65.0);
     final double top = size.height - buttonSize.height;
     final double initialLeftRight = (size.width - buttonSize.width) / 2;
 
@@ -82,7 +91,10 @@ class _AddPrchButtonState extends State<AddPrchButton>
               decoration: BoxDecoration(
                 shape: editing ? BoxShape.rectangle : BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: <Color>[Color(0xFF60a0d7), Color(0xFF5fa0d6)],
+                  colors: <Color>[
+                    Color(0xFF36D1DC),
+                    Color(0xFF5B86E5),
+                  ],
                 ),
               ),
               child: Material(
@@ -90,13 +102,15 @@ class _AddPrchButtonState extends State<AddPrchButton>
                 child: InkWell(
                   onTap: () {
                     Logger().i('Shuttle button clicked');
-                    if (editing) {
-                      setState(() {
-                        adding = true;
-                      });
-                      ShuttlePrchHstrHandler().submitEventHandle();
-                    } else
-                      ShuttlePrchHstrHandler().changeEditingState(true);
+                    if (!adding) {
+                      if (editing) {
+                        setState(() {
+                          adding = true;
+                        });
+                        ShuttlePrchHstrHandler().submitEventHandle();
+                      } else
+                        ShuttlePrchHstrHandler().changeEditingState(true);
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

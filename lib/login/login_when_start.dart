@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     setState(() {
                                       onAnimation = false;
                                     });
-                                    PopupGenerator.ErrorPopupWidget(
+                                    PopupGenerator.errorPopupWidget(
                                         context,
                                         'Login Error',
                                         'Please check your povis Id and studend Id',

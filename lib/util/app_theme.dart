@@ -20,9 +20,16 @@ class ClearAppTheme {
   static const Color pink = Color(0xFFee528c);
   static const Color blue = Color(0xFF8bccd6);
   static const Color darkBlue = Color(0xFF60a0d7);
-  static const Color valueBlue = Color(0xFFa5f0d6);
+  static const Color valueBlue = Color(0xFFcfe8ff);
+  static const Color pastelBlue = Color(0xFFd1dfe8);
+  static const Color slightPurple = Color(0xFF7F7FD5);
+  static const Color purpleBlue = Color(0xFF86A8E7);
+  static const Color lightBlue = Color(0xFF91EAE4);
   static const Color lightRed = Color(0xFFFF1010);
+  static const Color brightRed1 = Color(0xFFC02425);
   static const Color postechRed = Color(0xFFff528c);
+  static const Color brightRed2 = Color(0xF5ff308c);
+  static const Color green = Color(0xFF96c93d);
 
   static const String fontName = 'WorkSans';
 

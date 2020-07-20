@@ -71,6 +71,15 @@ class AddPrchFormState extends State<AddPrchForm>
       end: RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
     ).animate(_animCntroller);
 
+    ShuttlePrchHstrHandler().errorCallback.add(() {
+      Logger().i('errir call back in form');
+      if (!mounted) return;
+      _remainingController.forward(from: 0.0);
+      setState(() {
+        amountOverflowed = true;
+      });
+    });
+
     ShuttlePrchHstrHandler().editingChangedCallback.add((_editing) {
       if (!mounted) return;
 

@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/util/popup_widgets/popup_generator.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../login/login_info.dart';
 import '../../util/constants.dart' as Constants;
 import 'package:http/http.dart' as http;
@@ -24,6 +25,9 @@ import 'package:logger/logger.dart';
 /* validateNewPrch */
 
 class ShuttlePrchHstrHandler {
+  Constants.ShuttleMenuCurrentTab previousTab =
+      Constants.ShuttleMenuCurrentTab.Admin;
+
   List<ShuttlePrchHstr> shuttlePrchHstrList = new List<ShuttlePrchHstr>();
   List<ShuttlePrchHstr> totalUserShuttlePrchHstrList =
       new List<ShuttlePrchHstr>();
@@ -31,6 +35,7 @@ class ShuttlePrchHstrHandler {
   List<Function(bool)> editingChangedCallback = new List<Function(bool)>();
   Function(List<ShuttlePrchHstr>) dataUpdateCallback;
   Future<ShuttlePrchHstr> Function() submitEventCallback;
+  List<Function()> errorCallback = new List<Function()>();
 
   /* Singleton pattern */
   static final ShuttlePrchHstrHandler _shuttlePrchHstrHandler =
@@ -57,7 +62,9 @@ class ShuttlePrchHstrHandler {
       addNewPrchHstr(newHstr);
       changeEditingState(false);
     } catch (error) {
-      changeEditingState(false);
+      errorCallback.forEach((element) {
+        element();
+      });
       Logger().e('error: $error');
     }
   }
@@ -65,7 +72,7 @@ class ShuttlePrchHstrHandler {
   /*Data Handlings*/
   Future<String> doAction(
       String baseURL, String action, Map<String, dynamic> params,
-      {bool popupWhenError = false, Function errorHander}) async {
+      {bool popupWhenError = false, String errorTitle}) async {
     String url = baseURL + '?action=$action';
     params.forEach((key, value) {
       url += '&$key=$value';
@@ -81,11 +88,14 @@ class ShuttlePrchHstrHandler {
     if (statusCode != 200 || body.containsKey('error')) {
       Logger().e('error: ${body['error'].toString()}');
       if (popupWhenError) {
-        PopupGenerator.ErrorPopupWidget(
-            Constants.homeContext,
-            "Loading Error",
-            "Please check your internet connection.",
-            () => Navigator.pop(Constants.homeContext)).show();
+        Fluttertoast.showToast(
+            msg: errorTitle,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(0xFFF45C43).withOpacity(1),
+            textColor: Colors.white,
+            fontSize: 13.0);
       }
       throw ('error: ${body['error'].toString()}');
     } else {
@@ -98,8 +108,7 @@ class ShuttlePrchHstrHandler {
     Map<String, dynamic> map = {'studentId': LoginInfo().studentId};
     String response = await doAction(
         Constants.shuttlePrchHstrSheetURL, 'getMyHstr', map,
-        popupWhenError: true,
-        errorHander: () => Navigator.pop(Constants.homeContext));
+        popupWhenError: true, errorTitle: "Invalid amount");
 
     shuttlePrchHstrList = new List<ShuttlePrchHstr>();
     Map<String, dynamic> rcvedMap = jsonDecode(response);
@@ -141,8 +150,7 @@ class ShuttlePrchHstrHandler {
     };
 
     doAction(Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map,
-            popupWhenError: true,
-            errorHander: () => Navigator.pop(Constants.homeContext))
+            popupWhenError: true, errorTitle: "Invalid input")
         .then((value) => Logger().i('sheet updated finished handled'));
   }
 
@@ -162,6 +170,7 @@ class ShuttlePrchHstrHandler {
   void updateAppr(String _key) {
     shuttlePrchHstrList.firstWhere((element) => element.key == _key).approved =
         true;
+
     dataUpdateCallback(shuttlePrchHstrList);
 
     Map<String, dynamic> map = {
@@ -172,25 +181,54 @@ class ShuttlePrchHstrHandler {
         .then((value) => Logger().i('sheet updated finished handled'));
   }
 
+  void deleteHstr(String _key) {
+    shuttlePrchHstrList.firstWhere((element) => element.key == _key).deleted =
+        true;
+
+    shuttlePrchHstrList.removeWhere((element) => element.deleted == true);
+
+    Map<String, dynamic> map = {
+      "key": _key,
+    };
+
+    doAction(Constants.shuttleStorageSheetURL, 'deleteHstr', map)
+        .then((value) => Logger().i('sheet updated finished handled'));
+
+    doAction(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map)
+        .then((value) => Logger().i('sheet updated finished handled'));
+  }
+
   //tab update
   void updateTabChanged(Constants.ShuttleMenuCurrentTab tab) {
     switch (tab) {
       case Constants.ShuttleMenuCurrentTab.Total:
         Logger().i('Tab changed to Total');
-        getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList));
+        if (previousTab != Constants.ShuttleMenuCurrentTab.Admin) {
+          dataUpdateCallback(shuttlePrchHstrList);
+        } else {
+          getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList));
+        }
+        previousTab = Constants.ShuttleMenuCurrentTab.Total;
         break;
 
       case Constants.ShuttleMenuCurrentTab.Not_Rcved:
         Logger().i('Tab changed to Not rcved');
-        getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList
-            .where((element) => element.received == false)
-            .toList()));
+        if (previousTab != Constants.ShuttleMenuCurrentTab.Admin) {
+          dataUpdateCallback(shuttlePrchHstrList
+              .where((element) => element.received == false)
+              .toList());
+        } else {
+          getMyHstr().then((value) => dataUpdateCallback(shuttlePrchHstrList
+              .where((element) => element.received == false)
+              .toList()));
+        }
+        previousTab = Constants.ShuttleMenuCurrentTab.Not_Rcved;
         break;
-
       case Constants.ShuttleMenuCurrentTab.Admin:
         Logger().i('Tab changed to Admin');
         getAllUnapprHstr()
             .then((value) => dataUpdateCallback(totalUserShuttlePrchHstrList));
+        previousTab = Constants.ShuttleMenuCurrentTab.Admin;
     }
   }
 }

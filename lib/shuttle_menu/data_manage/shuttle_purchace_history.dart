@@ -5,6 +5,7 @@ import '../../login/login_info.dart';
 
 class ShuttlePrchHstr {
   String key;
+  String name;
   int studentId;
   String usage;
   DateTime date;
@@ -17,6 +18,7 @@ class ShuttlePrchHstr {
 
   ShuttlePrchHstr(String _usage, int _price, int _amount) {
     studentId = LoginInfo().studentId;
+    name = LoginInfo().name;
     usage = _usage;
     date = new DateTime.now();
     price = _price;
@@ -33,6 +35,7 @@ class ShuttlePrchHstr {
 
   ShuttlePrchHstr.fromMap(Map<String, dynamic> map)
       : key = (jsonDecode(map['key']) as String),
+        name = (jsonDecode(map['name']) as String),
         studentId = (jsonDecode(map['studentId']) as int),
         usage = jsonDecode(map['usage'] as String),
         date = DateTime.parse(jsonDecode(map['date'])),
@@ -45,6 +48,7 @@ class ShuttlePrchHstr {
 
   Map<String, dynamic> toMap() => {
         'key': key,
+        'name': name,
         'studentId': studentId,
         'usage': usage,
         'date': date.toIso8601String(),

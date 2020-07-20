@@ -175,8 +175,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   },
                 ),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.pushNamed(context, '/');
                 },
               ),
               SizedBox(
