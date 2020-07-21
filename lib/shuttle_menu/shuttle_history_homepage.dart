@@ -8,6 +8,7 @@ import '../util/app_theme.dart';
 import 'data_manage/shuttle_hitsory_handler.dart';
 import 'data_manage/shuttle_purchace_history.dart';
 import '../util/constants.dart' as Constants;
+import 'data_manage/actions.dart';
 
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
@@ -50,33 +51,33 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   @override
   void initState() {
     super.initState();
-    loading = true;
-
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
-
-    _tabController = TabController(length: _tabs.length, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() {
-          loading = true;
-        });
-        ShuttlePrchHstrHandler().updateTabChanged(
-            Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
-      }
-    });
-
-    ShuttlePrchHstrHandler().dataUpdateCallback = (list) {
+    //register
+    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
       if (!mounted) return;
 
       setState(() {
         shuttlePrchHstrList = list;
         loading = false;
       });
-    };
+    });
 
-    ShuttlePrchHstrHandler()
-        .updateTabChanged(Constants.ShuttleMenuCurrentTab.Total);
+    //animation setting
+    loading = true;
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          loading = true;
+        });
+        ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
+            tab: Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
+      }
+    });
+
+    ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
+        tab: Constants.ShuttleMenuCurrentTab.Total);
   }
 
   @override
@@ -200,6 +201,9 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                                               .fastOutSlowIn)));
                                           animationController.forward();
                                           return PrchHstrTile(
+                                            animation: animation,
+                                            animationController:
+                                                animationController,
                                             prchHstr:
                                                 shuttlePrchHstrList[index],
                                             isAdminTab: Constants
