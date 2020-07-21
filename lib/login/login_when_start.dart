@@ -145,16 +145,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   });
                                   LoginAuth.loginAuth(povisId, studentId)
                                       .then((value) {
-                                    print(
-                                        "Login : $studentId, $povisId, ${value.substring(1)}, Admin? ${value[0] == '1'}");
                                     setState(() {
                                       onAnimation = false;
                                     });
-                                    LoginInfo()
-                                        .setPovisId(povisId)
-                                        .setStudentId(studentId)
-                                        .setName(value.substring(1))
-                                        .setIsAdmin(value[0]);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -169,8 +162,6 @@ class _LoginScreenState extends State<LoginScreen>
                                         'Login Error',
                                         'Please check your povis Id and studend Id',
                                         () => Navigator.pop(context)).show();
-                                    //TODO: logging
-                                    print(e);
                                     return;
                                   });
                                 },

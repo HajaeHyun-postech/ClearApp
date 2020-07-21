@@ -33,7 +33,6 @@ dependencies:
   intl: ^0.16.0
   rflutter_alert: ^1.0.3
   flutter_screenutil: ^0.4.2
-  gsheets: ^0.2.4+1
   http: ^0.12.2
   path_provider: ^1.6.11
   f_logs: ^1.2.2

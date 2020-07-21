@@ -121,7 +121,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 4),
                     child: Text(
-                      '${LoginInfo().getStudentId()} / ${LoginInfo().getName()}',
+                      '${LoginInfo().studentId} / ${LoginInfo().name}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: ClearAppTheme.grey,

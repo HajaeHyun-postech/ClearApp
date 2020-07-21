@@ -5,13 +5,15 @@
  * LoginInfo().getName() == LoginInfo().getName() //true 
  */
 
+import 'dart:convert';
+
 class LoginInfo {
   static final LoginInfo _loginInfo = LoginInfo._internal();
   String name;
   String povisId;
   int studentId;
   bool isAdmin;
-  int rowNum;
+  int uniqueRow;
 
   factory LoginInfo() {
     return _loginInfo;
@@ -19,41 +21,11 @@ class LoginInfo {
 
   LoginInfo._internal();
 
-  String getName() {
-    return name;
-  }
-
-  String getPovisId() {
-    return povisId;
-  }
-
-  int getStudentId() {
-    return studentId;
-  }
-
-  bool getIsAdmin() {
-    return isAdmin;
-  }
-
-  LoginInfo setName(String _name) {
-    name = _name;
-    return this;
-  }
-
-  LoginInfo setPovisId(String _povisId) {
-    povisId = _povisId;
-    return this;
-  }
-
-  LoginInfo setStudentId(int _studentId) {
-    studentId = _studentId;
-    return this;
-  }
-
-  LoginInfo setIsAdmin(String _isAdmin) {
-    if (_isAdmin == '1')
-      isAdmin = true;
-    else
-      isAdmin = false;
+  LoginInfo.fromMap(Map<String, dynamic> map) {
+    LoginInfo().name = (jsonDecode(map['name']) as String);
+    LoginInfo().povisId = (jsonDecode(map['povisId']) as String);
+    LoginInfo().studentId = (jsonDecode(map['studentId']) as int);
+    LoginInfo().isAdmin = (jsonDecode(map['isAdmin']) as bool);
+    LoginInfo().uniqueRow = (jsonDecode(map['uniqueRow']) as int);
   }
 }
