@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:async/async.dart';
+import 'package:clearApp/shuttle_menu/data_manage/actions.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/shuttle_menu/usage_select_button.dart';
@@ -37,13 +37,13 @@ class AddPrchFormState extends State<AddPrchForm>
   ScrollController _scrollController;
   Animation<RelativeRect> _rectAnimation;
   AnimationController _remainingController;
+  bool loading;
   bool editing;
   bool amountOverflowed;
   int selectedAmount;
   int remainAmount;
   UsageLists selectedUsage;
   String selectedUsageString;
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   void _setInitial() {
     selectedAmount = 0;
@@ -52,12 +52,15 @@ class AddPrchFormState extends State<AddPrchForm>
     selectedUsageString = '';
     editing = false;
     amountOverflowed = false;
+    loading = true;
   }
 
   @override
   void initState() {
     super.initState();
     _setInitial();
+
+    /*Animation Settings*/
     _scrollController = ScrollController();
     _textController = TextEditingController();
     _animCntroller = AnimationController(
@@ -71,20 +74,30 @@ class AddPrchFormState extends State<AddPrchForm>
       end: RelativeRect.fromLTRB(0.0, 0.0, 0.0, 0.0),
     ).animate(_animCntroller);
 
-    ShuttlePrchHstrHandler().errorCallback.add(() {
+    /*Callback registeration*/
+    ShuttlePrchHstrHandler().registerErrorCallback(() {
       Logger().i('error call back in form');
       if (!mounted) return;
       _remainingController.forward(from: 0.0);
+
       setState(() {
         amountOverflowed = true;
       });
     });
-
-    ShuttlePrchHstrHandler().editingChangedCallback.add((_editing) {
+    ShuttlePrchHstrHandler().registerEditingStateChangeCallback((_editing) {
       if (!mounted) return;
 
       setState(() {
         editing = _editing;
+      });
+
+      getRemainingShuttleAmount().then((value) {
+        if (!mounted) return;
+
+        setState(() {
+          remainAmount = value;
+          loading = false;
+        });
       });
 
       if (!_editing) {
@@ -95,8 +108,7 @@ class AddPrchFormState extends State<AddPrchForm>
       }
       _animCntroller.fling(velocity: _editing ? 1.0 : -1.0);
     });
-
-    ShuttlePrchHstrHandler().submitEventCallback = () async {
+    ShuttlePrchHstrHandler().registerSubmitToAddNewCallback(() async {
       try {
         ShuttlePrchHstr newHstr = await validateNewPrch();
         _setInitial();
@@ -107,28 +119,35 @@ class AddPrchFormState extends State<AddPrchForm>
       } catch (error) {
         throw (error);
       }
-    };
-  }
+    });
 
-  Future<dynamic> getRemainingShuttleAmount() async {
-    return this._memoizer.runOnce(() async {
-      try {
-        Logger().i('trying to get remaining counts..');
-        String response = await ShuttlePrchHstrHandler().doAction(
-            Constants.shuttleStorageSheetURL, 'getRemainingCount', new Map());
+    /*Data initializing*/
+    getRemainingShuttleAmount().then((value) {
+      if (!mounted) return;
 
-        Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
-        int count = rcvedMap['shuttleCount'] as int;
-        Logger().i('got count : $count');
-        return count;
-      } catch (error) {
-        throw (error);
-      }
+      setState(() {
+        remainAmount = value;
+        loading = false;
+      });
     });
   }
 
+  Future<dynamic> getRemainingShuttleAmount() async {
+    try {
+      Logger().i('trying to get remaining counts..');
+      String response = await ShuttlePrchHstrHandler().doHttpAction(
+          Constants.shuttleStorageSheetURL, 'getRemainingCount', new Map());
+
+      Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
+      int count = rcvedMap['shuttleCount'] as int;
+      Logger().i('got count : $count');
+      return count;
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   Future<ShuttlePrchHstr> validateNewPrch() async {
-    //TODO : add some callbacks. Like focus, send error... etc
     //form validation check
     if (selectedUsageString == '') throw ('invalid usage input');
     if (selectedAmount < 1) throw ('invalid amount input');
@@ -147,8 +166,8 @@ class AddPrchFormState extends State<AddPrchForm>
     };
 
     try {
-      String response = await ShuttlePrchHstrHandler()
-          .doAction(Constants.shuttleStorageSheetURL, 'validateNewPrch', map);
+      String response = await ShuttlePrchHstrHandler().doHttpAction(
+          Constants.shuttleStorageSheetURL, 'validateNewPrch', map);
 
       Logger().i('validateNewPrch received response : $response');
 
@@ -254,33 +273,25 @@ class AddPrchFormState extends State<AddPrchForm>
                             ? ClearAppTheme.lightRed
                             : ClearAppTheme.grey)),
               ),
-              FutureBuilder<int>(
-                  future: getRemainingShuttleAmount()
-                      .then((value) => remainAmount = value),
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    return Container(
-                        padding: EdgeInsets.only(
-                            top: 10,
-                            left: animation.value + 20.0,
-                            right: (20.0 - animation.value) < 0
-                                ? 0
-                                : 20.0 - animation.value),
-                        child: snapshot.connectionState ==
-                                    ConnectionState.none ||
-                                snapshot.connectionState ==
-                                    ConnectionState.waiting
-                            ? new CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                    ClearAppTheme.grey),
-                              )
-                            : Text(snapshot.data.toString(),
-                                style: TextStyle(
-                                    fontFamily: ClearAppTheme.fontName,
-                                    fontSize: 30,
-                                    color: amountOverflowed
-                                        ? ClearAppTheme.lightRed
-                                        : ClearAppTheme.grey)));
-                  }),
+              Container(
+                  padding: EdgeInsets.only(
+                      top: 10,
+                      left: animation.value + 20.0,
+                      right: (20.0 - animation.value) < 0
+                          ? 0
+                          : 20.0 - animation.value),
+                  child: loading
+                      ? new CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              ClearAppTheme.grey),
+                        )
+                      : Text(remainAmount.toString(),
+                          style: TextStyle(
+                              fontFamily: ClearAppTheme.fontName,
+                              fontSize: 30,
+                              color: amountOverflowed
+                                  ? ClearAppTheme.lightRed
+                                  : ClearAppTheme.grey))),
             ],
           );
         },
@@ -382,7 +393,8 @@ class AddPrchFormState extends State<AddPrchForm>
           Expanded(
             flex: 2,
             child: GestureDetector(
-              onTap: () => ShuttlePrchHstrHandler().changeEditingState(false),
+              onTap: () => ShuttlePrchHstrHandler()
+                  .eventHandle(EVENT.EditingStateChangeEvent, editing: false),
               child: Container(
                 color: Colors.black.withOpacity(0.3),
               ),

@@ -6,12 +6,20 @@ import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'data_manage/actions.dart';
 
 class PrchHstrTile extends StatefulWidget {
   final ShuttlePrchHstr prchHstr;
   final bool isAdminTab;
+  final AnimationController animationController;
+  final Animation<dynamic> animation;
 
-  const PrchHstrTile({Key key, this.prchHstr, this.isAdminTab})
+  const PrchHstrTile(
+      {Key key,
+      this.prchHstr,
+      this.isAdminTab,
+      this.animationController,
+      this.animation})
       : super(key: key);
 
   @override
@@ -30,51 +38,128 @@ class PrchHstrTileState extends State<PrchHstrTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      actionPane: SlidableScrollActionPane(),
-      actionExtentRatio: 0.25,
-      child: Row(
-        children: <Widget>[
-          SizedBox(width: 10),
-          Expanded(
-            child: ValueCard(
-                widget.prchHstr.usage,
-                widget.prchHstr.name,
-                widget.prchHstr.price,
-                widget.prchHstr.date,
-                widget.prchHstr.shuttleList,
-                widget.isAdminTab,
-                widget.prchHstr.approved,
-                widget.prchHstr.received),
-          ),
-          SizedBox(width: 10),
-        ],
-      ),
-      actions: widget.isAdminTab
-          ? <Widget>[
-              IconSlideAction(
-                  caption: 'Approved',
-                  color: ClearAppTheme.darkBlue,
-                  icon: Icons.check,
-                  onTap: widget.prchHstr.approved
-                      ? () => Fluttertoast.showToast(
-                          msg: "Already Approved!",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Color(0xFFF45C43).withOpacity(1),
-                          textColor: Colors.white,
-                          fontSize: 13.0)
-                      : () => PopupGenerator.remindPopupWidget(
+    return AnimatedBuilder(
+        animation: widget.animationController,
+        builder: (BuildContext context, Widget child) {
+          return FadeTransition(
+              opacity: widget.animation,
+              child: Slidable(
+                actionPane: SlidableScrollActionPane(),
+                actionExtentRatio: 0.25,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ValueCard(
+                          widget.prchHstr.usage,
+                          widget.prchHstr.name,
+                          widget.prchHstr.price,
+                          widget.prchHstr.date,
+                          widget.prchHstr.shuttleList,
+                          widget.isAdminTab,
+                          widget.prchHstr.approved,
+                          widget.prchHstr.received),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                ),
+                actions: widget.isAdminTab
+                    ? <Widget>[
+                        IconSlideAction(
+                            caption: 'Approved',
+                            color: ClearAppTheme.darkBlue,
+                            icon: Icons.check,
+                            onTap: widget.prchHstr.approved
+                                ? () => Fluttertoast.showToast(
+                                    msg: "Already Approved!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor:
+                                        Color(0xFFF45C43).withOpacity(1),
+                                    textColor: Colors.white,
+                                    fontSize: 13.0)
+                                : () => PopupGenerator.remindPopupWidget(
+                                        context,
+                                        'REMIND',
+                                        'Are you sure about this?',
+                                        () => Navigator.pop(context), () {
+                                      ShuttlePrchHstrHandler().eventHandle(
+                                          EVENT.UpdateApprEvent,
+                                          key: widget.prchHstr.key);
+                                      Navigator.pop(context);
+                                      Fluttertoast.showToast(
+                                          msg: "Approved succesfully",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: ClearAppTheme.green
+                                              .withOpacity(1),
+                                          textColor: Colors.white,
+                                          fontSize: 13.0);
+                                    }).show())
+                      ]
+                    : <Widget>[
+                        IconSlideAction(
+                            caption: 'Received',
+                            color: ClearAppTheme.darkBlue,
+                            icon: Icons.check,
+                            onTap: widget.prchHstr.received
+                                ? () => Fluttertoast.showToast(
+                                    msg: "Already Received!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor:
+                                        Color(0xFFF45C43).withOpacity(1),
+                                    textColor: Colors.white,
+                                    fontSize: 13.0)
+                                : () => PopupGenerator.remindPopupWidget(
+                                        context,
+                                        'REMIND',
+                                        'Are you sure about this?',
+                                        () => Navigator.pop(context), () {
+                                      ShuttlePrchHstrHandler().eventHandle(
+                                          EVENT.UpdateRcvedEvent,
+                                          key: widget.prchHstr.key);
+                                      Navigator.pop(context);
+                                      Fluttertoast.showToast(
+                                          msg: "Received succesfully",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: ClearAppTheme.green
+                                              .withOpacity(1),
+                                          textColor: Colors.white,
+                                          fontSize: 13.0);
+                                    }).show())
+                      ],
+                secondaryActions: <Widget>[
+                  IconSlideAction(
+                      caption: 'Delete',
+                      color: ClearAppTheme.postechRed,
+                      icon: Icons.delete,
+                      onTap: () {
+                        //validate
+                        bool timeValidate = DateTime.now()
+                                .difference(widget.prchHstr.date)
+                                .inMinutes <=
+                            10;
+                        if (!widget.prchHstr.approved &&
+                            !widget.prchHstr.received &&
+                            timeValidate &&
+                            !widget.isAdminTab) {
+                          PopupGenerator.remindPopupWidget(
                               context,
-                              'REMIND',
+                              'ALERT',
                               'Are you sure about this?',
                               () => Navigator.pop(context), () {
-                            ShuttlePrchHstrHandler()
-                                .updateAppr(widget.prchHstr.key);
+                            ShuttlePrchHstrHandler().eventHandle(
+                                EVENT.DeleteHstrEvent,
+                                key: widget.prchHstr.key);
                             Navigator.pop(context);
                             Fluttertoast.showToast(
-                                msg: "Approved succesfully",
+                                msg: "Deleted succesfully",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
@@ -82,87 +167,27 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                     ClearAppTheme.green.withOpacity(1),
                                 textColor: Colors.white,
                                 fontSize: 13.0);
-                          }).show())
-            ]
-          : <Widget>[
-              IconSlideAction(
-                  caption: 'Received',
-                  color: ClearAppTheme.darkBlue,
-                  icon: Icons.check,
-                  onTap: widget.prchHstr.received
-                      ? () => Fluttertoast.showToast(
-                          msg: "Already Received!",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Color(0xFFF45C43).withOpacity(1),
-                          textColor: Colors.white,
-                          fontSize: 13.0)
-                      : () => PopupGenerator.remindPopupWidget(
-                              context,
-                              'REMIND',
-                              'Are you sure about this?',
-                              () => Navigator.pop(context), () {
-                            ShuttlePrchHstrHandler()
-                                .updateRcved(widget.prchHstr.key);
-                            Navigator.pop(context);
-                            Fluttertoast.showToast(
-                                msg: "Received succesfully",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor:
-                                    ClearAppTheme.green.withOpacity(1),
-                                textColor: Colors.white,
-                                fontSize: 13.0);
-                          }).show())
-            ],
-      secondaryActions: <Widget>[
-        IconSlideAction(
-            caption: 'Delete',
-            color: ClearAppTheme.postechRed,
-            icon: Icons.delete,
-            onTap: () {
-              //validate
-              bool timeValidate =
-                  DateTime.now().difference(widget.prchHstr.date).inMinutes <=
-                      10;
-              if (!widget.prchHstr.approved &&
-                  !widget.prchHstr.received &&
-                  timeValidate) {
-                PopupGenerator.remindPopupWidget(
-                    context,
-                    'ALERT',
-                    'Are you sure about this?',
-                    () => Navigator.pop(context), () {
-                  ShuttlePrchHstrHandler().deleteHstr(widget.prchHstr.key);
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(
-                      msg: "Deleted succesfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: ClearAppTheme.green.withOpacity(1),
-                      textColor: Colors.white,
-                      fontSize: 13.0);
-                }).show();
-              } else {
-                Fluttertoast.showToast(
-                    msg: widget.prchHstr.approved
-                        ? "Error: approved history"
-                        : (widget.prchHstr.received
-                            ? "Error: received history"
-                            : "Error: timeout (10 min)"),
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Color(0xFFF45C43).withOpacity(1),
-                    textColor: Colors.white,
-                    fontSize: 13.0);
-              }
-            })
-      ],
-    );
+                          }).show();
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: widget.prchHstr.approved
+                                  ? "Error: approved history"
+                                  : (widget.prchHstr.received
+                                      ? "Error: received history"
+                                      : (!timeValidate
+                                          ? "Error: timeout (10 min)"
+                                          : "Admin cannot remove history")),
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Color(0xFFF45C43).withOpacity(1),
+                              textColor: Colors.white,
+                              fontSize: 13.0);
+                        }
+                      })
+                ],
+              ));
+        });
   }
 }
 

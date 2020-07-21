@@ -1,8 +1,8 @@
+import 'package:clearApp/shuttle_menu/data_manage/actions.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 
 class AddPrchButton extends StatefulWidget {
@@ -32,16 +32,15 @@ class _AddPrchButtonState extends State<AddPrchButton>
     super.initState();
     editing = false;
     adding = false;
-
     _controller =
         AnimationController(duration: Duration(milliseconds: 450), vsync: this);
-
     _buttonTextAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(curve: Interval(0.7, 1.0), parent: _controller));
 
-    ShuttlePrchHstrHandler().editingChangedCallback.add((_editing) {
+    //register
+    ShuttlePrchHstrHandler().registerEditingStateChangeCallback((_editing) {
       if (!mounted) return;
-      Logger().i('editing call back in button called with editing: $editing');
+
       setState(() {
         editing = _editing;
         if (_editing)
@@ -53,9 +52,9 @@ class _AddPrchButtonState extends State<AddPrchButton>
       });
     });
 
-    ShuttlePrchHstrHandler().errorCallback.add(() {
+    ShuttlePrchHstrHandler().registerErrorCallback(() {
       if (!mounted) return;
-      Logger().i('error call back in button');
+
       setState(() {
         adding = false;
       });
@@ -107,9 +106,12 @@ class _AddPrchButtonState extends State<AddPrchButton>
                         setState(() {
                           adding = true;
                         });
-                        ShuttlePrchHstrHandler().submitEventHandle();
+                        ShuttlePrchHstrHandler()
+                            .eventHandle(EVENT.SubmitToAddNewEvent);
                       } else
-                        ShuttlePrchHstrHandler().changeEditingState(true);
+                        ShuttlePrchHstrHandler().eventHandle(
+                            EVENT.EditingStateChangeEvent,
+                            editing: true);
                     }
                   },
                   child: Row(
