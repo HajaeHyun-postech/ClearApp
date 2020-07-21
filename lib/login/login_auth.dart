@@ -1,28 +1,33 @@
-import 'package:gsheets/gsheets.dart';
+import 'dart:convert';
+
+import 'package:logger/logger.dart';
 import '../util/constants.dart' as Constants;
 import 'login_info.dart';
-
-const _spreadsheetId = '1N1fHuGuZdoLy10QQiBzDxXDBI67RnDk-N0gOZgIfF5A';
+import 'package:http/http.dart' as http;
+import 'login_info.dart';
 
 class LoginAuth {
   static Future<String> loginAuth(String povisId, int studentId) async {
-    final gsheets = GSheets(Constants.CREDENTIAL);
-    final ss = await gsheets.spreadsheet(_spreadsheetId);
-    var sheet = await ss.worksheetByTitle('sheet');
-    sheet ??= await ss.addWorksheet('sheet');
+    Map<String, dynamic> map = {'povisId': povisId, 'studentId': studentId};
+    String url = Constants.subscriberListURL + '?action=loginAuth';
+    map.forEach((key, value) {
+      url += '&$key=$value';
+    });
 
-    final studentIdList = await sheet.values.column(1);
-    final povisIdList = await sheet.values.column(2);
-    final nameList = await sheet.values.column(3);
-    final adminList = await sheet.values.column(4);
-    for (var i = 0; i < studentIdList.length; i++) {
-      if (int.parse(studentIdList[i]) == studentId &&
-          povisIdList[i] == povisId) {
-        LoginInfo().rowNum = i + 1;
-        return adminList[i] + nameList[i];
-      }
+    var response = await http.get(url, headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    });
+    var statusCode = response.statusCode;
+    Map<String, dynamic> body = jsonDecode(response.body);
+
+    if (statusCode != 200 || body.containsKey('error')) {
+      Logger().e('error: ${body['error'].toString()}');
+      return Future.error('error: ${body['error'].toString()}');
+    } else {
+      Logger().i('Loggin success with $povisId, $studentId');
+      Logger().i('data: ${body['data']}');
+      LoginInfo.fromMap(body['data']);
     }
-
-    return Future.error("not exist member");
   }
 }
