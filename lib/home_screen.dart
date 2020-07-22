@@ -1,6 +1,9 @@
 import 'package:f_logs/f_logs.dart';
 import 'package:flutter/material.dart';
 
+import 'util/app_theme.dart';
+import 'util/app_theme.dart';
+import 'util/app_theme.dart';
 import 'util/constants.dart' as Constants;
 import 'util/app_theme.dart';
 import 'model/homelist.dart';
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         } else {
                           return GridView(
                             padding: const EdgeInsets.only(
-                                top: 0, left: 12, right: 12),
+                                top: 10, left: 20, right: 20),
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             children: List<Widget>.generate(
@@ -199,27 +202,46 @@ class HomeListView extends StatelessWidget {
           child: Transform(
             transform: Matrix4.translationValues(
                 0.0, 50 * (1.0 - animation.value), 0.0),
-            child: AspectRatio(
-              aspectRatio: 1.5,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      offset: const Offset(2, 2),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  border: Border.all(
+                      width: 1, color: ClearAppTheme.grey.withOpacity(0.5))),
+              child: GestureDetector(
+                onTap: () => callBack(),
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: <Widget>[
-                    Image.asset(
-                      listData.imagePath,
-                      fit: BoxFit.cover,
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4.0)),
-                        onTap: () {
-                          callBack();
-                        },
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(flex: 3, child: SizedBox()),
+                        Expanded(
+                            flex: 9,
+                            child: Image.asset(
+                              listData.imagePath,
+                              fit: BoxFit.fill,
+                            )),
+                        Expanded(flex: 2, child: SizedBox()),
+                        Text(
+                          listData.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black.withOpacity(0.8),
+                          ),
+                        ),
+                        Expanded(flex: 3, child: SizedBox()),
+                      ],
                     ),
                   ],
                 ),

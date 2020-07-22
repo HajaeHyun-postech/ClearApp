@@ -9,56 +9,69 @@ class HomeList {
   HomeList({
     this.navigateScreen,
     this.imagePath = '',
+    this.title = '',
   });
 
   Widget navigateScreen;
   String imagePath;
+  String title;
 
   //TODO : fix nagigateScreen
   static List<HomeList> homeList = [
     HomeList(
-      imagePath: 'assets/hotel/hotel_booking.png',
-      navigateScreen: HotelHomeScreen(),
-    ),
-    HomeList(
-      imagePath: 'assets/fitness_app/fitness_app.png',
-      navigateScreen: FitnessAppHomeScreen(),
-    ),
-    HomeList(
-      imagePath: 'assets/design_course/design_course.png',
-      navigateScreen: DesignCourseHomeScreen(),
-    ),
-    HomeList(
-      imagePath: 'assets/menu/shuttleExcel.png',
+      imagePath: 'assets/menu/shuttleCock.png',
       navigateScreen: ShuttleMenuHomePage(),
+      title: 'Shuttlecock',
     ),
     HomeList(
-      imagePath: 'assets/menu/racketExcel.png',
+      imagePath: 'assets/menu/racket.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: 'Racket',
     ),
     HomeList(
       imagePath: 'assets/menu/apply.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: 'Matches',
     ),
     HomeList(
       imagePath: 'assets/menu/matchRetrieve.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: '(Depredicated)',
     ),
     HomeList(
       imagePath: 'assets/menu/opgg.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: '(Depredicated)',
     ),
     HomeList(
       imagePath: 'assets/menu/tongdolli.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: '(Depredicated)',
     ),
     HomeList(
       imagePath: 'assets/menu/matchMake.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: '(Depredicated)',
     ),
     HomeList(
       imagePath: 'assets/menu/matchFix.png',
       navigateScreen: DesignCourseHomeScreen(),
+      title: '(Depredicated)',
+    ),
+    HomeList(
+      imagePath: 'assets/hotel/hotel_booking.png',
+      navigateScreen: HotelHomeScreen(),
+      title: 'hotel',
+    ),
+    HomeList(
+      imagePath: 'assets/fitness_app/fitness_app.png',
+      navigateScreen: FitnessAppHomeScreen(),
+      title: 'fitness',
+    ),
+    HomeList(
+      imagePath: 'assets/design_course/design_course.png',
+      navigateScreen: DesignCourseHomeScreen(),
+      title: 'design',
     ),
   ];
 }
