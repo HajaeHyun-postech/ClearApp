@@ -1,11 +1,7 @@
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/material.dart';
 
 import 'util/app_theme.dart';
-import 'util/app_theme.dart';
-import 'util/app_theme.dart';
 import 'util/constants.dart' as Constants;
-import 'util/app_theme.dart';
 import 'model/homelist.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -225,7 +221,7 @@ class HomeListView extends StatelessWidget {
                       children: <Widget>[
                         Expanded(flex: 3, child: SizedBox()),
                         Expanded(
-                            flex: 9,
+                            flex: 10,
                             child: Image.asset(
                               listData.imagePath,
                               fit: BoxFit.fill,

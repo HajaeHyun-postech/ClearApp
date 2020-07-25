@@ -1,3 +1,4 @@
+import 'package:clearApp/games_menu/games_home_screen.dart';
 import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/widgets.dart';
 
@@ -29,34 +30,19 @@ class HomeList {
       title: 'Racket',
     ),
     HomeList(
-      imagePath: 'assets/menu/apply.png',
-      navigateScreen: DesignCourseHomeScreen(),
-      title: 'Matches',
+      imagePath: 'assets/menu/games.png',
+      navigateScreen: GamesHomeScreen(),
+      title: 'Games',
     ),
     HomeList(
-      imagePath: 'assets/menu/matchRetrieve.png',
+      imagePath: 'assets/menu/scores.png',
       navigateScreen: DesignCourseHomeScreen(),
-      title: '(Depredicated)',
+      title: 'deprecated',
     ),
     HomeList(
-      imagePath: 'assets/menu/opgg.png',
+      imagePath: 'assets/menu/gatcha.png',
       navigateScreen: DesignCourseHomeScreen(),
-      title: '(Depredicated)',
-    ),
-    HomeList(
-      imagePath: 'assets/menu/tongdolli.png',
-      navigateScreen: DesignCourseHomeScreen(),
-      title: '(Depredicated)',
-    ),
-    HomeList(
-      imagePath: 'assets/menu/matchMake.png',
-      navigateScreen: DesignCourseHomeScreen(),
-      title: '(Depredicated)',
-    ),
-    HomeList(
-      imagePath: 'assets/menu/matchFix.png',
-      navigateScreen: DesignCourseHomeScreen(),
-      title: '(Depredicated)',
+      title: 'Gatcha',
     ),
     HomeList(
       imagePath: 'assets/hotel/hotel_booking.png',
