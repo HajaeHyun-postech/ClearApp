@@ -28,4 +28,12 @@ class LoginInfo {
     LoginInfo().isAdmin = (jsonDecode(map['isAdmin']) as bool);
     LoginInfo().uniqueRow = (jsonDecode(map['uniqueRow']) as int);
   }
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'povisId': povisId,
+        'studentId': studentId,
+        'isAdmin': isAdmin,
+        'uniqueRow': uniqueRow,
+      };
 }

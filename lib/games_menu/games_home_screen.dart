@@ -7,7 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:logger/logger.dart';
 import 'package:numberpicker/numberpicker.dart';
+import './data_manage/game_data_handler.dart';
+import './data_manage/game_data.dart';
+import './data_manage/events.dart';
 
 import 'game_list_view.dart';
 
@@ -20,17 +24,35 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
   List<GameListData> hotelList = GameListData.hotelList;
+  List<GameData> gameList = new List();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
 
-  DateTime date = DateTime.now();
-  TimeOfDay time = TimeOfDay.now();
-  String gameType = "Personally";
-  int maxCapacity = 60;
+  Map<String, dynamic> formData = new Map();
+
+  GameDataHandler gameDataHandler;
+
+  void initForm() {
+    formData['date'] = DateTime.now();
+    formData['time'] = TimeOfDay.now();
+    formData['gameType'] = "Personally";
+    formData['description'] = '';
+    formData['maxCapacity'] = 60;
+  }
 
   @override
   void initState() {
+    //register
+    gameDataHandler = new GameDataHandler(context);
+    gameDataHandler.registerDataUpdateCallback((list) {
+      setState(() {
+        gameList = list;
+      });
+    });
+
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
+    initForm();
     super.initState();
   }
 
@@ -42,6 +64,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
   @override
   void dispose() {
     animationController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -76,6 +99,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                                 return Column(
                                   children: <Widget>[
                                     getSearchBarUI(),
+                                    getDescriptionUI(),
                                     getTimeDateUI(),
                                   ],
                                 );
@@ -94,12 +118,12 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                           color:
                               ClearAppTheme.buildLightTheme().backgroundColor,
                           child: ListView.builder(
-                            itemCount: hotelList.length,
+                            itemCount: gameList.length,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
                             itemBuilder: (BuildContext context, int index) {
                               final int count =
-                                  hotelList.length > 10 ? 10 : hotelList.length;
+                                  gameList.length > 10 ? 10 : gameList.length;
                               final Animation<double> animation =
                                   Tween<double>(begin: 0.0, end: 1.0).animate(
                                       CurvedAnimation(
@@ -110,7 +134,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                               animationController.forward();
                               return GameListView(
                                 callback: () {},
-                                hotelData: hotelList[index],
+                                gameData: gameList[index],
                                 animation: animation,
                                 animationController: animationController,
                               );
@@ -125,6 +149,30 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget getDescriptionUI() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: ClearAppTheme.buildLightTheme().backgroundColor,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      offset: const Offset(0, 2),
+                      blurRadius: 8.0),
+                ],
+              ),
+              child: _buildTodoTextInput(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -169,7 +217,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                         if (newDate == null) return;
 
                         setState(() {
-                          date = newDate;
+                          formData['date'] = newDate;
                         });
 
                         showRoundedTimePicker(
@@ -191,7 +239,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                           if (newTime == null) return;
 
                           setState(() {
-                            time = newTime;
+                            formData['time'] = newTime;
                           });
                         });
                       });
@@ -214,7 +262,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '${DateFormat("MM/dd").format(date)} , ${time.format(context)}',
+                            '${DateFormat("MM/dd").format(formData['date'])} , ${formData['time'].format(context)}',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -258,13 +306,15 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             return new NumberPickerDialog.integer(
                               minValue: 1,
                               maxValue: 100,
-                              initialIntegerValue: maxCapacity,
+                              initialIntegerValue: formData['maxCapacity'],
                             );
                           }).then((newCapacity) {
                         if (newCapacity == null) return;
                         setState(() {
-                          maxCapacity = newCapacity;
+                          formData['maxCapacity'] = newCapacity;
                         });
+                        Logger().i(
+                            'max capacity changed : ${formData['maxCapacity']}');
                       });
                     },
                     child: Padding(
@@ -285,7 +335,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '${maxCapacity}',
+                            '${formData['maxCapacity']}',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -335,15 +385,10 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                   hint: "country in menu mode",
                   label: "Selecte game type",
                   onChanged: (String item) {
-                    gameType = item;
+                    formData['gameType'] = item;
+                    Logger().i('gameType changed : ${formData['gameType']}');
                   },
-                  selectedItem: gameType,
-                  validator: (String item) {
-                    if (item == null)
-                      return "Required field";
-                    else
-                      return null;
-                  },
+                  selectedItem: formData['gameType'],
                 ),
               ),
             ),
@@ -369,6 +414,9 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                 ),
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
+                  GameData newGame = new GameData(formData);
+                  gameDataHandler.eventHandle(EVENT.MakeGameEvent,
+                      newGame: newGame);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -438,7 +486,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                       Navigator.push<dynamic>(
                         context,
                         MaterialPageRoute<dynamic>(
-                            // TODO: error
+                            // TODO: refresh
                             builder: (BuildContext context) => null,
                             fullscreenDialog: true),
                       );
@@ -466,6 +514,27 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildTodoTextInput() {
+    return TextFormField(
+      controller: _textController,
+      decoration: InputDecoration(
+        labelText: 'Game description',
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(width: 2, color: ClearAppTheme.purpleBlue),
+        ),
+        border: new OutlineInputBorder(
+          borderRadius: new BorderRadius.all(Radius.circular(4)),
+          borderSide: new BorderSide(),
+        ),
+      ),
+      onFieldSubmitted: (String text) {
+        formData['description'] = text;
+        Logger().i('description saved : ${formData['description']}');
+      },
     );
   }
 }

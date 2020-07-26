@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../login/login_info.dart';
 import '../../util/constants.dart' as Constants;
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'actions.dart';
+import 'events.dart';
+import 'package:clearApp/util/api_service.dart';
 
 /* HTTP Format */
 /* ONLY GET METHOD */
@@ -77,30 +77,6 @@ class ShuttlePrchHstrHandler {
 
   void registerErrorCallback(Function() callback) =>
       errorCallback.add(callback);
-
-  //main functions
-  Future<String> doHttpAction(
-      String baseURL, String action, Map<String, dynamic> params) async {
-    String url = baseURL + '?action=$action';
-    params.forEach((key, value) {
-      url += '&$key=$value';
-    });
-
-    var response = await http.get(url, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    });
-    var statusCode = response.statusCode;
-    Map<String, dynamic> body = jsonDecode(response.body);
-
-    if (statusCode != 200 || body.containsKey('error')) {
-      Logger().e('error: ${body['error'].toString()}');
-      throw ('error: ${body['error'].toString()}');
-    } else {
-      Logger().i('http  reqeust response success');
-    }
-    return response.body;
-  }
 
   void eventHandle(EVENT eventType,
       {Constants.ShuttleMenuCurrentTab tab,
@@ -190,7 +166,7 @@ class ShuttlePrchHstrHandler {
 
     String response;
     try {
-      response = await doHttpAction(
+      response = await APIService.doGet(
           Constants.shuttlePrchHstrSheetURL, 'getMyHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
@@ -215,7 +191,7 @@ class ShuttlePrchHstrHandler {
 
     String response;
     try {
-      response = await doHttpAction(
+      response = await APIService.doGet(
           Constants.shuttlePrchHstrSheetURL, 'getAllUnapprHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
@@ -242,7 +218,7 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map);
+      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -264,7 +240,7 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map);
+      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -287,8 +263,8 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttleStorageSheetURL, 'deleteHstr', map);
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map);
+      APIService.doGet(Constants.shuttleStorageSheetURL, 'deleteHstr', map);
+      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -310,7 +286,8 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map);
+      APIService.doGet(
+          Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,

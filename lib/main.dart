@@ -3,6 +3,7 @@ import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'games_menu/games_home_screen.dart';
 import 'util/app_theme.dart';
 import 'login/login_when_start.dart';
 import 'navigation_home_screen.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginScreen(),
         '/homescreen': (context) => NavigationHomeScreen(),
         '/homescreen/shuttlemenu': (context) => ShuttleMenuHomePage(),
+        '/homescreen/gamesmenu': (context) => GamesHomeScreen(),
       }, //use this route by Navigator.pushNamed(context, address)
     );
   }
