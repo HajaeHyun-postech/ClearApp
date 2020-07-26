@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         textTheme: ClearAppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
+      locale: Locale('en', 'KR'),
       initialRoute: '/',
       routes: {
         '/': (context) => LoginScreen(),

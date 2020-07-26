@@ -83,6 +83,7 @@ class _GameExpansionCardState extends State<GameExpansionCard>
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               IntrinsicHeight(
                 child: Row(
@@ -91,31 +92,43 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                     Expanded(
                       flex: 3,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(
                             height: 10,
                           ),
                           Text('THU',
                               style: TextStyle(
-                                  fontSize: 15, fontFamily: 'Roboto')),
+                                  fontSize: 13, fontFamily: 'Roboto')),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
                             '30',
-                            style:
-                                TextStyle(fontSize: 20, fontFamily: 'Roboto'),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w600),
                           ),
                           SizedBox(
                             height: 5,
                           ),
                           Text('10:30',
                               style: TextStyle(
-                                  fontSize: 15, fontFamily: 'Roboto')),
+                                  fontSize: 13, fontFamily: 'Roboto')),
                           SizedBox(
                             height: 10,
                           ),
                         ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Container(
+                        width: 1,
+                        height: 50,
+                        color: Colors.grey.withOpacity(0.8),
                       ),
                     ),
                     Expanded(
@@ -124,20 +137,28 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text('Regular Meeting',
+                          Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Text('Regular Meeting',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600))),
+                          // if have description
+                          Text('description',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 11,
                                   fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600)),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          SizedBox(
+                                  color: ClearAppTheme.grey.withOpacity(0.8),
+                                  fontWeight: FontWeight.w400)),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5, bottom: 7),
                             child: LiteRollingSwitch(
                               value: true,
                               textOn: 'Attend',
-                              textOff: 'Absent',
+                              textOff: 'Rest',
                               colorOn: LinearGradient(colors: <Color>[
                                 Color(0xFF36D1DC),
                                 Color(0xFF5B86E5)
@@ -147,16 +168,17 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                                 Color(0xFFF45C43)
                               ]),
                               iconOn: Icons.thumb_up,
-                              iconOff: Icons.thumb_down,
+                              iconOff: Icons.hotel,
                               textSize: 12.0,
-                              width: 95,
+                              width: 90,
                               height: 15,
                               iconSize: 10,
-                              rollingOffset: 70,
+                              rollingOffset: 65,
                               onChanged: (bool state) {
                                 //Use it to manage the different states
                                 print('Current State of SWITCH IS: $state');
                               },
+                              onTap: () {},
                             ),
                           ),
                         ],

@@ -5,7 +5,9 @@ import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import 'game_list_view.dart';
 
@@ -20,8 +22,10 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
   List<GameListData> hotelList = GameListData.hotelList;
   final ScrollController _scrollController = ScrollController();
 
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  DateTime date = DateTime.now();
+  TimeOfDay time = TimeOfDay.now();
+  String gameType = "Personally";
+  int maxCapacity = 60;
 
   @override
   void initState() {
@@ -125,91 +129,14 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
     );
   }
 
-  Widget getListUI() {
-    return Container(
-      decoration: BoxDecoration(
-        color: ClearAppTheme.buildLightTheme().backgroundColor,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: const Offset(0, -2),
-              blurRadius: 8.0),
-        ],
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height - 156 - 50,
-            child: FutureBuilder<bool>(
-              future: getData(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else {
-                  return ListView.builder(
-                    itemCount: hotelList.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      final int count =
-                          hotelList.length > 10 ? 10 : hotelList.length;
-                      final Animation<double> animation =
-                          Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                  parent: animationController,
-                                  curve: Interval((1 / count) * index, 1.0,
-                                      curve: Curves.fastOutSlowIn)));
-                      animationController.forward();
-
-                      return GameListView(
-                        callback: () {},
-                        hotelData: hotelList[index],
-                        animation: animation,
-                        animationController: animationController,
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget getHotelViewList() {
-    final List<Widget> hotelListViews = <Widget>[];
-    for (int i = 0; i < hotelList.length; i++) {
-      final int count = hotelList.length;
-      final Animation<double> animation =
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: animationController,
-          curve: Interval((1 / count) * i, 1.0, curve: Curves.fastOutSlowIn),
-        ),
-      );
-      hotelListViews.add(
-        GameListView(
-          callback: () {},
-          hotelData: hotelList[i],
-          animation: animation,
-          animationController: animationController,
-        ),
-      );
-    }
-    animationController.forward();
-    return Column(
-      children: hotelListViews,
-    );
-  }
-
   Widget getTimeDateUI() {
     return Padding(
-      padding: const EdgeInsets.only(left: 18, bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -223,6 +150,51 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     ),
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
+                      showRoundedDatePicker(
+                        context: context,
+                        background: Colors.white,
+                        theme: ThemeData(
+                          primaryColor: ClearAppTheme.darkBlue,
+                          accentColor: ClearAppTheme.blue,
+                          dialogBackgroundColor: ClearAppTheme.nearlyWhite,
+                          textTheme: TextTheme(
+                            bodyText1: TextStyle(color: ClearAppTheme.black),
+                            caption: TextStyle(color: ClearAppTheme.orange),
+                          ),
+                          accentTextTheme: TextTheme(
+                            bodyText1: TextStyle(color: ClearAppTheme.white),
+                          ),
+                        ),
+                      ).then((newDate) {
+                        if (newDate == null) return;
+
+                        setState(() {
+                          date = newDate;
+                        });
+
+                        showRoundedTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                          theme: ThemeData(
+                            primaryColor: ClearAppTheme.darkBlue,
+                            accentColor: ClearAppTheme.blue,
+                            dialogBackgroundColor: ClearAppTheme.nearlyWhite,
+                            textTheme: TextTheme(
+                              bodyText1: TextStyle(color: ClearAppTheme.black),
+                              caption: TextStyle(color: ClearAppTheme.orange),
+                            ),
+                            accentTextTheme: TextTheme(
+                              bodyText1: TextStyle(color: ClearAppTheme.white),
+                            ),
+                          ),
+                        ).then((newTime) {
+                          if (newTime == null) return;
+
+                          setState(() {
+                            time = newTime;
+                          });
+                        });
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -242,7 +214,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
+                            '${DateFormat("MM/dd").format(date)} , ${time.format(context)}',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -266,6 +238,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
           ),
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -279,16 +252,30 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     ),
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
+                      showDialog<int>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return new NumberPickerDialog.integer(
+                              minValue: 1,
+                              maxValue: 100,
+                              initialIntegerValue: maxCapacity,
+                            );
+                          }).then((newCapacity) {
+                        if (newCapacity == null) return;
+                        setState(() {
+                          maxCapacity = newCapacity;
+                        });
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 8, right: 8, top: 4, bottom: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Number of Rooms',
+                            'Max Capacity',
                             style: TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
@@ -298,7 +285,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '1 Room - 2 Adults',
+                            '${maxCapacity}',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -328,9 +315,6 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
               child: Container(
                 decoration: BoxDecoration(
                   color: ClearAppTheme.buildLightTheme().backgroundColor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(38.0),
-                  ),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -338,27 +322,35 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                         blurRadius: 8.0),
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
-                  child: TextField(
-                    onChanged: (String txt) {},
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                    cursorColor: ClearAppTheme.buildLightTheme().primaryColor,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'London...',
-                    ),
-                  ),
+                child: DropdownSearch<String>(
+                  mode: Mode.MENU,
+                  showSelectedItem: true,
+                  items: [
+                    "Regular Meeting",
+                    "Training",
+                    'Personally',
+                    'Event',
+                    'etc'
+                  ],
+                  hint: "country in menu mode",
+                  label: "Selecte game type",
+                  onChanged: (String item) {
+                    gameType = item;
+                  },
+                  selectedItem: gameType,
+                  validator: (String item) {
+                    if (item == null)
+                      return "Required field";
+                    else
+                      return null;
+                  },
                 ),
               ),
             ),
           ),
           Container(
             decoration: BoxDecoration(
-              color: ClearAppTheme.buildLightTheme().primaryColor,
+              color: Color(0xFF5B86E5).withOpacity(0.8),
               borderRadius: const BorderRadius.all(
                 Radius.circular(38.0),
               ),
@@ -380,7 +372,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Icon(FontAwesomeIcons.search,
+                  child: Icon(FontAwesomeIcons.plus,
                       size: 20,
                       color: ClearAppTheme.buildLightTheme().backgroundColor),
                 ),
@@ -423,7 +415,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      '530 hotels found',
+                      '5 games found',
                       style: TextStyle(
                         fontWeight: FontWeight.w100,
                         fontSize: 16,
@@ -453,22 +445,10 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Filter',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.sort,
-                                color: ClearAppTheme.buildLightTheme()
-                                    .primaryColor),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.refresh,
+                            color: ClearAppTheme.deactivatedText),
                       ),
                     ),
                   ),
