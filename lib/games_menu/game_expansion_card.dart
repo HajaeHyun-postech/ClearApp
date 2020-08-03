@@ -21,12 +21,9 @@ class _GameExpansionCardState extends State<GameExpansionCard>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0.0, end: 0.5);
 
   AnimationController _controller;
   Animation<double> _heightFactor;
-  Animation<double> _iconTurns;
 
   bool _isExpanded = false;
 
@@ -35,7 +32,6 @@ class _GameExpansionCardState extends State<GameExpansionCard>
     super.initState();
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
-    _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
 
     _isExpanded =
         PageStorage.of(context)?.readState(context) ?? widget.initiallyExpanded;

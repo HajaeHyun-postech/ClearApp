@@ -26,12 +26,13 @@ class APIService {
     return response.body;
   }
 
-  static Future<String> doPost(
-    String baseURL,
-    String action,
-    String body,
-  ) async {
+  static Future<String> doPost(String baseURL, String action,
+      {String body: '{}', Map<String, dynamic> params: const {}}) async {
     String url = baseURL + '?action=$action';
+    params.forEach((key, value) {
+      url += '&$key=$value';
+    });
+
     var response = await http.post(url,
         headers: {
           'Content-type': 'application/json',
@@ -54,6 +55,7 @@ class APIService {
         Logger().e('error: ${body['error'].toString()}');
         throw ('error: ${body['error'].toString()}');
       } else {
+        Logger().i('http  redirect post response success');
         return response.body;
       }
     } else if (statusCode == 200) {
@@ -62,6 +64,7 @@ class APIService {
         Logger().e('error: ${body['error'].toString()}');
         throw ('error: ${body['error'].toString()}');
       } else {
+        Logger().i('http  post response success');
         return response.body;
       }
     } else {

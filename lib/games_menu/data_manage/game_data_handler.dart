@@ -53,8 +53,8 @@ class GameDataHandler {
   Future<List<GameData>> makeGame(GameData newGame) async {
     gameDataList.add(newGame);
     try {
-      APIService.doPost(
-              Constants.gamesListURL, 'makeGame', jsonEncode(newGame.toMap()))
+      APIService.doPost(Constants.gamesListURL, 'makeGame',
+              body: jsonEncode(newGame.toMap()))
           .then((value) => Logger().i('makeGame succeed.'));
     } catch (error) {
       PopupGenerator.errorPopupWidget(

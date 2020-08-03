@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../util/app_theme.dart';
 import '../login/login_info.dart';
-import '../login/login_when_start.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(

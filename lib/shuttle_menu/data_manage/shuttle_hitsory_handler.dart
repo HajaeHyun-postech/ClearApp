@@ -218,7 +218,8 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map);
+      APIService.doPost(Constants.shuttlePrchHstrSheetURL, 'updateRcved',
+          params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -240,7 +241,8 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map);
+      APIService.doPost(Constants.shuttlePrchHstrSheetURL, 'updateAppr',
+          params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -263,8 +265,10 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
+      //TODO : doPost
       APIService.doGet(Constants.shuttleStorageSheetURL, 'deleteHstr', map);
-      APIService.doGet(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map);
+      APIService.doPost(Constants.shuttlePrchHstrSheetURL, 'deleteHstr',
+          params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -279,15 +283,9 @@ class ShuttlePrchHstrHandler {
   Future<List<ShuttlePrchHstr>> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
     shuttlePrchHstrList.add(newHstr);
 
-    //string -> json -> utf8 byte -> base64
-    Map<String, dynamic> map = {
-      "studentId": newHstr.studentId,
-      "body": base64Encode(utf8.encode(jsonEncode(newHstr.toMap()))),
-    };
-
     try {
-      APIService.doGet(
-          Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map);
+      APIService.doPost(Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr',
+          body: jsonEncode(newHstr.toMap()));
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,

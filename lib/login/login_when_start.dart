@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../navigation_home_screen.dart';
 import 'Widgets/FormCard.dart';
 import 'login_auth.dart';
-import 'login_info.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
