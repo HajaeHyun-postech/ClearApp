@@ -45,6 +45,9 @@ dependencies:
   flutter_rounded_date_picker: ^1.0.4
   dropdown_search: ^0.4.4
   numberpicker: ^1.2.0
+  modal_bottom_sheet: ^0.2.0+1
+  flutter_form_builder: ^3.12.0
+  
 
 dev_dependencies:
   flutter_test:

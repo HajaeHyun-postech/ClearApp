@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:clearApp/util/popup_widgets/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
@@ -39,6 +41,8 @@ class GameDataHandler {
       case EVENT.DeleteGameEvent:
         break;
       case EVENT.RefreshEvent:
+        Logger().i('refresh Event occured');
+        getGames().then((list) => dataUpdateCallback(list));
         break;
       default:
         Logger().e('ERROR: unknown event: $eventType');
@@ -48,9 +52,10 @@ class GameDataHandler {
 
   Future<List<GameData>> makeGame(GameData newGame) async {
     gameDataList.add(newGame);
-
     try {
-      APIService.doGet(Constants.gamesListURL, 'makeGame', newGame.toMap());
+      APIService.doPost(
+              Constants.gamesListURL, 'makeGame', jsonEncode(newGame.toMap()))
+          .then((value) => Logger().i('makeGame succeed.'));
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -58,6 +63,31 @@ class GameDataHandler {
           'Please retry : $error',
           () => Navigator.pushNamed(context, '/homescreen')).show();
     }
+
+    return gameDataList;
+  }
+
+  Future<List<GameData>> getGames() async {
+    String response;
+    try {
+      response =
+          await APIService.doGet(Constants.gamesListURL, 'getGames', new Map());
+    } catch (error) {
+      PopupGenerator.errorPopupWidget(
+          context,
+          'ERROR!',
+          'Please check internet connection : $error',
+          () => Navigator.pushNamed(context, '/homescreen')).show();
+    }
+
+    gameDataList = new List<GameData>();
+    Map<String, dynamic> rcvedMap = jsonDecode(response);
+
+    List<dynamic> jsonList = rcvedMap['data'];
+    jsonList.forEach((element) {
+      Map<String, dynamic> _map = element;
+      gameDataList.add(GameData.fromMap(_map));
+    });
 
     return gameDataList;
   }

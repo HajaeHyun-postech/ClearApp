@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:clearApp/games_menu/game_list_data.dart';
+import 'package:clearApp/util/api_service.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ import 'package:numberpicker/numberpicker.dart';
 import './data_manage/game_data_handler.dart';
 import './data_manage/game_data.dart';
 import './data_manage/events.dart';
-
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'game_list_view.dart';
 
 class GamesHomeScreen extends StatefulWidget {
@@ -23,14 +25,15 @@ class GamesHomeScreen extends StatefulWidget {
 class _GamesHomeScreenState extends State<GamesHomeScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
-  List<GameListData> hotelList = GameListData.hotelList;
   List<GameData> gameList = new List();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
   Map<String, dynamic> formData = new Map();
-
   GameDataHandler gameDataHandler;
+
+  bool loadingData;
 
   void initForm() {
     formData['date'] = DateTime.now();
@@ -42,23 +45,30 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
 
   @override
   void initState() {
-    //register
-    gameDataHandler = new GameDataHandler(context);
-    gameDataHandler.registerDataUpdateCallback((list) {
-      setState(() {
-        gameList = list;
-      });
-    });
+    //Data handling
+    registerHandler();
+    refreshData();
 
+    //animation controll
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     initForm();
     super.initState();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
-    return true;
+  void registerHandler() {
+    gameDataHandler = new GameDataHandler(context);
+    gameDataHandler.registerDataUpdateCallback((list) {
+      setState(() {
+        loadingData = false;
+        gameList = list;
+      });
+    });
+  }
+
+  void refreshData() {
+    loadingData = true;
+    gameDataHandler.eventHandle(EVENT.RefreshEvent);
   }
 
   @override
@@ -121,24 +131,49 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             itemCount: gameList.length,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              final int count =
-                                  gameList.length > 10 ? 10 : gameList.length;
-                              final Animation<double> animation =
-                                  Tween<double>(begin: 0.0, end: 1.0).animate(
-                                      CurvedAnimation(
-                                          parent: animationController,
-                                          curve: Interval(
-                                              (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn)));
-                              animationController.forward();
-                              return GameListView(
-                                callback: () {},
-                                gameData: gameList[index],
-                                animation: animation,
-                                animationController: animationController,
-                              );
-                            },
+                            itemBuilder: !loadingData
+                                ? (BuildContext context, int index) {
+                                    final int count = gameList.length > 10
+                                        ? 10
+                                        : gameList.length;
+                                    final Animation<double> animation =
+                                        Tween<double>(begin: 0.0, end: 1.0)
+                                            .animate(CurvedAnimation(
+                                                parent: animationController,
+                                                curve: Interval(
+                                                    (1 / count) * index, 1.0,
+                                                    curve:
+                                                        Curves.fastOutSlowIn)));
+                                    animationController.forward();
+                                    return GameListView(
+                                      callback: () {},
+                                      gameData: gameList[index],
+                                      animation: animation,
+                                      animationController: animationController,
+                                    );
+                                  }
+                                : (BuildContext context, int index) {
+                                    return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Center(
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              margin: EdgeInsets.all(5),
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 3.0,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        ClearAppTheme.darkBlue),
+                                              ),
+                                            ),
+                                          ),
+                                        ]);
+                                  },
                           ),
                         ),
                       ),
@@ -481,21 +516,23 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            // TODO: refresh
-                            builder: (BuildContext context) => null,
-                            fullscreenDialog: true),
-                      );
-                    },
+                    onTap: () => showMaterialModalBottomSheet(
+                        expand: false,
+                        context: context,
+                        builder: (context, scrollController) => Material(
+                                child: Theme(
+                              data: ClearAppTheme.buildLightTheme(),
+                              child: SafeArea(
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30, right: 30, bottom: 20),
+                                      child: createForm())),
+                            ))),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.refresh,
+                        child: Icon(Icons.add,
                             color: ClearAppTheme.deactivatedText),
                       ),
                     ),
@@ -515,6 +552,111 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
         )
       ],
     );
+  }
+
+  Widget createForm() {
+    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      FormBuilder(
+        key: _fbKey,
+        initialValue: {'dateTime': DateTime.now(), 'gameType': 'Personal'},
+        autovalidate: true,
+        child: Column(
+          children: <Widget>[
+            Text('Create Game',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600)),
+            SizedBox(
+              height: 10,
+            ),
+            Column(
+              children: <Widget>[
+                FormBuilderDropdown(
+                  attribute: "gameType",
+                  decoration: InputDecoration(labelText: "Game Type"),
+                  hint: Text('Select type'),
+                  validators: [FormBuilderValidators.required()],
+                  items: [
+                    'Regular Meeting',
+                    'Training',
+                    'Personal',
+                    'Event',
+                    'etc'
+                  ]
+                      .map((type) =>
+                          DropdownMenuItem(value: type, child: Text("$type")))
+                      .toList(),
+                ),
+                FormBuilderTextField(
+                  attribute: "description",
+                  decoration:
+                      InputDecoration(labelText: "Type game description"),
+                ),
+                FormBuilderDateTimePicker(
+                  attribute: "dateTime",
+                  inputType: InputType.both,
+                  format: DateFormat("yyyy/MM/dd  HH:mm"),
+                  decoration: InputDecoration(labelText: "Date time"),
+                ),
+                FormBuilderSlider(
+                  attribute: "maxCapacity",
+                  validators: [FormBuilderValidators.min(1)],
+                  min: 0,
+                  max: 100,
+                  initialValue: 60,
+                  divisions: 20,
+                  decoration: InputDecoration(labelText: "Max Capacity"),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+      Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          gradient: LinearGradient(
+            colors: <Color>[
+              Color(0xFF36D1DC),
+              Color(0xFF5B86E5),
+            ],
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              if (_fbKey.currentState.saveAndValidate()) {
+                Logger().i('Create Game button clicked');
+                GameData newGame = new GameData(_fbKey.currentState.value);
+                gameDataHandler.eventHandle(EVENT.MakeGameEvent,
+                    newGame: newGame);
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                !false
+                    ? Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      )
+                    : new CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            ClearAppTheme.white),
+                      ),
+              ],
+            ),
+          ),
+        ),
+      )
+    ]);
   }
 
   Widget _buildTodoTextInput() {

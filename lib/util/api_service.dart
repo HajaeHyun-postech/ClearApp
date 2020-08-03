@@ -25,4 +25,48 @@ class APIService {
     }
     return response.body;
   }
+
+  static Future<String> doPost(
+    String baseURL,
+    String action,
+    String body,
+  ) async {
+    String url = baseURL + '?action=$action';
+    var response = await http.post(url,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: body);
+
+    var statusCode = response.statusCode;
+
+    if (statusCode == 302) {
+      Logger().i('Redirecting...');
+      var redirectResponse =
+          await http.get(response.headers['location'], headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      });
+
+      Map<String, dynamic> body = jsonDecode(redirectResponse.body);
+      if (body.containsKey('error')) {
+        Logger().e('error: ${body['error'].toString()}');
+        throw ('error: ${body['error'].toString()}');
+      } else {
+        return response.body;
+      }
+    } else if (statusCode == 200) {
+      Map<String, dynamic> body = jsonDecode(response.body);
+      if (body.containsKey('error')) {
+        Logger().e('error: ${body['error'].toString()}');
+        throw ('error: ${body['error'].toString()}');
+      } else {
+        return response.body;
+      }
+    } else {
+      Logger().e('error: $statusCode');
+      throw ('error: $statusCode');
+    }
+  }
 }

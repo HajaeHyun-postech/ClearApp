@@ -19,9 +19,8 @@ Application for postech badminton club CLEAR
     - 프로젝트 관리
     - 리팩토링 (코드 간결화)
     - 업데이트 확인 구현
-    - pop up widget 종류 다양화
     - 각종 에러에 대비
-    - 탭 전환할 때 로컬 데이터 사용하도록.
+    - post 메소드로 변경하기 (shuttle)
 
  - 이상오 :
     - 장부 구현

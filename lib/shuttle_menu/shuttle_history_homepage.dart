@@ -51,15 +51,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   @override
   void initState() {
     super.initState();
-    //register
-    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
-      if (!mounted) return;
-
-      setState(() {
-        shuttlePrchHstrList = list;
-        loading = false;
-      });
-    });
+    registerHandler();
 
     //animation setting
     loading = true;
@@ -78,6 +70,18 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
 
     ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
         tab: Constants.ShuttleMenuCurrentTab.Total);
+  }
+
+  void registerHandler() {
+    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
+      if (!mounted) return;
+
+      setState(() {
+        shuttlePrchHstrList = list;
+        loading = false;
+      });
+    });
+
   }
 
   @override

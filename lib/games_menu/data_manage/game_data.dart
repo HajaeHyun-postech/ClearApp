@@ -1,53 +1,48 @@
 import 'dart:convert';
 
 import 'package:clearApp/login/login_info.dart';
-import 'package:flutter/material.dart';
 
 class GameData {
   String gameType;
   String description;
-  DateTime date;
-  TimeOfDay time;
+  DateTime dateTime;
   bool canAttend;
   bool constructed;
   bool deleted;
-  int maxCapacity;
-  List<LoginInfo> participants;
+  double maxCapacity;
+  List<LoginInfo> participantList;
 
   GameData(Map<String, dynamic> formData) {
     gameType = formData['gameType'];
     description = formData['description'];
-    date = formData['date'];
-    time = formData['time'];
+    dateTime = formData['dateTime'];
     canAttend = true;
     constructed = false;
     deleted = false;
     maxCapacity = formData['maxCapacity'];
-    participants = new List();
+    participantList = new List();
   }
 
   GameData.fromMap(Map<String, dynamic> map)
       : gameType = (jsonDecode(map['gameType']) as String),
         description = (jsonDecode(map['description']) as String),
-        date = DateTime.parse(jsonDecode(map['date'])),
-        time = jsonDecode(map['time']),
+        dateTime = DateTime.parse(jsonDecode(map['dateTime'])),
         canAttend = jsonDecode(map['canAttend']),
         constructed = jsonDecode(map['constructed']),
         deleted = jsonDecode(map['deleted']),
-        maxCapacity = jsonDecode(map['maxCapacity']),
-        participants = (jsonDecode(map['participants']) as List)
-            .map((i) => LoginInfo.fromMap(i))
+        maxCapacity = double.parse((map['maxCapacity'])),
+        participantList = (jsonDecode(map['participantList']) as List)
+            .map((info) => LoginInfo.fromMap(info))
             .toList();
 
   Map<String, dynamic> toMap() => {
         'gameType': gameType,
         'description': description,
-        'date': date.toString(),
-        'time': time.toString(),
+        'dateTime': dateTime.toString(),
         'canAttend': canAttend,
         'constructed': constructed,
         'deleted': deleted,
         'maxCapacity': maxCapacity,
-        'participants': participants
+        'participantList': participantList.map((info) => info.toMap()).toList()
       };
 }

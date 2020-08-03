@@ -128,7 +128,7 @@ class ClearAppTheme {
 
   static ThemeData buildLightTheme() {
     final Color primaryColor = ClearAppTheme.purpleBlue;
-    final Color secondaryColor = HexColor('#54D3C2');
+    final Color secondaryColor = ClearAppTheme.darkBlue;
     final ColorScheme colorScheme = const ColorScheme.light().copyWith(
       primary: primaryColor,
       secondary: secondaryColor,
