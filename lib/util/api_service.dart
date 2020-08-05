@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class APIService {
-  static Future<String> doGet(
+  static Future<Map<String, dynamic>> doGet(
       String baseURL, String action, Map<String, dynamic> params) async {
     String url = baseURL + '?action=$action';
     params.forEach((key, value) {
@@ -23,10 +23,10 @@ class APIService {
     } else {
       Logger().i('http  reqeust response success');
     }
-    return response.body;
+    return body;
   }
 
-  static Future<String> doPost(String baseURL, String action,
+  static Future<Map<String, dynamic>> doPost(String baseURL, String action,
       {String body: '{}', Map<String, dynamic> params: const {}}) async {
     String url = baseURL + '?action=$action';
     params.forEach((key, value) {
@@ -56,7 +56,7 @@ class APIService {
         throw ('error: ${body['error'].toString()}');
       } else {
         Logger().i('http  redirect post response success');
-        return response.body;
+        return body;
       }
     } else if (statusCode == 200) {
       Map<String, dynamic> body = jsonDecode(response.body);
@@ -65,7 +65,7 @@ class APIService {
         throw ('error: ${body['error'].toString()}');
       } else {
         Logger().i('http  post response success');
-        return response.body;
+        return body;
       }
     } else {
       Logger().e('error: $statusCode');

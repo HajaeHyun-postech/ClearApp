@@ -55,7 +55,7 @@ class GameDataHandler {
     try {
       APIService.doPost(Constants.gamesListURL, 'makeGame',
               body: jsonEncode(newGame.toMap()))
-          .then((value) => Logger().i('makeGame succeed.'));
+          .then((value) => Logger().i('makeGame succeed. $value'));
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -68,7 +68,7 @@ class GameDataHandler {
   }
 
   Future<List<GameData>> getGames() async {
-    String response;
+    Map<String, dynamic> response;
     try {
       response =
           await APIService.doGet(Constants.gamesListURL, 'getGames', new Map());
@@ -81,9 +81,8 @@ class GameDataHandler {
     }
 
     gameDataList = new List<GameData>();
-    Map<String, dynamic> rcvedMap = jsonDecode(response);
 
-    List<dynamic> jsonList = rcvedMap['data'];
+    List<dynamic> jsonList = response['data'];
     jsonList.forEach((element) {
       Map<String, dynamic> _map = element;
       gameDataList.add(GameData.fromMap(_map));
