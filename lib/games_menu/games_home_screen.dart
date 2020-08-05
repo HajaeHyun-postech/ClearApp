@@ -1,12 +1,15 @@
 import 'dart:ui';
-import 'package:clearApp/games_menu/game_list_data.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-
+import './data_manage/game_data_handler.dart';
+import './data_manage/game_data.dart';
+import './data_manage/events.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'game_list_view.dart';
 
 class GamesHomeScreen extends StatefulWidget {
@@ -16,28 +19,49 @@ class GamesHomeScreen extends StatefulWidget {
 
 class _GamesHomeScreenState extends State<GamesHomeScreen>
     with TickerProviderStateMixin {
-  AnimationController animationController;
-  List<GameListData> hotelList = GameListData.hotelList;
-  final ScrollController _scrollController = ScrollController();
+  //data
+  List<GameData> gameList = new List();
+  GameDataHandler gameDataHandler;
 
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  //states
+  bool loadingData;
+
+  AnimationController animationController;
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
+    //Data handling
+    registerHandler();
+    refreshData();
+
+    //animation controll
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
-    return true;
+  void registerHandler() {
+    gameDataHandler = new GameDataHandler(context);
+    gameDataHandler.registerDataUpdateCallback((list) {
+      setState(() {
+        loadingData = false;
+        gameList = list;
+      });
+    });
+  }
+
+  void refreshData() {
+    loadingData = true;
+    gameDataHandler.eventHandle(EVENT.RefreshEvent);
   }
 
   @override
   void dispose() {
     animationController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -72,6 +96,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                                 return Column(
                                   children: <Widget>[
                                     getSearchBarUI(),
+                                    getDescriptionUI(),
                                     getTimeDateUI(),
                                   ],
                                 );
@@ -90,27 +115,52 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                           color:
                               ClearAppTheme.buildLightTheme().backgroundColor,
                           child: ListView.builder(
-                            itemCount: hotelList.length,
+                            itemCount: gameList.length,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              final int count =
-                                  hotelList.length > 10 ? 10 : hotelList.length;
-                              final Animation<double> animation =
-                                  Tween<double>(begin: 0.0, end: 1.0).animate(
-                                      CurvedAnimation(
-                                          parent: animationController,
-                                          curve: Interval(
-                                              (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn)));
-                              animationController.forward();
-                              return GameListView(
-                                callback: () {},
-                                hotelData: hotelList[index],
-                                animation: animation,
-                                animationController: animationController,
-                              );
-                            },
+                            itemBuilder: !loadingData
+                                ? (BuildContext context, int index) {
+                                    final int count = gameList.length > 10
+                                        ? 10
+                                        : gameList.length;
+                                    final Animation<double> animation =
+                                        Tween<double>(begin: 0.0, end: 1.0)
+                                            .animate(CurvedAnimation(
+                                                parent: animationController,
+                                                curve: Interval(
+                                                    (1 / count) * index, 1.0,
+                                                    curve:
+                                                        Curves.fastOutSlowIn)));
+                                    animationController.forward();
+                                    return GameListView(
+                                      callback: () {},
+                                      gameData: gameList[index],
+                                      animation: animation,
+                                      animationController: animationController,
+                                    );
+                                  }
+                                : (BuildContext context, int index) {
+                                    return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Center(
+                                            child: Container(
+                                              height: 30,
+                                              width: 30,
+                                              margin: EdgeInsets.all(5),
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 3.0,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        ClearAppTheme.darkBlue),
+                                              ),
+                                            ),
+                                          ),
+                                        ]);
+                                  },
                           ),
                         ),
                       ),
@@ -125,91 +175,37 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
     );
   }
 
-  Widget getListUI() {
-    return Container(
-      decoration: BoxDecoration(
-        color: ClearAppTheme.buildLightTheme().backgroundColor,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: const Offset(0, -2),
-              blurRadius: 8.0),
-        ],
-      ),
-      child: Column(
+  Widget getDescriptionUI() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+      child: Row(
         children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height - 156 - 50,
-            child: FutureBuilder<bool>(
-              future: getData(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else {
-                  return ListView.builder(
-                    itemCount: hotelList.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      final int count =
-                          hotelList.length > 10 ? 10 : hotelList.length;
-                      final Animation<double> animation =
-                          Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                  parent: animationController,
-                                  curve: Interval((1 / count) * index, 1.0,
-                                      curve: Curves.fastOutSlowIn)));
-                      animationController.forward();
-
-                      return GameListView(
-                        callback: () {},
-                        hotelData: hotelList[index],
-                        animation: animation,
-                        animationController: animationController,
-                      );
-                    },
-                  );
-                }
-              },
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: ClearAppTheme.buildLightTheme().backgroundColor,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      offset: const Offset(0, 2),
+                      blurRadius: 8.0),
+                ],
+              ),
             ),
-          )
+          ),
         ],
       ),
-    );
-  }
-
-  Widget getHotelViewList() {
-    final List<Widget> hotelListViews = <Widget>[];
-    for (int i = 0; i < hotelList.length; i++) {
-      final int count = hotelList.length;
-      final Animation<double> animation =
-          Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: animationController,
-          curve: Interval((1 / count) * i, 1.0, curve: Curves.fastOutSlowIn),
-        ),
-      );
-      hotelListViews.add(
-        GameListView(
-          callback: () {},
-          hotelData: hotelList[i],
-          animation: animation,
-          animationController: animationController,
-        ),
-      );
-    }
-    animationController.forward();
-    return Column(
-      children: hotelListViews,
     );
   }
 
   Widget getTimeDateUI() {
     return Padding(
-      padding: const EdgeInsets.only(left: 18, bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -221,9 +217,6 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 8, right: 8, top: 4, bottom: 4),
@@ -242,7 +235,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}',
+                            ' ',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -266,6 +259,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
           ),
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -277,18 +271,15 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 8, right: 8, top: 4, bottom: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Number of Rooms',
+                            ' ',
                             style: TextStyle(
                                 fontWeight: FontWeight.w100,
                                 fontSize: 16,
@@ -298,7 +289,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            '1 Room - 2 Adults',
+                            ' ',
                             style: TextStyle(
                               fontWeight: FontWeight.w100,
                               fontSize: 16,
@@ -324,41 +315,22 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: ClearAppTheme.buildLightTheme().backgroundColor,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(38.0),
+                padding: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ClearAppTheme.buildLightTheme().backgroundColor,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          offset: const Offset(0, 2),
+                          blurRadius: 8.0),
+                    ],
                   ),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: const Offset(0, 2),
-                        blurRadius: 8.0),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
-                  child: TextField(
-                    onChanged: (String txt) {},
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                    cursorColor: ClearAppTheme.buildLightTheme().primaryColor,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'London...',
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                )),
           ),
           Container(
             decoration: BoxDecoration(
-              color: ClearAppTheme.buildLightTheme().primaryColor,
+              color: Color(0xFF5B86E5).withOpacity(0.8),
               borderRadius: const BorderRadius.all(
                 Radius.circular(38.0),
               ),
@@ -375,12 +347,9 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                 borderRadius: const BorderRadius.all(
                   Radius.circular(32.0),
                 ),
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Icon(FontAwesomeIcons.search,
+                  child: Icon(FontAwesomeIcons.plus,
                       size: 20,
                       color: ClearAppTheme.buildLightTheme().backgroundColor),
                 ),
@@ -423,7 +392,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      '530 hotels found',
+                      '5 games found',
                       style: TextStyle(
                         fontWeight: FontWeight.w100,
                         fontSize: 16,
@@ -441,34 +410,24 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                            // TODO: error
-                            builder: (BuildContext context) => null,
-                            fullscreenDialog: true),
-                      );
-                    },
+                    onTap: () => showMaterialModalBottomSheet(
+                        expand: false,
+                        context: context,
+                        builder: (context, scrollController) => Material(
+                                child: Theme(
+                              data: ClearAppTheme.buildLightTheme(),
+                              child: SafeArea(
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 30, right: 30, bottom: 20),
+                                      child: createForm())),
+                            ))),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Filter',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.sort,
-                                color: ClearAppTheme.buildLightTheme()
-                                    .primaryColor),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.add,
+                            color: ClearAppTheme.deactivatedText),
                       ),
                     ),
                   ),
@@ -487,6 +446,119 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
         )
       ],
     );
+  }
+
+  Widget createForm() {
+    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      FormBuilder(
+        key: _fbKey,
+        initialValue: {
+          'dateTime': DateTime.now(),
+          'gameType': 'Personal',
+          'location': '체육관'
+        },
+        autovalidate: true,
+        child: Column(
+          children: <Widget>[
+            Text('Create Game',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600)),
+            SizedBox(
+              height: 10,
+            ),
+            Column(
+              children: <Widget>[
+                FormBuilderDropdown(
+                  attribute: "gameType",
+                  decoration: InputDecoration(labelText: "Game Type"),
+                  hint: Text('Select type'),
+                  validators: [FormBuilderValidators.required()],
+                  items: [
+                    'Regular Meeting',
+                    'Training',
+                    'Personal',
+                    'Event',
+                    'etc'
+                  ]
+                      .map((type) =>
+                          DropdownMenuItem(value: type, child: Text("$type")))
+                      .toList(),
+                ),
+                FormBuilderTextField(
+                  attribute: "description",
+                  decoration:
+                      InputDecoration(labelText: "Type game description"),
+                ),
+                FormBuilderTextField(
+                  attribute: "location",
+                  decoration: InputDecoration(labelText: "Type location"),
+                ),
+                FormBuilderDateTimePicker(
+                  attribute: "dateTime",
+                  inputType: InputType.both,
+                  format: DateFormat("yyyy/MM/dd  HH:mm"),
+                  decoration: InputDecoration(labelText: "Date time"),
+                ),
+                FormBuilderSlider(
+                  attribute: "maxCapacity",
+                  validators: [FormBuilderValidators.min(1)],
+                  min: 0,
+                  max: 100,
+                  initialValue: 60,
+                  divisions: 20,
+                  decoration: InputDecoration(labelText: "Max Capacity"),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+      Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          gradient: LinearGradient(
+            colors: <Color>[
+              Color(0xFF36D1DC),
+              Color(0xFF5B86E5),
+            ],
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              if (_fbKey.currentState.saveAndValidate()) {
+                Logger().i('Create Game button clicked');
+                GameData newGame = new GameData(_fbKey.currentState.value);
+                gameDataHandler.eventHandle(EVENT.MakeGameEvent,
+                    newGame: newGame);
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                !false
+                    ? Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      )
+                    : new CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            ClearAppTheme.white),
+                      ),
+              ],
+            ),
+          ),
+        ),
+      )
+    ]);
   }
 }
 

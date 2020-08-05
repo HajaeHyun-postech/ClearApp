@@ -4,7 +4,6 @@ import 'package:logger/logger.dart';
 import '../util/constants.dart' as Constants;
 import 'login_info.dart';
 import 'package:http/http.dart' as http;
-import 'login_info.dart';
 
 class LoginAuth {
   static Future<String> loginAuth(String povisId, int studentId) async {

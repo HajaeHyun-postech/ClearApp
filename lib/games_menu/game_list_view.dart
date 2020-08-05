@@ -1,12 +1,11 @@
-import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'game_expansion_card.dart';
-import 'game_list_data.dart';
+import './data_manage/game_data.dart';
 
 class GameListView extends StatelessWidget {
   const GameListView(
       {Key key,
-      this.hotelData,
+      this.gameData,
       this.animationController,
       this.animation,
       this.callback})
@@ -14,7 +13,7 @@ class GameListView extends StatelessWidget {
 
   final VoidCallback callback;
 
-  final GameListData hotelData;
+  final GameData gameData;
   final AnimationController animationController;
   final Animation<dynamic> animation;
 

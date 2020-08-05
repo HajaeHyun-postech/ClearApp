@@ -1,4 +1,3 @@
-import 'package:clearApp/main.dart';
 import 'package:flutter/material.dart';
 
 class ClearAppTheme {
@@ -127,8 +126,8 @@ class ClearAppTheme {
   }
 
   static ThemeData buildLightTheme() {
-    final Color primaryColor = HexColor('#54D3C2');
-    final Color secondaryColor = HexColor('#54D3C2');
+    final Color primaryColor = ClearAppTheme.purpleBlue;
+    final Color secondaryColor = ClearAppTheme.darkBlue;
     final ColorScheme colorScheme = const ColorScheme.light().copyWith(
       primary: primaryColor,
       secondary: secondaryColor,

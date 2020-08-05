@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:clearApp/shuttle_menu/data_manage/actions.dart';
+import 'package:clearApp/shuttle_menu/data_manage/events.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/shuttle_menu/usage_select_button.dart';
@@ -8,6 +8,7 @@ import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../util/constants.dart' as Constants;
+import 'package:clearApp/util/api_service.dart';
 
 enum UsageLists {
   Regular_Meeting,
@@ -135,11 +136,10 @@ class AddPrchFormState extends State<AddPrchForm>
   Future<dynamic> getRemainingShuttleAmount() async {
     try {
       Logger().i('trying to get remaining counts..');
-      String response = await ShuttlePrchHstrHandler().doHttpAction(
-          Constants.shuttleStorageSheetURL, 'getRemainingCount', new Map());
+      Map<String, dynamic> response = await APIService.doGet(
+          Constants.shuttlecockURL, 'getRemainingCount', new Map());
 
-      Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
-      int count = rcvedMap['shuttleCount'] as int;
+      int count = response['data'] as int;
       Logger().i('got count : $count');
       return count;
     } catch (error) {
@@ -166,14 +166,14 @@ class AddPrchFormState extends State<AddPrchForm>
     };
 
     try {
-      String response = await ShuttlePrchHstrHandler().doHttpAction(
-          Constants.shuttleStorageSheetURL, 'validateNewPrch', map);
+      Map<String, dynamic> response = await APIService.doGet(
+          Constants.shuttlecockURL, 'validateNewPrch', map);
 
       Logger().i('validateNewPrch received response : $response');
 
-      Map<String, dynamic> rcvedMap = (jsonDecode(response))['data'];
-      newHstr.shuttleList = rcvedMap['shuttleList'].cast<String>();
-      newHstr.price = (rcvedMap['price'] as int);
+      Map<String, dynamic> validationDataMap = response['data'];
+      newHstr.shuttleList = validationDataMap['shuttleList'].cast<String>();
+      newHstr.price = (validationDataMap['price'] as int);
       return newHstr;
     } catch (error) {
       throw (error);

@@ -8,7 +8,7 @@ import '../util/app_theme.dart';
 import 'data_manage/shuttle_hitsory_handler.dart';
 import 'data_manage/shuttle_purchace_history.dart';
 import '../util/constants.dart' as Constants;
-import 'data_manage/actions.dart';
+import 'data_manage/events.dart';
 
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
@@ -51,15 +51,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   @override
   void initState() {
     super.initState();
-    //register
-    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
-      if (!mounted) return;
-
-      setState(() {
-        shuttlePrchHstrList = list;
-        loading = false;
-      });
-    });
+    registerHandler();
 
     //animation setting
     loading = true;
@@ -78,6 +70,18 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
 
     ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
         tab: Constants.ShuttleMenuCurrentTab.Total);
+  }
+
+  void registerHandler() {
+    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
+      if (!mounted) return;
+
+      setState(() {
+        shuttlePrchHstrList = list;
+        loading = false;
+      });
+    });
+
   }
 
   @override

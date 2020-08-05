@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../login/login_info.dart';
 import '../../util/constants.dart' as Constants;
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'actions.dart';
+import 'events.dart';
+import 'package:clearApp/util/api_service.dart';
 
 /* HTTP Format */
 /* ONLY GET METHOD */
@@ -77,30 +77,6 @@ class ShuttlePrchHstrHandler {
 
   void registerErrorCallback(Function() callback) =>
       errorCallback.add(callback);
-
-  //main functions
-  Future<String> doHttpAction(
-      String baseURL, String action, Map<String, dynamic> params) async {
-    String url = baseURL + '?action=$action';
-    params.forEach((key, value) {
-      url += '&$key=$value';
-    });
-
-    var response = await http.get(url, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    });
-    var statusCode = response.statusCode;
-    Map<String, dynamic> body = jsonDecode(response.body);
-
-    if (statusCode != 200 || body.containsKey('error')) {
-      Logger().e('error: ${body['error'].toString()}');
-      throw ('error: ${body['error'].toString()}');
-    } else {
-      Logger().i('http  reqeust response success');
-    }
-    return response.body;
-  }
 
   void eventHandle(EVENT eventType,
       {Constants.ShuttleMenuCurrentTab tab,
@@ -188,10 +164,10 @@ class ShuttlePrchHstrHandler {
   Future<void> getMyHstr() async {
     Map<String, dynamic> map = {'studentId': LoginInfo().studentId};
 
-    String response;
+    Map<String, dynamic> response;
     try {
-      response = await doHttpAction(
-          Constants.shuttlePrchHstrSheetURL, 'getMyHstr', map);
+      response =
+          await APIService.doGet(Constants.shuttlecockURL, 'getMyHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -201,9 +177,8 @@ class ShuttlePrchHstrHandler {
     }
 
     shuttlePrchHstrList = new List<ShuttlePrchHstr>();
-    Map<String, dynamic> rcvedMap = jsonDecode(response);
 
-    List<dynamic> jsonList = rcvedMap['data'];
+    List<dynamic> jsonList = response['data'];
     jsonList.forEach((element) {
       Map<String, dynamic> _map = element;
       shuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(_map));
@@ -213,10 +188,10 @@ class ShuttlePrchHstrHandler {
   Future<void> getAllUnapprHstr() async {
     Map<String, dynamic> map = new Map<String, dynamic>();
 
-    String response;
+    Map<String, dynamic> response;
     try {
-      response = await doHttpAction(
-          Constants.shuttlePrchHstrSheetURL, 'getAllUnapprHstr', map);
+      response = await APIService.doGet(
+          Constants.shuttlecockURL, 'getAllUnapprHstr', map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -226,8 +201,7 @@ class ShuttlePrchHstrHandler {
     }
 
     totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
-    Map<String, dynamic> rcvedMap = jsonDecode(response);
-    List<dynamic> jsonList = rcvedMap['data'];
+    List<dynamic> jsonList = response['data'];
     jsonList.forEach((element) {
       totalUserShuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(element));
     });
@@ -242,7 +216,7 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'updateRcved', map);
+      APIService.doPost(Constants.shuttlecockURL, 'updateRcved', params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -264,7 +238,7 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'updateAppr', map);
+      APIService.doPost(Constants.shuttlecockURL, 'updateAppr', params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -287,8 +261,7 @@ class ShuttlePrchHstrHandler {
     };
 
     try {
-      doHttpAction(Constants.shuttleStorageSheetURL, 'deleteHstr', map);
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'deleteHstr', map);
+      APIService.doPost(Constants.shuttlecockURL, 'deleteHstr', params: map);
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,
@@ -303,14 +276,9 @@ class ShuttlePrchHstrHandler {
   Future<List<ShuttlePrchHstr>> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
     shuttlePrchHstrList.add(newHstr);
 
-    //string -> json -> utf8 byte -> base64
-    Map<String, dynamic> map = {
-      "studentId": newHstr.studentId,
-      "body": base64Encode(utf8.encode(jsonEncode(newHstr.toMap()))),
-    };
-
     try {
-      doHttpAction(Constants.shuttlePrchHstrSheetURL, 'addNewPrchHstr', map);
+      APIService.doPost(Constants.shuttlecockURL, 'addNewPrchHstr',
+          body: jsonEncode(newHstr.toMap()));
     } catch (error) {
       PopupGenerator.errorPopupWidget(
           context,

@@ -42,6 +42,9 @@ dependencies:
   date_format: ^1.0.8
   fluttertoast: ^7.0.1
   sleek_circular_slider: ^1.1.0
+  modal_bottom_sheet: ^0.2.0+1
+  flutter_form_builder: ^3.12.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 400
     - family: WorkSans
       fonts:
         - asset: assets/fonts/WorkSans-Regular.ttf
@@ -87,12 +96,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/WorkSans-Bold.ttf
           weight: 700
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Bold.ttf
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Medium.ttf
-          weight: 400
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Bold.ttf
