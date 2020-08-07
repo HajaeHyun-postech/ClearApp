@@ -1,11 +1,11 @@
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
-import 'package:clearApp/util/popup_widgets/popup_generator.dart';
+import 'package:clearApp/util/popup_generator.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
-import '../util/toastmessage_widgets/toast_generator.dart';
+import '../util/toast_generator.dart';
 import 'data_manage/events.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -71,7 +71,8 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             color: ClearAppTheme.darkBlue,
                             icon: Icons.check,
                             onTap: widget.prchHstr.approved
-                                ? () => Toast_generator.errorPopup(context, 'Already Approved!')
+                                ? () => Toast_generator.errorToast(
+                                    context, 'Already Approved!')
                                 : () => PopupGenerator.remindPopupWidget(
                                         context,
                                         'REMIND',
@@ -81,22 +82,26 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                           EVENT.UpdateApprEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
-                                          showToast('Approved Succesfully',
-                                          context: context,
-                                          animation: StyledToastAnimation.slideFromBottom,
-                                          reverseAnimation: StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 2),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                          backgroundColor: ClearAppTheme.green.withOpacity(0.7),
-                                          textStyle: TextStyle(
-                                              fontSize: 13.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFFFFFF),
-                                            ),
-                                          );
+                                      showToast(
+                                        'Approved Succesfully',
+                                        context: context,
+                                        animation: StyledToastAnimation
+                                            .slideFromBottom,
+                                        reverseAnimation:
+                                            StyledToastAnimation.fade,
+                                        position: StyledToastPosition.bottom,
+                                        animDuration: Duration(seconds: 1),
+                                        duration: Duration(seconds: 2),
+                                        curve: Curves.elasticOut,
+                                        reverseCurve: Curves.linear,
+                                        backgroundColor: ClearAppTheme.green
+                                            .withOpacity(0.7),
+                                        textStyle: TextStyle(
+                                          fontSize: 13.0,
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFFFFFFFF),
+                                        ),
+                                      );
                                     }).show())
                       ]
                     : <Widget>[
@@ -105,7 +110,8 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             color: ClearAppTheme.darkBlue,
                             icon: Icons.check,
                             onTap: widget.prchHstr.received
-                                ? () => Toast_generator.errorPopup(context, 'Already Received!')
+                                ? () => Toast_generator.errorToast(
+                                    context, 'Already Received!')
                                 : () => PopupGenerator.remindPopupWidget(
                                         context,
                                         'REMIND',
@@ -115,7 +121,8 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                           EVENT.UpdateRcvedEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
-                                      Toast_generator.successPopup(context, 'Received Succesfully!');
+                                      Toast_generator.successToast(
+                                          context, 'Received Succesfully!');
                                     }).show())
                       ],
                 secondaryActions: <Widget>[
@@ -142,9 +149,11 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                 EVENT.DeleteHstrEvent,
                                 key: widget.prchHstr.key);
                             Navigator.pop(context);
-                            Toast_generator.successPopup(context, 'Deleted Succesfully!');
+                            Toast_generator.successToast(
+                                context, 'Deleted Succesfully!');
                           }).show();
-                        } else {/*
+                        } else {
+                          /*
                               showToast(widget.prchHstr.approved
                                   ? "Error: approved history"
                                   : (widget.prchHstr.received
@@ -167,7 +176,9 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                               color: Color(0xFFFFFFFF),
                                             ),
                                           );*/
-                                Toast_generator.errorPopup(context, widget.prchHstr.approved
+                          Toast_generator.errorToast(
+                              context,
+                              widget.prchHstr.approved
                                   ? "Error: approved history"
                                   : (widget.prchHstr.received
                                       ? "Error: received history"

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:clearApp/util/popup_widgets/popup_generator.dart';
+import 'package:clearApp/util/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:clearApp/util/api_service.dart';
