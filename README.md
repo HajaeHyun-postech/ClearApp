@@ -10,6 +10,11 @@ Application for postech badminton club CLEAR
  - pubspec.yaml : code setting xml
  - popup_widgets : providing pop up widgets. see https://pub.dev/packages/rflutter_alert
  - login/login_info.dart : return name & student id as String format
+ 
+## 고쳐야할것
+ Shuttle ui 갈아엎기 (하재현)
+ 종료버튼 눌러서 팝업창에서 캔슬 누르면 로그인창으로 돌아가는 문제 해결(하재현)
+ 
 
 ## 역할 분담
 
