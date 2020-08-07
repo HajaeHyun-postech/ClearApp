@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+import '../login_auth.dart';
 
 class FormCard extends StatelessWidget {
-  final Function(String name) povisIdChanged;
-  final Function(int studentId) studentIdChanged;
-
-  const FormCard({Key key, this.povisIdChanged, this.studentIdChanged})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final loginAuth = Provider.of<LoginAuth>(context);
+
     return new Container(
       width: double.infinity,
 //      height: ScreenUtil.getInstance().setHeight(500),
@@ -45,9 +44,8 @@ class FormCard extends StatelessWidget {
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) => {
-                povisIdChanged(value.replaceAll("\t", "").replaceAll(" ", ""))
-              },
+              onChanged: (value) => loginAuth.povisId =
+                  (value.replaceAll("\t", "").replaceAll(" ", "")),
               decoration: InputDecoration(
                   hintText: "Povis Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
@@ -60,7 +58,7 @@ class FormCard extends StatelessWidget {
                     fontFamily: "Poppins-Medium",
                     fontSize: ScreenUtil.getInstance().setSp(26))),
             TextField(
-              onChanged: (value) => {studentIdChanged(int.parse(value))},
+              onChanged: (value) => loginAuth.studentId = (int.parse(value)),
               decoration: InputDecoration(
                   hintText: "Student Id",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),

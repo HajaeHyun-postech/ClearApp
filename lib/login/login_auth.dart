@@ -1,32 +1,30 @@
-import 'dart:convert';
-
+import 'package:clearApp/util/api_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import '../util/constants.dart' as Constants;
 import 'login_info.dart';
-import 'package:http/http.dart' as http;
 
-class LoginAuth {
-  static Future<String> loginAuth(String povisId, int studentId) async {
-    Map<String, dynamic> map = {'povisId': povisId, 'studentId': studentId};
-    String url = Constants.subscriberListURL + '?action=loginAuth';
-    map.forEach((key, value) {
-      url += '&$key=$value';
-    });
+class LoginAuth extends ChangeNotifier {
+  bool isFetching = false;
+  String povisId;
+  int studentId;
 
-    var response = await http.get(url, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    });
-    var statusCode = response.statusCode;
-    Map<String, dynamic> body = jsonDecode(response.body);
+  Future<void> doLoginAuth() async {
+    isFetching = true;
+    notifyListeners();
 
-    if (statusCode != 200 || body.containsKey('error')) {
-      Logger().e('error: ${body['error'].toString()}');
-      return Future.error('error: ${body['error'].toString()}');
-    } else {
-      Logger().i('Loggin success with $povisId, $studentId');
-      Logger().i('data: ${body['data']}');
-      LoginInfo.fromMap(body['data']);
+    try {
+      Logger().i('Login with... $povisId, $studentId');
+      Map<String, dynamic> map = {'povisId': povisId, 'studentId': studentId};
+      var response =
+          await APIService.doGet(Constants.memberlistURL, 'loginAuth', map);
+
+      LoginInfo.fromMap(response['data']);
+    } catch (e) {
+      throw e;
+    } finally {
+      isFetching = false;
+      notifyListeners();
     }
   }
 }

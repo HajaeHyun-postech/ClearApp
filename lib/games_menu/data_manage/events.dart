@@ -1,5 +1,5 @@
 enum EVENT {
-  RefreshEvent,
+  FechingEvent,
   ChangeAttendStateEvent,
   MakeGameEvent,
   DeleteGameEvent,

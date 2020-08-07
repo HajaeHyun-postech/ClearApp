@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:clearApp/design_course/home_design_course.dart';
+import 'package:clearApp/fitness_app/fitness_app_home_screen.dart';
+import 'package:clearApp/hotel_booking/hotel_home_screen.dart';
 import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'games_menu/games_home_screen.dart';
 import 'util/app_theme.dart';
-import 'login/login_when_start.dart';
+import 'login/login_screen.dart';
 import 'navigation_home_screen.dart';
 
 void main() async {
@@ -39,10 +42,13 @@ class MyApp extends StatelessWidget {
       locale: Locale('en', 'KR'),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginScreen(),
+        '/': (context) => LoginScreenWithProvider(),
         '/homescreen': (context) => NavigationHomeScreen(),
         '/homescreen/shuttlemenu': (context) => ShuttleMenuHomePage(),
-        '/homescreen/gamesmenu': (context) => GamesHomeScreen(),
+        '/homescreen/gamesmenu': (context) => GamesHomeScreenWithProvider(),
+        '/homescreen/racketmenu': (context) => DesignCourseHomeScreen(),
+        '/homescreen/scoresmenu': (context) => HotelHomeScreen(),
+        '/homescreen/gatchamenu': (context) => FitnessAppHomeScreen(),
       }, //use this route by Navigator.pushNamed(context, address)
     );
   }

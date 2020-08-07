@@ -81,7 +81,6 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
         loading = false;
       });
     });
-
   }
 
   @override

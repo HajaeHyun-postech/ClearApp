@@ -1,9 +1,19 @@
 import 'package:clearApp/util/popup_widgets/popup_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../navigation_home_screen.dart';
+import 'package:provider/provider.dart';
 import 'Widgets/FormCard.dart';
 import 'login_auth.dart';
+
+class LoginScreenWithProvider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<LoginAuth>(
+      create: (context) => LoginAuth(),
+      child: LoginScreen(),
+    );
+  }
+}
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,9 +23,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   bool _isSelected = false;
-  bool onAnimation = false;
-  String povisId;
-  int studentId;
 
   @override
   void initState() {
@@ -56,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final loginAuth = Provider.of<LoginAuth>(context);
+
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
@@ -86,18 +95,7 @@ class _LoginScreenState extends State<LoginScreen>
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(300),
                     ),
-                    FormCard(
-                      povisIdChanged: (String _povisId) {
-                        setState(() {
-                          povisId = _povisId;
-                        });
-                      },
-                      studentIdChanged: (int _studentId) {
-                        setState(() {
-                          studentId = _studentId;
-                        });
-                      },
-                    ),
+                    FormCard(),
                     SizedBox(height: ScreenUtil.getInstance().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,33 +137,22 @@ class _LoginScreenState extends State<LoginScreen>
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    onAnimation = true;
-                                  });
-                                  LoginAuth.loginAuth(povisId, studentId)
-                                      .then((value) {
-                                    setState(() {
-                                      onAnimation = false;
-                                    });
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                NavigationHomeScreen()));
-                                  }).catchError((e) {
-                                    setState(() {
-                                      onAnimation = false;
-                                    });
-                                    PopupGenerator.errorPopupWidget(
-                                        context,
-                                        'Login Error',
-                                        'Please check your povis Id and studend Id',
-                                        () => Navigator.pop(context)).show();
-                                    return;
-                                  });
+                                  if (!loginAuth.isFetching) {
+                                    loginAuth
+                                        .doLoginAuth()
+                                        .then((_) => Navigator.pushNamed(
+                                            context, '/homescreen'))
+                                        .catchError((e) =>
+                                            PopupGenerator.errorPopupWidget(
+                                                context,
+                                                'Login Error',
+                                                'Please check your povis Id and studend Id',
+                                                () => Navigator.pop(
+                                                    context)).show());
+                                  }
                                 },
                                 child: Center(
-                                    child: !onAnimation
+                                    child: !loginAuth.isFetching
                                         ? new Text("SIGNIN",
                                             style: TextStyle(
                                               color: Colors.white,

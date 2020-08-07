@@ -5,12 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import './data_manage/game_data_handler.dart';
+import 'package:provider/provider.dart';
+import 'data_manage/game_data_subject.dart';
 import './data_manage/game_data.dart';
 import './data_manage/events.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'game_list_view.dart';
+
+class GamesHomeScreenWithProvider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<GameDataSubject>(
+      create: (context) => GameDataSubject(context),
+      child: GamesHomeScreen(),
+    );
+  }
+}
 
 class GamesHomeScreen extends StatefulWidget {
   @override
@@ -19,13 +30,6 @@ class GamesHomeScreen extends StatefulWidget {
 
 class _GamesHomeScreenState extends State<GamesHomeScreen>
     with TickerProviderStateMixin {
-  //data
-  List<GameData> gameList = new List();
-  GameDataHandler gameDataHandler;
-
-  //states
-  bool loadingData;
-
   AnimationController animationController;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
@@ -33,29 +37,10 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
 
   @override
   void initState() {
-    //Data handling
-    registerHandler();
-    refreshData();
-
     //animation controll
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
-  }
-
-  void registerHandler() {
-    gameDataHandler = new GameDataHandler(context);
-    gameDataHandler.registerDataUpdateCallback((list) {
-      setState(() {
-        loadingData = false;
-        gameList = list;
-      });
-    });
-  }
-
-  void refreshData() {
-    loadingData = true;
-    gameDataHandler.eventHandle(EVENT.RefreshEvent);
   }
 
   @override
@@ -67,6 +52,8 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final gameDataSubject = Provider.of<GameDataSubject>(context);
+
     return Theme(
       data: ClearAppTheme.buildLightTheme(),
       child: Container(
@@ -115,14 +102,13 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                           color:
                               ClearAppTheme.buildLightTheme().backgroundColor,
                           child: ListView.builder(
-                            itemCount: gameList.length,
+                            itemCount: gameDataSubject.gameDataList.length,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
-                            itemBuilder: !loadingData
+                            itemBuilder: !gameDataSubject.isFeching
                                 ? (BuildContext context, int index) {
-                                    final int count = gameList.length > 10
-                                        ? 10
-                                        : gameList.length;
+                                    final int count =
+                                        gameDataSubject.gameDataList.length;
                                     final Animation<double> animation =
                                         Tween<double>(begin: 0.0, end: 1.0)
                                             .animate(CurvedAnimation(
@@ -134,7 +120,8 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                                     animationController.forward();
                                     return GameListView(
                                       callback: () {},
-                                      gameData: gameList[index],
+                                      gameData:
+                                          gameDataSubject.gameDataList[index],
                                       animation: animation,
                                       animationController: animationController,
                                     );
@@ -449,6 +436,8 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
   }
 
   Widget createForm() {
+    final gameDataProvider = Provider.of<GameDataSubject>(context);
+
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       FormBuilder(
         key: _fbKey,
@@ -537,7 +526,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
               if (_fbKey.currentState.saveAndValidate()) {
                 Logger().i('Create Game button clicked');
                 GameData newGame = new GameData(_fbKey.currentState.value);
-                gameDataHandler.eventHandle(EVENT.MakeGameEvent,
+                gameDataProvider.eventHandle(EVENT.MakeGameEvent,
                     newGame: newGame);
               }
             },

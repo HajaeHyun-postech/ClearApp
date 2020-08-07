@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:clearApp/login/login_info.dart';
 
 class GameData {
-  String key;
+  int key;
   String gameType;
   String description;
   String location;
@@ -15,7 +15,7 @@ class GameData {
   List<LoginInfo> participantList;
 
   GameData(Map<String, dynamic> formData) {
-    key = '0';
+    key = 0;
     gameType = formData['gameType'];
     description = formData['description'];
     location = formData['location'];
@@ -28,7 +28,7 @@ class GameData {
   }
 
   GameData.fromMap(Map<String, dynamic> map)
-      : key = (jsonDecode(map['key']) as String),
+      : key = (jsonDecode(map['key']) as int),
         gameType = (jsonDecode(map['gameType']) as String),
         description = (jsonDecode(map['description']) as String),
         location = (jsonDecode(map['location']) as String),

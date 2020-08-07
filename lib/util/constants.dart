@@ -7,7 +7,7 @@ enum ShuttleMenuCurrentTab { Total, Not_Rcved, Admin }
 const shuttlecockURL =
     'https://script.google.com/macros/s/AKfycbwIDa1QhrWjn1aYK9WsTvIgXg5sfKOuo8Y9uGhq_rkkYq1BMQ/exec';
 
-const subscriberListURL =
+const memberlistURL =
     'https://script.google.com/macros/s/AKfycbxnKPsGY_p-d3vkx3YOo_svnMPDEmHUzLZwT2UtTLvqr7NWjALA/exec';
 
 const gamesListURL =
