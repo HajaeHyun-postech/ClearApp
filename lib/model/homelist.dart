@@ -1,5 +1,6 @@
 import 'package:clearApp/games_menu/games_home_screen.dart';
 import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
+import 'package:clearApp/racket_menu/racket_menu_homepage.dart';
 import 'package:flutter/widgets.dart';
 
 import '../design_course/home_design_course.dart';
@@ -26,7 +27,7 @@ class HomeList {
     ),
     HomeList(
       imagePath: 'assets/menu/racket.png',
-      navigateScreen: DesignCourseHomeScreen(),
+      navigateScreen: RacketmenuHomepage(),
       title: 'Racket',
     ),
     HomeList(
