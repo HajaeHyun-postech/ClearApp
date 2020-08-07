@@ -5,7 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
+import '../util/toastmessage_widgets/toast_generator.dart';
 import 'data_manage/events.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -71,31 +71,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             color: ClearAppTheme.darkBlue,
                             icon: Icons.check,
                             onTap: widget.prchHstr.approved
-                                ? () => /*Fluttertoast.showToast(
-                                    msg: "Already Approved!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor:
-                                        Color(0xFFF45C43).withOpacity(1),
-                                    textColor: Colors.white,
-                                    fontSize: 13.0)*/
-                                    showToast('Already Approved!',
-                                          context: context,
-                                          animation: StyledToastAnimation.slideFromBottom,
-                                          reverseAnimation: StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 2),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                          backgroundColor: Color(0xFFF45C43).withOpacity(0.7),
-                                          textStyle: TextStyle(
-                                              fontSize: 13.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFFFFFF),
-                                            ),
-                                          )
+                                ? () => Toast_generator.errorPopup(context, 'Already Approved!')
                                 : () => PopupGenerator.remindPopupWidget(
                                         context,
                                         'REMIND',
@@ -105,15 +81,6 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                           EVENT.UpdateApprEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
-                                      /*Fluttertoast.showToast(
-                                          msg: "Approved succesfully",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: ClearAppTheme.green
-                                              .withOpacity(1),
-                                          textColor: Colors.white,
-                                          fontSize: 13.0);*/
                                           showToast('Approved Succesfully',
                                           context: context,
                                           animation: StyledToastAnimation.slideFromBottom,
@@ -138,31 +105,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             color: ClearAppTheme.darkBlue,
                             icon: Icons.check,
                             onTap: widget.prchHstr.received
-                                ? () => /*Fluttertoast.showToast(
-                                    msg: "Already Received!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor:
-                                        Color(0xFFF45C43).withOpacity(1),
-                                    textColor: Colors.white,
-                                    fontSize: 13.0)*/
-                                   showToast('Already Received',
-                                          context: context,
-                                          animation: StyledToastAnimation.slideFromBottom,
-                                          reverseAnimation: StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 2),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                          backgroundColor: Color(0xFFF45C43).withOpacity(0.7),
-                                          textStyle: TextStyle(
-                                              fontSize: 13.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFFFFFF),
-                                            ),
-                                          )
+                                ? () => Toast_generator.errorPopup(context, 'Already Received!')
                                 : () => PopupGenerator.remindPopupWidget(
                                         context,
                                         'REMIND',
@@ -172,22 +115,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                           EVENT.UpdateRcvedEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
-                                      showToast('Recieved Succesfully',
-                                          context: context,
-                                          animation: StyledToastAnimation.slideFromBottom,
-                                          reverseAnimation: StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 2),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                          backgroundColor: ClearAppTheme.green.withOpacity(0.7),
-                                          textStyle: TextStyle(
-                                              fontSize: 13.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFFFFFF),
-                                            ),
-                                          );
+                                      Toast_generator.successPopup(context, 'Received Succesfully!');
                                     }).show())
                       ],
                 secondaryActions: <Widget>[
@@ -214,47 +142,9 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                 EVENT.DeleteHstrEvent,
                                 key: widget.prchHstr.key);
                             Navigator.pop(context);
-                            /*Fluttertoast.showToast(
-                                msg: "Deleted succesfully",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor:
-                                    ClearAppTheme.green.withOpacity(1),
-                                textColor: Colors.white,
-                                fontSize: 13.0);*/
-                                showToast('Deleted Succesfully',
-                                          context: context,
-                                          animation: StyledToastAnimation.slideFromBottom,
-                                          reverseAnimation: StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 2),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                          backgroundColor: ClearAppTheme.green.withOpacity(0.7),
-                                          textStyle: TextStyle(
-                                              fontSize: 13.0,
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFFFFFF),
-                                            )
-                                          );
+                            Toast_generator.successPopup(context, 'Deleted Succesfully!');
                           }).show();
-                        } else {
-                         /* Fluttertoast.showToast(
-                              msg: widget.prchHstr.approved
-                                  ? "Error: approved history"
-                                  : (widget.prchHstr.received
-                                      ? "Error: received history"
-                                      : (!timeValidate
-                                          ? "Error: timeout (10 min)"
-                                          : "Admin cannot remove history")),
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Color(0xFFF45C43).withOpacity(1),
-                              textColor: Colors.white,
-                              fontSize: 13.0);*/
+                        } else {/*
                               showToast(widget.prchHstr.approved
                                   ? "Error: approved history"
                                   : (widget.prchHstr.received
@@ -276,7 +166,14 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                               fontFamily: 'Poppins',
                                               color: Color(0xFFFFFFFF),
                                             ),
-                                          );
+                                          );*/
+                                Toast_generator.errorPopup(context, widget.prchHstr.approved
+                                  ? "Error: approved history"
+                                  : (widget.prchHstr.received
+                                      ? "Error: received history"
+                                      : (!timeValidate
+                                          ? "Error: timeout (10 min)"
+                                          : "Admin cannot remove history")));
                         }
                       })
                 ],
