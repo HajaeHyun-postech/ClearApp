@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:clearApp/login/login_info.dart';
 
-class GameData {
+class GameData implements Comparable {
   int key;
   String gameType;
   String description;
@@ -53,4 +53,13 @@ class GameData {
         'maxCapacity': maxCapacity,
         'participantList': participantList.map((info) => info.toMap()).toList()
       };
+  @override
+  int compareTo(other) {
+    if (this.key < other.key) {
+      return 1;
+    }
+    if (this.key > other.key) {
+      return -1;
+    }
+  }
 }

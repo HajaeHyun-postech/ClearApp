@@ -1,3 +1,4 @@
+import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'util/app_theme.dart';
@@ -132,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   'Clear App',
                   style: TextStyle(
                     fontSize: 22,
+                    fontFamily: 'Poppins',
                     color: ClearAppTheme.darkText,
                     fontWeight: FontWeight.w700,
                   ),

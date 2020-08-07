@@ -174,7 +174,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   },
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, '/');
+                  Navigator.pop(context);
                 },
               ),
               SizedBox(

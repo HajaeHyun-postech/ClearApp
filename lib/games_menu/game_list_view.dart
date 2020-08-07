@@ -3,15 +3,12 @@ import 'game_expansion_card.dart';
 import './data_manage/game_data.dart';
 
 class GameListView extends StatelessWidget {
-  const GameListView(
-      {Key key,
-      this.gameData,
-      this.animationController,
-      this.animation,
-      this.callback})
-      : super(key: key);
-
-  final VoidCallback callback;
+  const GameListView({
+    Key key,
+    this.gameData,
+    this.animationController,
+    this.animation,
+  }) : super(key: key);
 
   final GameData gameData;
   final AnimationController animationController;
@@ -30,7 +27,10 @@ class GameListView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 24, right: 24, top: 8, bottom: 16),
-              child: GameExpansionCard(initiallyExpanded: false),
+              child: GameExpansionCard(
+                initiallyExpanded: false,
+                gameData: gameData,
+              ),
             ),
           ),
         );

@@ -124,7 +124,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                 },
                 child: Column(
                   children: <Widget>[
-                    CustomAppBar().appBar(context),
+                    CustomAppBar(),
                     Expanded(
                         child: NestedScrollView(
                             controller: _scrollController,

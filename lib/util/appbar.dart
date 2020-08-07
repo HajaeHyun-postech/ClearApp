@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'app_theme.dart';
 
-class CustomAppBar {
-  Widget appBar(BuildContext context) {
+class CustomAppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
           color: ClearAppTheme.buildLightTheme().backgroundColor,
@@ -47,6 +48,7 @@ class CustomAppBar {
                     'Clear App',
                     style: TextStyle(
                       fontSize: 22,
+                      fontFamily: 'Poppins',
                       color: ClearAppTheme.darkText,
                       fontWeight: FontWeight.w700,
                     ),

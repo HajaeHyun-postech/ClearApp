@@ -45,6 +45,7 @@ dependencies:
   modal_bottom_sheet: ^0.2.0+1
   flutter_form_builder: ^3.12.0
   provider: ^4.3.1
+  sticky_grouped_list: ^0.3.0
   
 
 dev_dependencies:
@@ -84,10 +85,11 @@ flutter:
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/fonts/Roboto-Bold.ttf
         - asset: assets/fonts/Roboto-Regular.ttf
         - asset: assets/fonts/Roboto-Medium.ttf
-          weight: 400
+          weight: 500
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
     - family: WorkSans
       fonts:
         - asset: assets/fonts/WorkSans-Regular.ttf
@@ -99,8 +101,11 @@ flutter:
           weight: 700
     - family: Poppins
       fonts:
-        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:clearApp/login/login_info.dart';
 import 'package:clearApp/util/app_theme.dart';
 import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import './data_manage/game_data.dart';
 import './data_manage/events.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import 'game_list_view.dart';
 
 class GamesHomeScreenWithProvider extends StatelessWidget {
@@ -70,7 +72,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                 },
                 child: Column(
                   children: <Widget>[
-                    CustomAppBar().appBar(context),
+                    CustomAppBar(),
                     Expanded(
                       child: NestedScrollView(
                         controller: _scrollController,
@@ -101,12 +103,57 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                         body: Container(
                           color:
                               ClearAppTheme.buildLightTheme().backgroundColor,
-                          child: ListView.builder(
-                            itemCount: gameDataSubject.gameDataList.length,
-                            padding: const EdgeInsets.only(top: 8),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: !gameDataSubject.isFeching
-                                ? (BuildContext context, int index) {
+                          child: gameDataSubject.isFeching
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                      Center(
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          margin: EdgeInsets.all(5),
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 3.0,
+                                            valueColor: AlwaysStoppedAnimation(
+                                                ClearAppTheme.darkBlue),
+                                          ),
+                                        ),
+                                      ),
+                                    ])
+                              : StickyGroupedListView<GameData, bool>(
+                                  elements: gameDataSubject.gameDataList,
+                                  groupBy: (gameData) => gameData
+                                      .participantList
+                                      .contains(LoginInfo()),
+                                  floatingHeader: true,
+                                  groupSeparatorBuilder: (GameData gameData) =>
+                                      Container(
+                                    height: 50,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[300],
+                                          border: Border.all(
+                                            color: Colors.blue[300],
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '${gameData.participantList.contains(LoginInfo())}',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  indexedItemBuilder:
+                                      (context, element, index) {
                                     final int count =
                                         gameDataSubject.gameDataList.length;
                                     final Animation<double> animation =
@@ -119,36 +166,14 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                                                         Curves.fastOutSlowIn)));
                                     animationController.forward();
                                     return GameListView(
-                                      callback: () {},
                                       gameData:
                                           gameDataSubject.gameDataList[index],
                                       animation: animation,
                                       animationController: animationController,
                                     );
-                                  }
-                                : (BuildContext context, int index) {
-                                    return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Center(
-                                            child: Container(
-                                              height: 30,
-                                              width: 30,
-                                              margin: EdgeInsets.all(5),
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 3.0,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                        ClearAppTheme.darkBlue),
-                                              ),
-                                            ),
-                                          ),
-                                        ]);
                                   },
-                          ),
+                                  order: StickyGroupedListOrder.DESC,
+                                ),
                         ),
                       ),
                     )
@@ -381,8 +406,7 @@ class _GamesHomeScreenState extends State<GamesHomeScreen>
                     child: Text(
                       '5 games found',
                       style: TextStyle(
-                        fontWeight: FontWeight.w100,
-                        fontSize: 16,
+                        fontSize: 15,
                       ),
                     ),
                   ),

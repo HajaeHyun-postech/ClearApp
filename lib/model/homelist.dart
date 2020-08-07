@@ -18,7 +18,7 @@ class HomeList {
     ),
     HomeList(
       imagePath: 'assets/menu/racket.png',
-      navigateScreen: '/homescreeen/racketmenu',
+      navigateScreen: '/homescreen/racketmenu',
       title: 'Racket',
     ),
     HomeList(
@@ -28,7 +28,7 @@ class HomeList {
     ),
     HomeList(
       imagePath: 'assets/menu/scores.png',
-      navigateScreen: '/homescreeen/scoresmenu',
+      navigateScreen: '/homescreen/scoresmenu',
       title: 'deprecated',
     ),
     HomeList(

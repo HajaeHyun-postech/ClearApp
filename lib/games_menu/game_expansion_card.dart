@@ -3,14 +3,19 @@ import 'package:clearApp/util/app_theme.dart';
 import 'package:clearApp/games_menu/rolling_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'data_manage/game_data.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class GameExpansionCard extends StatefulWidget {
   final bool initiallyExpanded;
+  final GameData gameData;
 
-  const GameExpansionCard({Key key, this.initiallyExpanded = false})
+  const GameExpansionCard(
+      {Key key, this.initiallyExpanded = false, this.gameData})
       : super(key: key);
 
   @override
@@ -94,14 +99,17 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                           SizedBox(
                             height: 10,
                           ),
-                          Text('THU',
+                          Text(
+                              DateFormat('E')
+                                  .format(widget.gameData.dateTime)
+                                  .toUpperCase(),
                               style: TextStyle(
                                   fontSize: 13, fontFamily: 'Roboto')),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
-                            '30',
+                            DateFormat('d').format(widget.gameData.dateTime),
                             style: TextStyle(
                                 fontSize: 20,
                                 fontFamily: 'Roboto',
@@ -110,7 +118,8 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                           SizedBox(
                             height: 5,
                           ),
-                          Text('10:30',
+                          Text(
+                              DateFormat('Hm').format(widget.gameData.dateTime),
                               style: TextStyle(
                                   fontSize: 13, fontFamily: 'Roboto')),
                           SizedBox(
@@ -127,28 +136,55 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                         color: Colors.grey.withOpacity(0.8),
                       ),
                     ),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Expanded(
                       flex: 5,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Text('Regular Meeting',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600))),
-                          // if have description
-                          Text('description',
+                          Text(widget.gameData.gameType,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 15,
                                   fontFamily: 'Poppins',
-                                  color: ClearAppTheme.grey.withOpacity(0.8),
-                                  fontWeight: FontWeight.w400)),
+                                  fontWeight: FontWeight.w500)),
+                          Text(
+                              widget.gameData.description != ''
+                                  ? widget.gameData.description
+                                  : 'no description',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontFamily: 'Poppins',
+                                color: ClearAppTheme.grey.withOpacity(0.8),
+                              )),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                FontAwesomeIcons.mapMarkerAlt,
+                                size: 10,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                widget.gameData.location,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontFamily: 'Poppins',
+                                    color: ClearAppTheme.grey.withOpacity(0.8),
+                                    fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          ),
+                          /*
                           Padding(
                             padding: EdgeInsets.only(top: 5, bottom: 7),
                             child: LiteRollingSwitch(
@@ -177,6 +213,7 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                               onTap: () {},
                             ),
                           ),
+                          */
                         ],
                       ),
                     ),
@@ -185,15 +222,16 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                         child: Container(
                           alignment: Alignment.center,
                           child: SleekCircularSlider(
-                            min: 10,
-                            max: 60,
-                            initialValue: 20,
+                            min: 0,
+                            max: widget.gameData.maxCapacity,
+                            initialValue: widget.gameData.participantList.length
+                                .toDouble(),
                             appearance: CircularSliderAppearance(
                                 size: 60,
                                 customColors: CustomSliderColors(
                                     trackColor: HexColor('#90E3D0'),
                                     progressBarColors: [
-                                      HexColor('#FFC84B'),
+                                      HexColor('#96c93d'),
                                       HexColor('#00BFD5')
                                     ],
                                     shadowColor: HexColor('#5FC7B0'),
@@ -201,21 +239,30 @@ class _GameExpansionCardState extends State<GameExpansionCard>
                                 infoProperties: InfoProperties(
                                     bottomLabelStyle: TextStyle(
                                         color: HexColor('#002D43'),
-                                        fontSize: 10,
+                                        fontSize: 9,
                                         fontWeight: FontWeight.w200),
-                                    bottomLabelText: '/60',
+                                    bottomLabelText:
+                                        '/${widget.gameData.maxCapacity.toInt()}',
                                     mainLabelStyle: TextStyle(
                                         color: ClearAppTheme.grey,
-                                        fontSize: 20.0,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w200),
                                     modifier: (double value) {
                                       final count = value.toInt();
                                       return '$count';
                                     }),
                                 startAngle: 180,
-                                angleRange: 340),
+                                angleRange: 360),
                           ),
                         )),
+                    Icon(
+                      FontAwesomeIcons.chevronRight,
+                      size: 13,
+                      color: ClearAppTheme.grey.withOpacity(0.8),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    )
                   ],
                 ),
               ),

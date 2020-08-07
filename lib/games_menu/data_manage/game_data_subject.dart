@@ -3,14 +3,13 @@ import 'package:clearApp/util/popup_widgets/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:clearApp/util/api_service.dart';
-
 import '../../util/constants.dart' as Constants;
 import 'game_data.dart';
 import 'events.dart';
 
 class GameDataSubject extends ChangeNotifier {
   List<GameData> gameDataList = new List<GameData>();
-  bool isFeching = false;
+  bool isFeching = true;
 
   //etc
   BuildContext _context;
@@ -33,13 +32,13 @@ class GameDataSubject extends ChangeNotifier {
   void eventHandle(
     EVENT eventType, {
     GameData newGame,
-  }) {
+  }) async {
     try {
       fechingStartNotify();
       switch (eventType) {
         case EVENT.MakeGameEvent:
           Logger().i('Make Game Event occured');
-          makeGame(newGame);
+          await makeGame(newGame);
           break;
         case EVENT.ChangeAttendableEvent:
           break;
@@ -49,7 +48,7 @@ class GameDataSubject extends ChangeNotifier {
           break;
         case EVENT.FechingEvent:
           Logger().i('Fetching Event occured');
-          getGames();
+          await getGames();
           break;
         default:
           Logger().e('ERROR: unknown event: $eventType');
@@ -58,7 +57,6 @@ class GameDataSubject extends ChangeNotifier {
       fechingFinishNotify();
     } catch (error) {
       Logger().e('error... $error');
-
       PopupGenerator.errorPopupWidget(
           _context,
           'ERROR!',
@@ -70,8 +68,10 @@ class GameDataSubject extends ChangeNotifier {
 
   Future<void> makeGame(GameData newGame) async {
     try {
-      await APIService.doPost(Constants.gamesListURL, 'makeGame',
+      Map<String, dynamic> response = await APIService.doPost(
+          Constants.gamesListURL, 'makeGame',
           body: jsonEncode(newGame.toMap()));
+      newGame.key = response['data'];
       gameDataList.add(newGame);
     } catch (error) {
       throw error;
