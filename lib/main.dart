@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:clearApp/design_course/home_design_course.dart';
 import 'package:clearApp/fitness_app/fitness_app_home_screen.dart';
 import 'package:clearApp/hotel_booking/hotel_home_screen.dart';
 import 'package:clearApp/racket_menu/racket_menu_homepage.dart';
@@ -7,6 +6,7 @@ import 'package:clearApp/shuttle_menu/shuttle_menu_homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 import 'games_menu/games_home_screen.dart';
 import 'util/app_theme.dart';

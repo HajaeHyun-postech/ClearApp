@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,6 @@ class FormCard extends StatelessWidget {
 
     return new Container(
       width: double.infinity,
-//      height: ScreenUtil.getInstance().setHeight(500),
       padding: EdgeInsets.only(bottom: 1),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -27,48 +27,51 @@ class FormCard extends StatelessWidget {
                 blurRadius: 10.0),
           ]),
       child: Padding(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Login",
-                style: TextStyle(
-                    fontSize: ScreenUtil.getInstance().setSp(45),
-                    fontFamily: "Poppins-Bold",
-                    letterSpacing: .6)),
-            SizedBox(
-              height: ScreenUtil.getInstance().setHeight(30),
+          padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+          child: FormBuilder(
+            key: loginAuth.fbKey,
+            initialValue: {
+              'povisId': 'yshajae',
+              'studentId': '20180673',
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Login",
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(60),
+                        fontFamily: "Poppins-Bold",
+                        letterSpacing: .6)),
+                SizedBox(
+                  height: ScreenUtil().setHeight(30),
+                ),
+                FormBuilderTextField(
+                  attribute: "povisId",
+                  decoration: InputDecoration(labelText: "Povis Id"),
+                  validators: [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(30),
+                ),
+                FormBuilderTextField(
+                  valueTransformer: (value) => int.parse(value),
+                  attribute: "studentId",
+                  decoration: InputDecoration(labelText: "Student Id"),
+                  validators: [
+                    FormBuilderValidators.pattern(r'^\d{8}',
+                        errorText: 'Invalid Student Id!'),
+                    FormBuilderValidators.required(),
+                  ],
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(60),
+                ),
+              ],
             ),
-            Text("Povis Id",
-                style: TextStyle(
-                    fontFamily: "Poppins-Medium",
-                    fontSize: ScreenUtil.getInstance().setSp(26))),
-            TextField(
-              onChanged: (value) => loginAuth.povisId =
-                  (value.replaceAll("\t", "").replaceAll(" ", "")),
-              decoration: InputDecoration(
-                  hintText: "Povis Id",
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
-            ),
-            SizedBox(
-              height: ScreenUtil.getInstance().setHeight(30),
-            ),
-            Text("Student Id",
-                style: TextStyle(
-                    fontFamily: "Poppins-Medium",
-                    fontSize: ScreenUtil.getInstance().setSp(26))),
-            TextField(
-              onChanged: (value) => loginAuth.studentId = (int.parse(value)),
-              decoration: InputDecoration(
-                  hintText: "Student Id",
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
-            ),
-            SizedBox(
-              height: ScreenUtil.getInstance().setHeight(35),
-            ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

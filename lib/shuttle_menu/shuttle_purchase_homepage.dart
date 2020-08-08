@@ -1,5 +1,3 @@
-import 'package:clearApp/shuttle_menu/add_prch_button.dart';
-import 'package:clearApp/shuttle_menu/add_prch_form.dart';
 import 'package:flutter/cupertino.dart';
 
 class ShuttlePrchHomePage extends StatelessWidget {
@@ -9,14 +7,7 @@ class ShuttlePrchHomePage extends StatelessWidget {
 
     return Stack(
       fit: StackFit.expand,
-      children: <Widget>[
-        AddPrchForm(
-          size: size,
-        ),
-        AddPrchButton(
-          size: size,
-        ),
-      ],
+      children: <Widget>[],
     );
   }
 }

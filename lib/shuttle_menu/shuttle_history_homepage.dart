@@ -1,14 +1,13 @@
-import 'package:clearApp/login/login_info.dart';
 import 'package:clearApp/shuttle_menu/prch_hstr_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'tab_model.dart';
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
-import 'data_manage/shuttle_hitsory_handler.dart';
 import 'data_manage/shuttle_purchace_history.dart';
-import '../util/constants.dart' as Constants;
 import 'data_manage/events.dart';
+import 'package:provider/provider.dart';
+import 'data_manage/shuttle_hitsory_subject.dart';
 
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
@@ -20,66 +19,27 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   List<ShuttlePrchHstr> shuttlePrchHstrList = new List<ShuttlePrchHstr>();
   AnimationController animationController;
   List<String> shuttleListToRcv;
-  bool loading;
   int moneyToPay;
 
   final ScrollController _scrollController = ScrollController();
 
   TabController _tabController;
-  final List<Widget> _tabs = [
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('TOTAL'),
-      ),
-    ),
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('NOT RCVED'),
-      ),
-    ),
-    if (LoginInfo().isAdmin)
-      Tab(
-        child: Align(
-          alignment: Alignment.center,
-          child: Text('ADMIN'),
-        ),
-      )
-  ];
 
   @override
   void initState() {
     super.initState();
-    registerHandler();
 
     //animation setting
-    loading = true;
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController =
+        TabController(length: ShuttleMenuCurrentTab.values.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        setState(() {
-          loading = true;
-        });
-        ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
-            tab: Constants.ShuttleMenuCurrentTab.values[_tabController.index]);
+        Provider.of<ShuttlePrchHstrSubject>(context).eventHandle(
+            EVENT.TabChangeEvent,
+            tab: ShuttleMenuCurrentTab.values[_tabController.index]);
       }
-    });
-
-    ShuttlePrchHstrHandler().eventHandle(EVENT.TabChangeEvent,
-        tab: Constants.ShuttleMenuCurrentTab.Total);
-  }
-
-  void registerHandler() {
-    ShuttlePrchHstrHandler().registerDataupdateCallback((list) {
-      if (!mounted) return;
-
-      setState(() {
-        shuttlePrchHstrList = list;
-        loading = false;
-      });
     });
   }
 
@@ -105,6 +65,8 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
+
     moneyToPayCal();
     shuttleListToRcvCal();
 
@@ -176,18 +138,19 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                     floating: true,
                                     delegate: ContestTabHeader(_MyTabBar(
                                         tabController: _tabController,
-                                        tabs: _tabs)))
+                                        tabs: ShuttleTab.getShuttleTab())))
                               ];
                             },
                             body: Container(
                               color: ClearAppTheme.buildLightTheme()
                                   .backgroundColor,
                               child: ListView.builder(
-                                  itemCount:
-                                      !loading ? shuttlePrchHstrList.length : 1,
+                                  itemCount: !shuttlePrchHstrSubject.isFeching
+                                      ? shuttlePrchHstrList.length
+                                      : 1,
                                   padding: const EdgeInsets.only(bottom: 1),
                                   scrollDirection: Axis.vertical,
-                                  itemBuilder: !loading
+                                  itemBuilder: !shuttlePrchHstrSubject.isFeching
                                       ? (BuildContext context, int index) {
                                           final int count =
                                               shuttlePrchHstrList.length;
@@ -209,12 +172,10 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                                 animationController,
                                             prchHstr:
                                                 shuttlePrchHstrList[index],
-                                            isAdminTab: Constants
-                                                        .ShuttleMenuCurrentTab
-                                                        .values[
-                                                    _tabController.index] ==
-                                                Constants.ShuttleMenuCurrentTab
-                                                    .Admin,
+                                            isAdminTab:
+                                                ShuttleMenuCurrentTab.values[
+                                                        _tabController.index] ==
+                                                    ShuttleMenuCurrentTab.Admin,
                                           );
                                         }
                                       : (BuildContext context, int index) {

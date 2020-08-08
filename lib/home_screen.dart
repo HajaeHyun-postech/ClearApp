@@ -37,8 +37,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Constants.homeContext = context;
-
     return Scaffold(
       backgroundColor: ClearAppTheme.white,
       body: FutureBuilder<bool>(

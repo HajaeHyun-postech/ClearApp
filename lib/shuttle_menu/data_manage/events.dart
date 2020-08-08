@@ -5,6 +5,4 @@ enum EVENT {
   DeleteHstrEvent,
   AddNewEvent, //data update events
   EditingStateChangeEvent, //state change events
-  SubmitToAddNewEvent, //submit events
-  ErrorEvent, //error events
 }

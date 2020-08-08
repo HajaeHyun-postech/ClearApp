@@ -171,7 +171,7 @@ packages:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.6"
+    version: "2.3.1"
   flutter_slidable:
     dependency: "direct main"
     description:

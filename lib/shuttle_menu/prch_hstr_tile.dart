@@ -1,4 +1,4 @@
-import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_handler.dart';
+import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_subject.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/util/popup_generator.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,6 +8,7 @@ import 'package:date_format/date_format.dart';
 import '../util/toast_generator.dart';
 import 'data_manage/events.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:provider/provider.dart';
 
 class PrchHstrTile extends StatefulWidget {
   final ShuttlePrchHstr prchHstr;
@@ -39,6 +40,8 @@ class PrchHstrTileState extends State<PrchHstrTile> {
 
   @override
   Widget build(BuildContext context) {
+    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
+
     return AnimatedBuilder(
         animation: widget.animationController,
         builder: (BuildContext context, Widget child) {
@@ -78,7 +81,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                         'REMIND',
                                         'Are you sure about this?',
                                         () => Navigator.pop(context), () {
-                                      ShuttlePrchHstrHandler().eventHandle(
+                                      shuttlePrchHstrSubject.eventHandle(
                                           EVENT.UpdateApprEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
@@ -117,7 +120,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                         'REMIND',
                                         'Are you sure about this?',
                                         () => Navigator.pop(context), () {
-                                      ShuttlePrchHstrHandler().eventHandle(
+                                      shuttlePrchHstrSubject.eventHandle(
                                           EVENT.UpdateRcvedEvent,
                                           key: widget.prchHstr.key);
                                       Navigator.pop(context);
@@ -145,7 +148,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                               'ALERT',
                               'Are you sure about this?',
                               () => Navigator.pop(context), () {
-                            ShuttlePrchHstrHandler().eventHandle(
+                            shuttlePrchHstrSubject.eventHandle(
                                 EVENT.DeleteHstrEvent,
                                 key: widget.prchHstr.key);
                             Navigator.pop(context);

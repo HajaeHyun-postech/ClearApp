@@ -67,31 +67,23 @@ class GameDataSubject extends ChangeNotifier {
   }
 
   Future<void> makeGame(GameData newGame) async {
-    try {
-      Map<String, dynamic> response = await APIService.doPost(
-          Constants.gamesListURL, 'makeGame',
-          body: jsonEncode(newGame.toMap()));
-      newGame.key = response['data'];
-      gameDataList.add(newGame);
-    } catch (error) {
-      throw error;
-    }
+    Map<String, dynamic> response = await APIService.doPost(
+        Constants.gamesListURL, 'makeGame',
+        body: jsonEncode(newGame.toMap()));
+    newGame.key = response['data'];
+    gameDataList.add(newGame);
   }
 
   Future<void> getGames() async {
-    try {
-      Map<String, dynamic> response =
-          await APIService.doGet(Constants.gamesListURL, 'getGames', new Map());
+    Map<String, dynamic> response =
+        await APIService.doGet(Constants.gamesListURL, 'getGames', new Map());
 
-      gameDataList = new List<GameData>();
+    gameDataList = new List<GameData>();
 
-      List<dynamic> jsonList = response['data'];
-      jsonList.forEach((element) {
-        Map<String, dynamic> _map = element;
-        gameDataList.add(GameData.fromMap(_map));
-      });
-    } catch (error) {
-      throw error;
-    }
+    List<dynamic> jsonList = response['data'];
+    jsonList.forEach((element) {
+      Map<String, dynamic> _map = element;
+      gameDataList.add(GameData.fromMap(_map));
+    });
   }
 }

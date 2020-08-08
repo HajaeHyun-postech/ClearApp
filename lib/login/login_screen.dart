@@ -1,6 +1,7 @@
 import 'package:clearApp/util/popup_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'Widgets/FormCard.dart';
 import 'login_auth.dart';
@@ -8,6 +9,7 @@ import 'login_auth.dart';
 class LoginScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, width: 1440, height: 2560, allowFontScaling: true);
     return ChangeNotifierProvider<LoginAuth>(
       create: (context) => LoginAuth(),
       child: LoginScreen(),
@@ -55,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: ScreenUtil.getInstance().setWidth(120),
+          width: ScreenUtil().setWidth(120),
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),
@@ -64,10 +66,6 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final loginAuth = Provider.of<LoginAuth>(context);
-
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-    ScreenUtil.instance =
-        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new WillPopScope(
       child: new Scaffold(
         backgroundColor: Colors.white,
@@ -93,24 +91,24 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(300),
+                      height: ScreenUtil().setHeight(600),
                     ),
                     FormCard(),
-                    SizedBox(height: ScreenUtil.getInstance().setHeight(40)),
+                    SizedBox(height: ScreenUtil().setHeight(40)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Row(
                           children: <Widget>[
                             SizedBox(
-                              width: 12.0,
+                              width: ScreenUtil().setWidth(25),
                             ),
                             GestureDetector(
                               onTap: _radio,
                               child: radioButton(_isSelected),
                             ),
                             SizedBox(
-                              width: 8.0,
+                              width: ScreenUtil().setWidth(20),
                             ),
                             Text("Remember me",
                                 style: TextStyle(
@@ -119,8 +117,8 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                         InkWell(
                           child: Container(
-                            width: ScreenUtil.getInstance().setHeight(330),
-                            height: ScreenUtil.getInstance().setHeight(100),
+                            width: ScreenUtil().setWidth(400),
+                            height: ScreenUtil().setHeight(150),
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: [
                                   Color(0xFF17ead9),
@@ -142,13 +140,13 @@ class _LoginScreenState extends State<LoginScreen>
                                         .doLoginAuth()
                                         .then((_) => Navigator.pushNamed(
                                             context, '/homescreen'))
-                                        .catchError((e) =>
-                                            PopupGenerator.errorPopupWidget(
-                                                context,
-                                                'Login Error',
-                                                'Please check your povis Id and studend Id',
-                                                () => Navigator.pop(
-                                                    context)).show());
+                                        .catchError((e) {
+                                      PopupGenerator.errorPopupWidget(
+                                          context,
+                                          'Login Error',
+                                          'Please check your povis Id and studend Id',
+                                          () => Navigator.pop(context)).show();
+                                    });
                                   }
                                 },
                                 child: Center(
@@ -170,9 +168,6 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         )
                       ],
-                    ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
                     ),
                   ],
                 ),
