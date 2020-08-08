@@ -10,13 +10,7 @@ class LoginAuth extends ChangeNotifier {
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
 
   Future<void> doLoginAuth() async {
-    try {
-      fbKey.currentState.saveAndValidate();
-    } catch (e) {
-      Logger().i(e);
-    }
     if (fbKey.currentState.saveAndValidate()) {
-      Logger().i('in');
       isFetching = true;
       notifyListeners();
       String povisId = fbKey.currentState.value['povisId'];
@@ -36,7 +30,7 @@ class LoginAuth extends ChangeNotifier {
         notifyListeners();
       }
     } else {
-      throw FormatException;
+      return Future.error(FormatException());
     }
   }
 }

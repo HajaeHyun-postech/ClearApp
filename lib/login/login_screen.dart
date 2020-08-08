@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:clearApp/util/popup_generator.dart';
+import 'package:clearApp/util/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'Widgets/FormCard.dart';
+import 'FormCard.dart';
 import 'login_auth.dart';
 
 class LoginScreenWithProvider extends StatelessWidget {
@@ -140,13 +143,14 @@ class _LoginScreenState extends State<LoginScreen>
                                         .doLoginAuth()
                                         .then((_) => Navigator.pushNamed(
                                             context, '/homescreen'))
-                                        .catchError((e) {
-                                      PopupGenerator.errorPopupWidget(
-                                          context,
-                                          'Login Error',
-                                          'Please check your povis Id and studend Id',
-                                          () => Navigator.pop(context)).show();
-                                    });
+                                        .catchError(
+                                            (e) => Toast_generator.errorToast(
+                                                context, 'Invalid Format'),
+                                            test: (e) => e is FormatException)
+                                        .catchError(
+                                            (e) => Toast_generator.errorToast(
+                                                context, 'Login failed'),
+                                            test: (e) => e is HttpException);
                                   }
                                 },
                                 child: Center(
@@ -154,15 +158,20 @@ class _LoginScreenState extends State<LoginScreen>
                                         ? new Text("SIGNIN",
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontFamily: "Poppins-Bold",
-                                              fontSize: 18,
+                                              fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: ScreenUtil().setSp(60),
                                               letterSpacing: 1.0,
                                             ))
-                                        : new CircularProgressIndicator(
-                                            valueColor:
-                                                new AlwaysStoppedAnimation<
-                                                    Color>(Colors.white),
-                                          )),
+                                        : SizedBox(
+                                            width: ScreenUtil().setWidth(80),
+                                            height: ScreenUtil().setHeight(80),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 3,
+                                              valueColor:
+                                                  new AlwaysStoppedAnimation<
+                                                      Color>(Colors.white),
+                                            ))),
                               ),
                             ),
                           ),

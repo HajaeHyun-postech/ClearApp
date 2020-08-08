@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
@@ -19,7 +20,7 @@ class APIService {
 
     if (statusCode != 200 || body.containsKey('error')) {
       Logger().e('error: ${body['error'].toString()}');
-      throw ('error: ${body['error'].toString()}');
+      throw HttpException('Get failed with ${body['error'].toString()}');
     } else {
       Logger().i('http  reqeust response success');
     }
@@ -53,7 +54,7 @@ class APIService {
       Map<String, dynamic> body = jsonDecode(redirectResponse.body);
       if (body.containsKey('error')) {
         Logger().e('error: ${body['error'].toString()}');
-        throw ('error: ${body['error'].toString()}');
+        throw HttpException('Post failed with ${body['error'].toString()}');
       } else {
         Logger().i('http  redirect post response success');
         return body;
@@ -62,7 +63,7 @@ class APIService {
       Map<String, dynamic> body = jsonDecode(response.body);
       if (body.containsKey('error')) {
         Logger().e('error: ${body['error'].toString()}');
-        throw ('error: ${body['error'].toString()}');
+        throw HttpException('Post failed with ${body['error'].toString()}');
       } else {
         Logger().i('http  post response success');
         return body;

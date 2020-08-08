@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../login_auth.dart';
+import 'login_auth.dart';
 
 class FormCard extends StatelessWidget {
   @override
@@ -51,6 +51,8 @@ class FormCard extends StatelessWidget {
                   validators: [
                     FormBuilderValidators.required(),
                   ],
+                  valueTransformer: (value) =>
+                      value.replaceAll("\t", "").replaceAll(" ", ""),
                 ),
                 SizedBox(
                   height: ScreenUtil().setHeight(30),
