@@ -40,14 +40,17 @@ class FormCard extends StatelessWidget {
                 Text("Login",
                     style: TextStyle(
                         fontSize: ScreenUtil().setSp(60),
-                        fontFamily: "Poppins-Bold",
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w500,
                         letterSpacing: .6)),
-                SizedBox(
-                  height: ScreenUtil().setHeight(30),
-                ),
                 FormBuilderTextField(
                   attribute: "povisId",
-                  decoration: InputDecoration(labelText: "Povis Id"),
+                  decoration: InputDecoration(
+                      labelText: "Povis Id",
+                      labelStyle: TextStyle(
+                        fontSize: ScreenUtil().setSp(50),
+                        fontFamily: "WorkSans",
+                      )),
                   validators: [
                     FormBuilderValidators.required(),
                   ],
@@ -60,16 +63,20 @@ class FormCard extends StatelessWidget {
                 FormBuilderTextField(
                   valueTransformer: (value) => int.parse(value),
                   attribute: "studentId",
-                  decoration: InputDecoration(labelText: "Student Id"),
+                  decoration: InputDecoration(
+                      labelText: "Student Id",
+                      labelStyle: TextStyle(
+                        fontSize: ScreenUtil().setSp(50),
+                        fontFamily: "WorkSans",
+                      )),
                   validators: [
                     FormBuilderValidators.pattern(r'^\d{8}',
-                        errorText: 'Invalid Student Id!'),
-                    FormBuilderValidators.required(),
+                        errorText: 'Invalid student Id'),
                   ],
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(
-                  height: ScreenUtil().setHeight(60),
+                  height: ScreenUtil().setHeight(70),
                 ),
               ],
             ),

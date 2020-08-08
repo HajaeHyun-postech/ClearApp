@@ -4,7 +4,7 @@ import 'package:clearApp/util/popup_generator.dart';
 import 'package:clearApp/util/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:logger/logger.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'FormCard.dart';
 import 'login_auth.dart';
@@ -57,15 +57,6 @@ class _LoginScreenState extends State<LoginScreen>
             : Container(),
       );
 
-  Widget horizontalLine() => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          width: ScreenUtil().setWidth(120),
-          height: 1.0,
-          color: Colors.black26.withOpacity(.2),
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     final loginAuth = Provider.of<LoginAuth>(context);
@@ -80,24 +71,21 @@ class _LoginScreenState extends State<LoginScreen>
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 50.0, left: 90),
+                  padding: EdgeInsets.only(top: 80.0, left: 90),
                   child: Image.asset("assets/images/badminton_play.png"),
-                ),
-                Expanded(
-                  child: Container(),
                 ),
               ],
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 60.0),
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 90.0),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: ScreenUtil().setHeight(600),
+                      height: ScreenUtil().setHeight(550),
                     ),
                     FormCard(),
-                    SizedBox(height: ScreenUtil().setHeight(40)),
+                    SizedBox(height: ScreenUtil().setHeight(50)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -115,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen>
                             ),
                             Text("Remember me",
                                 style: TextStyle(
-                                    fontSize: 12, fontFamily: "Poppins-Medium"))
+                                    fontSize: ScreenUtil().setSp(45),
+                                    fontFamily: "Poppins-Medium"))
                           ],
                         ),
                         InkWell(
@@ -154,24 +143,24 @@ class _LoginScreenState extends State<LoginScreen>
                                   }
                                 },
                                 child: Center(
-                                    child: !loginAuth.isFetching
-                                        ? new Text("SIGNIN",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: ScreenUtil().setSp(60),
-                                              letterSpacing: 1.0,
-                                            ))
-                                        : SizedBox(
-                                            width: ScreenUtil().setWidth(80),
-                                            height: ScreenUtil().setHeight(80),
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 3,
-                                              valueColor:
-                                                  new AlwaysStoppedAnimation<
-                                                      Color>(Colors.white),
-                                            ))),
+                                  child: !loginAuth.isFetching
+                                      ? new Text("SIGNIN",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: ScreenUtil().setSp(55),
+                                            letterSpacing: 1.0,
+                                          ))
+                                      : JumpingText('SIGNIN',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: ScreenUtil().setSp(55),
+                                            letterSpacing: 1.0,
+                                          )),
+                                ),
                               ),
                             ),
                           ),

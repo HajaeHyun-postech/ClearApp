@@ -1,5 +1,6 @@
 import 'package:clearApp/util/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'util/app_theme.dart';
 import 'util/constants.dart' as Constants;
@@ -225,7 +226,7 @@ class HomeListView extends StatelessWidget {
                         Text(
                           listData.title,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ScreenUtil().setSp(60),
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w600,
                             color: Colors.black.withOpacity(0.8),

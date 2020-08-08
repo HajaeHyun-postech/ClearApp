@@ -1,5 +1,7 @@
 import 'package:clearApp/util/popup_generator.dart';
+import 'package:clearApp/util/toast_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../util/app_theme.dart';
 import '../login/login_info.dart';
@@ -34,12 +36,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.HOME,
         labelName: 'Home',
         icon: Icon(Icons.home),
-      ),
-      DrawerList(
-        index: DrawerIndex.Help,
-        labelName: 'Help',
-        isAssetsImage: true,
-        imageName: 'assets/images/supportIcon.png',
       ),
       DrawerList(
         index: DrawerIndex.FeedBack,
@@ -122,7 +118,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: Text(
                       '${LoginInfo().studentId}  ${LoginInfo().name}',
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontFamily: 'WorkSans',
+                        fontWeight: FontWeight.w500,
                         color: ClearAppTheme.grey,
                         fontSize: 18,
                       ),
@@ -132,12 +129,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 4,
+          SizedBox(
+            height: ScreenUtil().setHeight(7),
           ),
           Divider(
             height: 1,
             color: ClearAppTheme.grey.withOpacity(0.6),
+          ),
+          SizedBox(
+            height: ScreenUtil().setHeight(30),
           ),
           Expanded(
             child: ListView.builder(
@@ -153,35 +153,42 @@ class _HomeDrawerState extends State<HomeDrawer> {
             height: 1,
             color: ClearAppTheme.grey.withOpacity(0.6),
           ),
-          Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontFamily: ClearAppTheme.fontName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: ClearAppTheme.darkText,
+          SizedBox(
+            height: ScreenUtil().setHeight(7),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: ScreenUtil().setWidth(70),
+                right: ScreenUtil().setWidth(50)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  child: Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: ScreenUtil().setSp(53),
+                      color: ClearAppTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  textAlign: TextAlign.left,
+                  onTap: () {
+                    Toast_generator.infoToast(context, 'Logout');
+                    Navigator.pop(context);
+                  },
                 ),
-                trailing: IconButton(
+                IconButton(
                   icon: Icon(Icons.power_settings_new),
                   color: Colors.red,
                   onPressed: () {
                     PopupGenerator.closingPopup(context).show();
                   },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
-          ),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -203,44 +210,25 @@ class _HomeDrawerState extends State<HomeDrawer> {
               child: Row(
                 children: <Widget>[
                   Container(
-                    width: 6.0,
-                    height: 46.0,
-                    // decoration: BoxDecoration(
-                    //   color: widget.screenIndex == listData.index
-                    //       ? Colors.blue
-                    //       : Colors.transparent,
-                    //   borderRadius: new BorderRadius.only(
-                    //     topLeft: Radius.circular(0),
-                    //     topRight: Radius.circular(16),
-                    //     bottomLeft: Radius.circular(0),
-                    //     bottomRight: Radius.circular(16),
-                    //   ),
-                    // ),
+                    width: ScreenUtil().setWidth(25),
+                    height: ScreenUtil().setHeight(180),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
-                  listData.isAssetsImage
-                      ? Container(
-                          width: 24,
-                          height: 24,
-                          child: Image.asset(listData.imageName,
-                              color: widget.screenIndex == listData.index
-                                  ? Colors.blue
-                                  : ClearAppTheme.nearlyBlack),
-                        )
-                      : Icon(listData.icon.icon,
-                          color: widget.screenIndex == listData.index
-                              ? Colors.blue
-                              : ClearAppTheme.nearlyBlack),
+                  Icon(listData.icon.icon,
+                      color: widget.screenIndex == listData.index
+                          ? Colors.blue
+                          : ClearAppTheme.nearlyBlack),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
                   Text(
                     listData.labelName,
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                      fontSize: ScreenUtil().setSp(50),
                       color: widget.screenIndex == listData.index
                           ? Colors.blue
                           : ClearAppTheme.nearlyBlack,
