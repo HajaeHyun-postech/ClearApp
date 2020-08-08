@@ -24,6 +24,9 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     _context = context;
     isFeching = false;
     isEditing = false;
+    shuttlePrchHstrList = new List<ShuttlePrchHstr>();
+    _userSpecificShuttlePrchHstrList = new List<ShuttlePrchHstr>();
+    _totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
 
     eventHandle(EVENT.TabChangeEvent, tab: ShuttleMenuCurrentTab.Total);
   }
@@ -175,6 +178,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   }
 
   Future<void> updateTabChanged(ShuttleMenuCurrentTab tab) async {
+    notifyListenersWith(isFeching: true, isEditing: false);
     switch (tab) {
       case ShuttleMenuCurrentTab.Total:
         Logger().i('Tab changed to Total');
@@ -199,5 +203,6 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
         shuttlePrchHstrList = _totalUserShuttlePrchHstrList;
     }
     _previousTab = tab;
+    notifyListenersWith(isFeching: false, isEditing: false);
   }
 }

@@ -1,13 +1,16 @@
+import 'package:clearApp/racket_menu/racket_menu_homepage.dart';
 import 'package:clearApp/shuttle_menu/prch_hstr_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'tab_model.dart';
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
-import 'data_manage/shuttle_purchace_history.dart';
 import 'data_manage/events.dart';
 import 'package:provider/provider.dart';
 import 'data_manage/shuttle_hitsory_subject.dart';
+import 'package:md2_tab_indicator/md2_tab_indicator.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
@@ -16,10 +19,10 @@ class ShuttleHstrHomePage extends StatefulWidget {
 
 class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
     with TickerProviderStateMixin {
-  List<ShuttlePrchHstr> shuttlePrchHstrList = new List<ShuttlePrchHstr>();
+  ShuttlePrchHstrSubject shuttlePrchHstrSubject;
+
   AnimationController animationController;
   List<String> shuttleListToRcv;
-  int moneyToPay;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -36,8 +39,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
         TabController(length: ShuttleMenuCurrentTab.values.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        Provider.of<ShuttlePrchHstrSubject>(context).eventHandle(
-            EVENT.TabChangeEvent,
+        shuttlePrchHstrSubject.eventHandle(EVENT.TabChangeEvent,
             tab: ShuttleMenuCurrentTab.values[_tabController.index]);
       }
     });
@@ -49,26 +51,17 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
     super.dispose();
   }
 
-  void moneyToPayCal() {
-    moneyToPay = 0;
-    shuttlePrchHstrList.forEach((element) {
+  int moneyToPayCal() {
+    int moneyToPay = 0;
+    shuttlePrchHstrSubject.shuttlePrchHstrList.forEach((element) {
       element.approved ? moneyToPay += 0 : moneyToPay += element.price;
     });
-  }
-
-  void shuttleListToRcvCal() {
-    shuttleListToRcv = new List<String>();
-    shuttlePrchHstrList.forEach((element) {
-      if (!element.received) shuttleListToRcv.addAll(element.shuttleList);
-    });
+    return moneyToPay;
   }
 
   @override
   Widget build(BuildContext context) {
-    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
-
-    moneyToPayCal();
-    shuttleListToRcvCal();
+    shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
 
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
@@ -98,37 +91,17 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                     return Column(
                                       children: <Widget>[
                                         SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        ItemCard('Unapproved',
-                                            moneyToPay.toString() + ' \₩', [
-                                          ClearAppTheme.orange,
-                                          ClearAppTheme.pink
-                                        ]),
-                                        SizedBox(
-                                          height: 8.0,
+                                          height: ScreenUtil().setHeight(40),
                                         ),
                                         ItemCard(
-                                            'List to rcv',
-                                            shuttleListToRcv.length > 5
-                                                ? shuttleListToRcv
-                                                        .getRange(0, 5)
-                                                        .toList()
-                                                        .toString()
-                                                        .replaceAll('[', '')
-                                                        .replaceAll(']', '') +
-                                                    ' ...'
-                                                : shuttleListToRcv
-                                                    .toString()
-                                                    .replaceAll('[', '')
-                                                    .replaceAll(']', ''),
+                                            'Unapproved',
+                                            moneyToPayCal().toString() + ' \₩',
                                             [
-                                              ClearAppTheme.blue,
-                                              ClearAppTheme.darkBlue
+                                              ClearAppTheme.orange,
+                                              ClearAppTheme.pink
                                             ]),
                                         SizedBox(
-                                          height: 10.0,
-                                        ),
+                                            height: ScreenUtil().setHeight(40)),
                                       ],
                                     );
                                   }, childCount: 1),
@@ -145,15 +118,34 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                               color: ClearAppTheme.buildLightTheme()
                                   .backgroundColor,
                               child: ListView.builder(
-                                  itemCount: !shuttlePrchHstrSubject.isFeching
-                                      ? shuttlePrchHstrList.length
-                                      : 1,
+                                  itemCount: shuttlePrchHstrSubject.isFeching
+                                      ? 1
+                                      : shuttlePrchHstrSubject
+                                          .shuttlePrchHstrList.length,
                                   padding: const EdgeInsets.only(bottom: 1),
                                   scrollDirection: Axis.vertical,
-                                  itemBuilder: !shuttlePrchHstrSubject.isFeching
+                                  itemBuilder: shuttlePrchHstrSubject.isFeching
                                       ? (BuildContext context, int index) {
+                                          return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(100),
+                                                ),
+                                                JumpingText(
+                                                  'Loading...',
+                                                  style: TextStyle(
+                                                      fontSize: ScreenUtil()
+                                                          .setSp(45)),
+                                                )
+                                              ]);
+                                        }
+                                      : (BuildContext context, int index) {
                                           final int count =
-                                              shuttlePrchHstrList.length;
+                                              shuttlePrchHstrSubject
+                                                  .shuttlePrchHstrList.length;
                                           final Animation<double>
                                               animation = Tween<double>(
                                                       begin: 0.0, end: 1.0)
@@ -170,37 +162,13 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                             animation: animation,
                                             animationController:
                                                 animationController,
-                                            prchHstr:
-                                                shuttlePrchHstrList[index],
+                                            prchHstr: shuttlePrchHstrSubject
+                                                .shuttlePrchHstrList[index],
                                             isAdminTab:
                                                 ShuttleMenuCurrentTab.values[
                                                         _tabController.index] ==
                                                     ShuttleMenuCurrentTab.Admin,
                                           );
-                                        }
-                                      : (BuildContext context, int index) {
-                                          return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Center(
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: 30,
-                                                    margin: EdgeInsets.all(5),
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 3.0,
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation(
-                                                              ClearAppTheme
-                                                                  .darkBlue),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ]);
                                         }),
                             )))
                   ],
@@ -222,7 +190,11 @@ class ItemCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(
+            left: ScreenUtil().setWidth(50),
+            right: ScreenUtil().setWidth(50),
+            top: ScreenUtil().setHeight(50),
+            bottom: ScreenUtil().setHeight(50)),
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -240,8 +212,8 @@ class ItemCard extends StatelessWidget {
                   titel,
                   style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
+                      fontWeight: FontWeight.w700,
+                      fontSize: ScreenUtil().setSp(55)),
                 ),
               ],
             ),
@@ -249,8 +221,8 @@ class ItemCard extends StatelessWidget {
               value,
               style: TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
+                  fontWeight: FontWeight.w700,
+                  fontSize: ScreenUtil().setSp(55)),
             )
           ],
         ),
@@ -281,18 +253,14 @@ class _MyTabBar extends StatelessWidget {
                 padding:
                     const EdgeInsets.only(left: 0, right: 0, top: 8, bottom: 8),
                 child: TabBar(
-                  indicator: UnderlineTabIndicator(
-                    borderSide: const BorderSide(
-                      width: 5.0,
-                      color: const Color.fromRGBO(86, 83, 195, 1.0),
-                    ),
-                    insets: const EdgeInsets.only(left: 50, right: 50),
-                  ),
+                  indicator: MD2Indicator(
+                      indicatorHeight: 4,
+                      indicatorColor: ClearAppTheme.black,
+                      indicatorSize: MD2IndicatorSize.tiny),
                   controller: _tabController,
                   tabs: _tabs.toList(),
-                  labelColor: Colors.black,
+                  labelColor: ClearAppTheme.black,
                   labelPadding: EdgeInsets.all(0.0),
-                  labelStyle: Theme.of(context).textTheme.bodyText1,
                   unselectedLabelColor: Colors.grey,
                 ))),
         const Positioned(

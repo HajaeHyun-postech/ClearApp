@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_theme.dart';
 
@@ -47,7 +48,7 @@ class CustomAppBar extends StatelessWidget {
                   child: Text(
                     'Clear App',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: ScreenUtil().setSp(75),
                       fontFamily: 'Poppins',
                       color: ClearAppTheme.darkText,
                       fontWeight: FontWeight.w700,

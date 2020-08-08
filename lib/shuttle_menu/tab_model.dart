@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login/login_info.dart';
 
 enum ShuttleMenuCurrentTab { Total, Not_Rcved, Admin }
@@ -9,14 +10,18 @@ class ShuttleTab {
     tab.add(Tab(
       child: Align(
         alignment: Alignment.center,
-        child: Text('TOTAL'),
+        child:
+            Text('TOTAL', style: TextStyle(fontSize: ScreenUtil().setSp(42))),
       ),
     ));
 
     tab.add(Tab(
       child: Align(
         alignment: Alignment.center,
-        child: Text('NOT RCVED'),
+        child: Text(
+          'NOT RCVED',
+          style: TextStyle(fontSize: ScreenUtil().setSp(42)),
+        ),
       ),
     ));
 
@@ -24,7 +29,8 @@ class ShuttleTab {
       tab.add(Tab(
         child: Align(
           alignment: Alignment.center,
-          child: Text('ADMIN'),
+          child:
+              Text('ADMIN', style: TextStyle(fontSize: ScreenUtil().setSp(42))),
         ),
       ));
     }
