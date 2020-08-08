@@ -163,7 +163,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                GestureDetector(
+                InkWell(
                   child: Text(
                     'Logout',
                     style: TextStyle(

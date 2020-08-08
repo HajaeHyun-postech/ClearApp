@@ -37,7 +37,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     notifyListeners();
   }
 
-  void eventHandle(EVENT eventType,
+  Future<void> eventHandle(EVENT eventType,
       {ShuttleMenuCurrentTab tab,
       bool editing,
       String key,

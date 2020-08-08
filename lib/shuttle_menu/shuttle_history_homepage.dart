@@ -1,8 +1,9 @@
-import 'package:clearApp/racket_menu/racket_menu_homepage.dart';
 import 'package:clearApp/shuttle_menu/prch_hstr_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'tab_model.dart';
 import '../util/appbar.dart';
 import '../util/app_theme.dart';
@@ -93,12 +94,13 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                         SizedBox(
                                           height: ScreenUtil().setHeight(40),
                                         ),
-                                        ItemCard(
+                                        Topcard(
                                             'Unapproved',
                                             moneyToPayCal().toString() + ' \₩',
                                             [
-                                              ClearAppTheme.orange,
-                                              ClearAppTheme.pink
+                                              ClearAppTheme.orange
+                                                  .withAlpha(230),
+                                              ClearAppTheme.pink.withAlpha(230)
                                             ]),
                                         SizedBox(
                                             height: ScreenUtil().setHeight(40)),
@@ -126,21 +128,16 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
                                   scrollDirection: Axis.vertical,
                                   itemBuilder: shuttlePrchHstrSubject.isFeching
                                       ? (BuildContext context, int index) {
-                                          return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  height: ScreenUtil()
-                                                      .setHeight(100),
-                                                ),
-                                                JumpingText(
-                                                  'Loading...',
-                                                  style: TextStyle(
-                                                      fontSize: ScreenUtil()
-                                                          .setSp(45)),
-                                                )
-                                              ]);
+                                          return Column(children: <Widget>[
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(60),
+                                            ),
+                                            JumpingText('Loading...',
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        ScreenUtil().setSp(45)))
+                                          ]);
                                         }
                                       : (BuildContext context, int index) {
                                           final int count =
@@ -180,54 +177,100 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
   }
 }
 
-class ItemCard extends StatelessWidget {
+class Topcard extends StatelessWidget {
   final titel;
   final value;
   final colors;
-  ItemCard(this.titel, this.value, this.colors);
+  Topcard(this.titel, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Container(
-        padding: EdgeInsets.only(
-            left: ScreenUtil().setWidth(50),
-            right: ScreenUtil().setWidth(50),
-            top: ScreenUtil().setHeight(50),
-            bottom: ScreenUtil().setHeight(50)),
-        width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                colors: colors),
-            borderRadius: BorderRadius.circular(4.0)),
+        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  titel,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: ScreenUtil().setSp(55)),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(
+                    left: ScreenUtil().setWidth(50),
+                    right: ScreenUtil().setWidth(50),
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(50)),
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        offset: const Offset(0, 2),
+                        blurRadius: 9.0)
+                  ],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(38.0),
+                  ),
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.topRight,
+                      colors: colors),
                 ),
-              ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          titel,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: ScreenUtil().setSp(55)),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      value,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: ScreenUtil().setSp(55)),
+                    )
+                  ],
+                ),
+              ),
             ),
-            Text(
-              value,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: ScreenUtil().setSp(55)),
+            SizedBox(
+              width: ScreenUtil().setWidth(50),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: ClearAppTheme.postechRed.withAlpha(200),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(38.0),
+                ),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      offset: const Offset(0, 2),
+                      blurRadius: 9.0)
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(38.0),
+                  ),
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Icon(FontAwesomeIcons.plus,
+                        size: 20, color: ClearAppTheme.white.withAlpha(230)),
+                  ),
+                ),
+              ),
             )
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
 
