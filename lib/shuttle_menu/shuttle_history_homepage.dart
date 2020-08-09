@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'data_manage/shuttle_hitsory_subject.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ShuttleHstrHomePage extends StatefulWidget {
   @override
@@ -257,7 +258,27 @@ class Topcard extends StatelessWidget {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(38.0),
                   ),
-                  onTap: () {},
+                  onTap: () => showBarModalBottomSheet(
+                    expand: false,
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context, scrollController) => Material(
+                        child: CupertinoPageScaffold(
+                      navigationBar: CupertinoNavigationBar(
+                          leading: Container(),
+                          middle: Text('Add Transaction')),
+                      child: SafeArea(
+                        bottom: false,
+                        child: InkWell(
+                          onTap: () => Navigator.popUntil(
+                              context,
+                              (route) =>
+                                  route.settings.name ==
+                                  '/homescreen/shuttlemenu'),
+                        ),
+                      ),
+                    )),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(18),
                     child: Icon(FontAwesomeIcons.plus,
