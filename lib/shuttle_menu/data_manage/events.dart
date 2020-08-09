@@ -4,5 +4,5 @@ enum EVENT {
   UpdateApprEvent,
   DeleteHstrEvent,
   AddNewEvent, //data update events
-  EditingStateChangeEvent, //state change events
+  ShuttleAmountRefreshEvent,
 }

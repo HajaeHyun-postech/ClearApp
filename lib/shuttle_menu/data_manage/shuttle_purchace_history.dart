@@ -12,7 +12,6 @@ class ShuttlePrchHstr {
   int price;
   int amount;
   List<String> shuttleList;
-  bool deleted;
   bool received;
   bool approved;
 
@@ -26,7 +25,6 @@ class ShuttlePrchHstr {
     shuttleList = new List<String>();
     received = false;
     approved = false;
-    deleted = false;
 
     key = studentId.toString() +
         'W' +
@@ -42,7 +40,6 @@ class ShuttlePrchHstr {
         price = (jsonDecode(map['price']) as int),
         amount = (jsonDecode(map['amount']) as int),
         shuttleList = (jsonDecode(map['shuttleList'])).cast<String>(),
-        deleted = (jsonDecode(map['deleted']) as bool),
         received = (jsonDecode(map['received']) as bool),
         approved = (jsonDecode(map['approved']) as bool);
 
@@ -55,7 +52,6 @@ class ShuttlePrchHstr {
         'price': price,
         'amount': (amount),
         'shuttleList': shuttleList,
-        'deleted': deleted,
         'received': received,
         'approved': approved,
       };

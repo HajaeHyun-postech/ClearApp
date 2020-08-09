@@ -1,6 +1,6 @@
 import 'package:clearApp/shuttle_menu/base_select.dart';
-import 'package:clearApp/util/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UsageSelectButton extends StatelessWidget {
   final String text;
@@ -21,8 +21,8 @@ class UsageSelectButton extends StatelessWidget {
         text,
         style: TextStyle(
             color: color,
-            fontFamily:
-                ClearAppTheme.buildLightTheme().textTheme.bodyText1.fontFamily),
+            fontFamily: 'Poppins',
+            fontSize: ScreenUtil().setSp(46)),
       ),
     );
   }

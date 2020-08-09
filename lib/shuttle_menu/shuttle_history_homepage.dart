@@ -12,16 +12,26 @@ import 'data_manage/shuttle_hitsory_subject.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'add_prch_form.dart';
+import 'data_manage/form_subject.dart';
 
-class ShuttleHstrHomePage extends StatefulWidget {
+class ShuttleMenuHomePage extends StatelessWidget {
   @override
-  ShuttleHstrHomePageState createState() => ShuttleHstrHomePageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ShuttlePrchHstrSubject>(
+      create: (context) => ShuttlePrchHstrSubject(context),
+      child: ShuttleHstrScreen(),
+    );
+  }
 }
 
-class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
-    with TickerProviderStateMixin {
-  ShuttlePrchHstrSubject shuttlePrchHstrSubject;
+class ShuttleHstrScreen extends StatefulWidget {
+  @override
+  ShuttleHstrScreenState createState() => ShuttleHstrScreenState();
+}
 
+class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
+    with TickerProviderStateMixin {
   AnimationController animationController;
   List<String> shuttleListToRcv;
 
@@ -40,6 +50,8 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
         TabController(length: ShuttleMenuCurrentTab.values.length, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
+        final shuttlePrchHstrSubject =
+            Provider.of<ShuttlePrchHstrSubject>(context, listen: false);
         shuttlePrchHstrSubject.eventHandle(EVENT.TabChangeEvent,
             tab: ShuttleMenuCurrentTab.values[_tabController.index]);
       }
@@ -54,6 +66,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
 
   int moneyToPayCal() {
     int moneyToPay = 0;
+    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
     shuttlePrchHstrSubject.shuttlePrchHstrList.forEach((element) {
       element.approved ? moneyToPay += 0 : moneyToPay += element.price;
     });
@@ -62,7 +75,7 @@ class ShuttleHstrHomePageState extends State<ShuttleHstrHomePage>
 
   @override
   Widget build(BuildContext context) {
-    shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
+    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
 
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
@@ -184,6 +197,7 @@ class Topcard extends StatelessWidget {
   Topcard(this.titel, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
+    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
         child: Row(
@@ -258,27 +272,32 @@ class Topcard extends StatelessWidget {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(38.0),
                   ),
-                  onTap: () => showBarModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context, scrollController) => Material(
-                        child: CupertinoPageScaffold(
-                      navigationBar: CupertinoNavigationBar(
-                          leading: Container(),
-                          middle: Text('Add Transaction')),
-                      child: SafeArea(
-                        bottom: false,
-                        child: InkWell(
-                          onTap: () => Navigator.popUntil(
-                              context,
-                              (route) =>
-                                  route.settings.name ==
-                                  '/homescreen/shuttlemenu'),
+                  onTap: () {
+                    showBarModalBottomSheet(
+                      expand: false,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context, scrollController) => Material(
+                          child: CupertinoPageScaffold(
+                        child: SafeArea(
+                          child: ChangeNotifierProvider<FormSubject>(
+                              create: (context) => FormSubject(
+                                  callback: (newHstr) async {
+                                    await shuttlePrchHstrSubject.eventHandle(
+                                        EVENT.AddNewEvent,
+                                        newHstr: newHstr);
+                                    Navigator.popUntil(
+                                        context,
+                                        (route) =>
+                                            route.settings.name ==
+                                            '/homescreen/shuttlemenu');
+                                  },
+                                  context: context),
+                              child: AddPrchForm()),
                         ),
-                      ),
-                    )),
-                  ),
+                      )),
+                    );
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(18),
                     child: Icon(FontAwesomeIcons.plus,
