@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_theme.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: camel_case_types
 class Toast_generator {
@@ -16,10 +17,11 @@ class Toast_generator {
       duration: Duration(seconds: 2),
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
-      backgroundColor: Color(0xFFF45C43).withOpacity(0.7),
+      backgroundColor: Color(0xFFF45C43).withOpacity(0.8),
       textStyle: TextStyle(
-        fontSize: 13.0,
+        fontSize: ScreenUtil().setSp(45),
         fontFamily: 'Poppins',
+        fontWeight: FontWeight.w500,
         color: Color(0xFFFFFFFF),
       ),
     );
@@ -36,10 +38,11 @@ class Toast_generator {
       duration: Duration(seconds: 2),
       curve: Curves.elasticOut,
       reverseCurve: Curves.linear,
-      backgroundColor: ClearAppTheme.green.withOpacity(0.7),
+      backgroundColor: ClearAppTheme.green.withOpacity(0.8),
       textStyle: TextStyle(
-        fontSize: 13.0,
+        fontSize: ScreenUtil().setSp(45),
         fontFamily: 'Poppins',
+        fontWeight: FontWeight.w500,
         color: Color(0xFFFFFFFF),
       ),
     );
@@ -59,9 +62,10 @@ class Toast_generator {
       backgroundColor:
           Color(0xFFF45C43).withOpacity(0.7), // TODO : fix color fit
       textStyle: TextStyle(
-        fontSize: 13.0,
+        fontSize: ScreenUtil().setSp(45),
         fontFamily: 'Poppins',
         color: Color(0xFFFFFFFF),
+        fontWeight: FontWeight.w500,
       ),
     );
   }

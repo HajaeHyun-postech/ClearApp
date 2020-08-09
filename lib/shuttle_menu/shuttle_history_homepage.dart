@@ -2,7 +2,6 @@ import 'package:clearApp/shuttle_menu/prch_hstr_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'tab_model.dart';
 import '../util/appbar.dart';
@@ -221,7 +220,7 @@ class Topcard extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
-                              fontSize: ScreenUtil().setSp(55)),
+                              fontSize: ScreenUtil().setSp(57)),
                         ),
                       ],
                     ),
@@ -230,7 +229,7 @@ class Topcard extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
-                          fontSize: ScreenUtil().setSp(55)),
+                          fontSize: ScreenUtil().setSp(57)),
                     )
                   ],
                 ),
@@ -258,13 +257,11 @@ class Topcard extends StatelessWidget {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(38.0),
                   ),
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
+                  onTap: () {},
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(18),
                     child: Icon(FontAwesomeIcons.plus,
-                        size: 20, color: ClearAppTheme.white.withAlpha(230)),
+                        size: 16, color: ClearAppTheme.white),
                   ),
                 ),
               ),
