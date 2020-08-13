@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 
 class RacketmenuHomepage extends StatelessWidget{
@@ -166,17 +167,15 @@ class Topcard extends StatelessWidget {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(38.0),
                   ),
-                  onTap: () => showBarModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context, scrollController) => Material(
-                        child: CupertinoPageScaffold(
-                      navigationBar: CupertinoNavigationBar(
-                          leading: Container(),
-                          middle: Text('Add Transaction')),
-                      child: SafeArea(
-                        bottom: false,
+                  onTap: () {
+                    showBarModalBottomSheet(
+                      expand: false,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context, scrollController) => Material(
+                          child: CupertinoPageScaffold(
+                        child: SafeArea(
+                          bottom: false,
                         child: InkWell(
                           onTap: () => Navigator.popUntil(
                               context,
@@ -184,9 +183,11 @@ class Topcard extends StatelessWidget {
                                   route.settings.name ==
                                   '/homescreen/shuttlemenu'),
                         ),
-                      ),
-                    )),
-                  ),
+                      
+                        ),
+                      )),
+                    );
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(13),
                     child: /*Icon(FontAwesomeIcons.plus,

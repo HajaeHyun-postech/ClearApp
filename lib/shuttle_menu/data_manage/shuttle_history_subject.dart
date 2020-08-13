@@ -15,17 +15,17 @@ import '../../util/toast_generator.dart';
 class ShuttlePrchHstrSubject extends ChangeNotifier {
   ShuttleMenuCurrentTab _previousTab;
   BuildContext _context;
-  bool _isFeching;
+  bool _isFetching;
   List<ShuttlePrchHstr> _shuttlePrchHstrList;
   List<ShuttlePrchHstr> _userSpecificShuttlePrchHstrList;
   List<ShuttlePrchHstr> _totalUserShuttlePrchHstrList;
 
-  bool get isFeching => _isFeching;
+  bool get isFetching => _isFetching;
   List<ShuttlePrchHstr> get shuttlePrchHstrList => _shuttlePrchHstrList;
 
   ShuttlePrchHstrSubject(BuildContext context) {
     _context = context;
-    _isFeching = false;
+    _isFetching = false;
     _shuttlePrchHstrList = new List<ShuttlePrchHstr>();
     _userSpecificShuttlePrchHstrList = new List<ShuttlePrchHstr>();
     _totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
@@ -34,8 +34,8 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     eventHandle(EVENT.TabChangeEvent, tab: ShuttleMenuCurrentTab.Total);
   }
 
-  void notifyListenersWith({bool isFeching = false}) {
-    _isFeching = isFeching;
+  void notifyListenersWith({bool isFetching = false}) {
+    _isFetching = isFetching;
     notifyListeners();
   }
 
@@ -86,7 +86,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   }
 
   Future<void> getMyHstr() async {
-    notifyListenersWith(isFeching: true);
+    notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = {'studentId': LoginInfo().studentId};
     Map<String, dynamic> response =
         await APIService.doGet(Constants.shuttlecockURL, 'getMyHstr', map);
@@ -99,11 +99,11 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
       _userSpecificShuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(_map));
     });
     _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> getAllUnapprHstr() async {
-    notifyListenersWith(isFeching: true);
+    notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = new Map<String, dynamic>();
     Map<String, dynamic> response = await APIService.doGet(
         Constants.shuttlecockURL, 'getAllUnapprHstr', map);
@@ -114,7 +114,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
       _totalUserShuttlePrchHstrList.add(ShuttlePrchHstr.fromMap(element));
     });
     _shuttlePrchHstrList = _totalUserShuttlePrchHstrList;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> updateRcved(String key) async {
@@ -129,7 +129,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
         .firstWhere((element) => element.key == key)
         .received = true;
     _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> updateAppr(String key) async {
@@ -144,7 +144,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
         .firstWhere((element) => element.key == key)
         .approved = true;
     _shuttlePrchHstrList = _totalUserShuttlePrchHstrList;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> deleteHstr(String key) async {
@@ -157,17 +157,17 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     _userSpecificShuttlePrchHstrList
         .removeWhere((element) => element.key == key);
     _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
-    notifyListenersWith(isFeching: true);
+    notifyListenersWith(isFetching: true);
 
     Map<String, dynamic> response = await APIService.doPost(
             Constants.shuttlecockURL, 'addNewPrchHstr',
             body: jsonEncode(newHstr.toMap()))
         .catchError((e) {
-      notifyListenersWith(isFeching: false);
+      notifyListenersWith(isFetching: false);
       throw ('Not enough shuttlecocks');
     }, test: (e) => e is HttpException);
 
@@ -178,11 +178,11 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     _userSpecificShuttlePrchHstrList.add(newHstr);
     _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList;
 
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 
   Future<void> updateTabChanged(ShuttleMenuCurrentTab tab) async {
-    notifyListenersWith(isFeching: true);
+    notifyListenersWith(isFetching: true);
     switch (tab) {
       case ShuttleMenuCurrentTab.Total:
         Logger().i('Tab changed to Total');
@@ -207,6 +207,6 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
         _shuttlePrchHstrList = _totalUserShuttlePrchHstrList;
     }
     _previousTab = tab;
-    notifyListenersWith(isFeching: false);
+    notifyListenersWith(isFetching: false);
   }
 }

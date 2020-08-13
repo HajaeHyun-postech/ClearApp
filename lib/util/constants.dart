@@ -8,3 +8,6 @@ const memberlistURL =
 
 const gamesListURL =
     'https://script.google.com/macros/s/AKfycbyosqI3RXI0wwTerqa-ci_g99Osa0_v2XG_PWT2kEgmkJm8VA/exec';
+
+const racketURL =
+    'https://script.google.com/macros/s/AKfycbwjy0AU5Ji_kolrOxyM3L8eXVCaWughhtAM1kryYMGZOClTdaY/exec';

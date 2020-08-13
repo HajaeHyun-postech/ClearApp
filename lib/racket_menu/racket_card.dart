@@ -39,7 +39,7 @@ List<RacketCard> racketcardlist = [
   ),
   RacketCard(
     id: "2",
-    name: "YONEX",
+    name: "VICTOR",
     location: "ARS-70FNA",
     distance: "54.6m Km",
     gravity: "11.15 m/s ",
@@ -50,7 +50,7 @@ List<RacketCard> racketcardlist = [
   ),
   RacketCard(
     id: "3",
-    name: "Moon",
+    name: "VICTOR",
     location: "TK-70F",
     distance: "54.6m Km",
     gravity: "1.622 m/s ",

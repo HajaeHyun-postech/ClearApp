@@ -133,13 +133,13 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
                               color: ClearAppTheme.buildLightTheme()
                                   .backgroundColor,
                               child: ListView.builder(
-                                  itemCount: shuttlePrchHstrSubject.isFeching
+                                  itemCount: shuttlePrchHstrSubject.isFetching
                                       ? 1
                                       : shuttlePrchHstrSubject
                                           .shuttlePrchHstrList.length,
                                   padding: const EdgeInsets.only(bottom: 1),
                                   scrollDirection: Axis.vertical,
-                                  itemBuilder: shuttlePrchHstrSubject.isFeching
+                                  itemBuilder: shuttlePrchHstrSubject.isFetching
                                       ? (BuildContext context, int index) {
                                           return Column(children: <Widget>[
                                             SizedBox(
