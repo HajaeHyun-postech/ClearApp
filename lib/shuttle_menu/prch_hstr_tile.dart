@@ -1,4 +1,4 @@
-import 'package:clearApp/shuttle_menu/data_manage/shuttle_hitsory_subject.dart';
+import 'package:clearApp/shuttle_menu/data_manage/shuttle_history_subject.dart';
 import 'package:clearApp/shuttle_menu/data_manage/shuttle_purchace_history.dart';
 import 'package:clearApp/util/popup_generator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

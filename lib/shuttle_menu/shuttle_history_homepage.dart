@@ -8,7 +8,7 @@ import '../util/appbar.dart';
 import '../util/app_theme.dart';
 import 'data_manage/events.dart';
 import 'package:provider/provider.dart';
-import 'data_manage/shuttle_hitsory_subject.dart';
+import 'data_manage/shuttle_history_subject.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

@@ -17,59 +17,11 @@ class RacketCardList extends StatelessWidget {
     
     final RacketCardContent = Container(
       margin: EdgeInsets.fromLTRB(
-          ScreenUtil().setWidth(30), ScreenUtil().setHeight(0), ScreenUtil().setWidth(70), ScreenUtil().setHeight(0)),
+          ScreenUtil().setWidth(70), ScreenUtil().setHeight(0), ScreenUtil().setWidth(70), ScreenUtil().setHeight(0)),
       constraints: BoxConstraints.expand(),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Stack(
-          alignment: Alignment.center,
-          
-          children: <Widget>[
-                  Container(
-                      height: ScreenUtil().setHeight(200),
-                    width: ScreenUtil().setWidth(200),
-                      decoration: BoxDecoration(
-                          color: ClearAppTheme.nearlyWhite,
-                    shape: BoxShape.circle,
-                      )
-                  ),
-                  
-                  Container(
-                      height: ScreenUtil().setHeight(187),
-                    width: ScreenUtil().setWidth(187),
-                      decoration: BoxDecoration(
-                    color: ClearAppTheme.nearlyWhite,
-                    shape: BoxShape.circle,      
-                      )
-                  ),
-                  
-                Text(
-                  racketCard.id,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w100,
-                      color: ClearAppTheme.darkerText,
-                      fontSize: 24,
-                    )               
-                ),
-                  
-          ]
-          ),
-          SizedBox(width: ScreenUtil().setWidth(30)),
-        new SizedBox(
-          width: ScreenUtil().setWidth(10),
-              child: new Center(
-                child: new Container(
-                  margin: new EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-                  height: ScreenUtil().setHeight(200),
-                  color: Colors.black,
-                ),
-            ),
-              ),
-          SizedBox(width: ScreenUtil().setWidth(70)),
           Image.asset(racketCard.image, width: ScreenUtil().setWidth(400), height: ScreenUtil().setHeight(200)),
           Expanded(
             child:
@@ -85,7 +37,9 @@ class RacketCardList extends StatelessWidget {
                 decoration: racketCard.isavailable ? TextDecoration.none : TextDecoration.lineThrough,
                 fontSize: 15,
               )),
-              
+              SizedBox(
+                height: ScreenUtil().setHeight(40),
+              ),
               Text(
                 racketCard.isavailable ? 'Availabe' : 'Occupied',
                 textAlign: TextAlign.end,
@@ -105,22 +59,22 @@ class RacketCardList extends StatelessWidget {
  
     final RacketCardf = Container(
       child: RacketCardContent,
-      height: ScreenUtil().setHeight(270),
-      margin:
-          EdgeInsets.only(left: ScreenUtil().setWidth(30)),
+      height: ScreenUtil().setHeight(400),
+       //margin: EdgeInsets.only(left: ScreenUtil().setWidth(30)),
       decoration: BoxDecoration(
         color: ClearAppTheme.nearlyWhite,
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(8.0),
+        //borderRadius: BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[
-          BoxShadow(
+          /*BoxShadow(
             color: Colors.black12,
             blurRadius: 18.0,
             offset: Offset(-10, 10.0),
-          ),
+          ),*/
         ],
       ),
     );
+
  
     return GestureDetector(
         onTap: racketCard.isavailable
@@ -134,16 +88,24 @@ class RacketCardList extends StatelessWidget {
                 )
             : () => Toast_generator.errorToast(context, "It is already occupied"),
         child: Container(
-          margin: EdgeInsets.only(
+          /*margin: EdgeInsets.only(
             top: ScreenUtil().setHeight(70),
             left: ScreenUtil().setWidth(0),
             right: ScreenUtil().setWidth(30),
+          ),*/
+          child: 
+          Column(
+           children: <Widget>[
+            RacketCardf,
+            Divider(
+              indent: ScreenUtil().setWidth(70),
+              endIndent: ScreenUtil().setWidth(70),
+            color: Color(0xFFF1F4F7),
+            thickness: ScreenUtil().setHeight(6),
           ),
-          child: Stack(
-            children: <Widget>[
-              RacketCardf,
-            ],
-          ),
+            ]
+          )
+           
         ));
   }
 }

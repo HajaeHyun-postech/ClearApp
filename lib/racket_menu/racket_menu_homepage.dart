@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../util/appbar.dart';
+import '../util/toast_generator.dart';
 import 'racket_cardlist.dart';
 import 'racket_card.dart';
 import '../util/app_theme.dart';
@@ -8,6 +9,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import '../util/toast_generator.dart';
 
 
 class RacketmenuHomepage extends StatelessWidget{
@@ -16,10 +18,49 @@ class RacketmenuHomepage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-          CustomAppBar(),
+         Stack(
+           children: <Widget>[
+            CustomAppBar(),
+            //Image.asset('assets/images/filtering.png', width: ScreenUtil().setWidth(130), height: ScreenUtil().setHeight(130)),
+            Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child:
+              Container(
+                alignment: Alignment.centerRight,
+                height: AppBar().preferredSize.height,
+                child:
+                Row(
+                  mainAxisAlignment:MainAxisAlignment.end,
+                  children: <Widget>[
+                 Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(32.0),
+                    ),
+                    onTap: () {
+                      Toast_generator.successToast(context, "Filter Test...");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: FaIcon(FontAwesomeIcons.search, size: ScreenUtil().setWidth(70)),
+                      
+                      
+                    ),
+                  ),
+                ),
+                  SizedBox(width: ScreenUtil().setWidth(70),),
+                  ],
+                ),
+              ),
+            ),
+         
+           ],),
           RacketScrollView(),
-        ]
+        ],
+        
       )
+    
     );
   }
 }
@@ -50,14 +91,14 @@ class _RacketScrollView extends State<RacketScrollView>{
         child:Column(
           children: <Widget>[
         SizedBox(
-              height: ScreenUtil().setHeight(40),),
-              Topcard(
+              height: ScreenUtil().setHeight(0),),
+              /*Topcard(
                 'Rentable Racket',
                  return_available().toString(),[
                      Color(0xFFBDC3C7).withAlpha(230),
                      Color(0xFFBDC3C7).withAlpha(230)
-                     ]),
-                       SizedBox(height: ScreenUtil().setHeight(40)),  
+                     ]),*/
+                       SizedBox(height: ScreenUtil().setHeight(10)),  
         Expanded(child:
          CustomScrollView(
           scrollDirection: Axis.vertical,
@@ -66,7 +107,7 @@ class _RacketScrollView extends State<RacketScrollView>{
             SliverPadding(
               padding: EdgeInsets.all(0),
               sliver: SliverFixedExtentList(
-                itemExtent: ScreenUtil().setHeight(350),
+                itemExtent: ScreenUtil().setHeight(500),
                 
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => RacketCardList(racketcardlist[index]),
