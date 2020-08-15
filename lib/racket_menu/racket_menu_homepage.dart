@@ -42,20 +42,29 @@ class RacketmenuHomepage extends StatelessWidget{
                       Toast_generator.successToast(context, "Filter Test...");
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(8),
                       child: FaIcon(FontAwesomeIcons.search, size: ScreenUtil().setWidth(70)),
-                      
-                      
                     ),
                   ),
                 ),
-                  SizedBox(width: ScreenUtil().setWidth(70),),
+                  SizedBox(width: ScreenUtil().setWidth(30),),
                   ],
                 ),
               ),
             ),
          
            ],),
+            Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child:
+          Divider(
+            indent: ScreenUtil().setWidth(30),
+            endIndent: ScreenUtil().setWidth(30),
+            height:0.1,
+          ),
+        ),
           RacketScrollView(),
         ],
         
@@ -72,7 +81,6 @@ class RacketScrollView extends StatefulWidget{
 }
 
 class _RacketScrollView extends State<RacketScrollView>{
-
 
   int return_available(){
     int count = 0;
@@ -106,15 +114,19 @@ class _RacketScrollView extends State<RacketScrollView>{
              
             SliverPadding(
               padding: EdgeInsets.all(0),
-              sliver: SliverFixedExtentList(
-                itemExtent: ScreenUtil().setHeight(500),
+              sliver: SliverList(delegate: SliverChildBuilderDelegate(
+                  (context, index) => RacketCardList(racketcardlist[index]),
+                  childCount: racketcardlist.length,
+                ),),
+              /*SliverFixedExtentList(
+                itemExtent: ScreenUtil().setHeight(660),
                 
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => RacketCardList(racketcardlist[index]),
                   childCount: racketcardlist.length,
                 ),
                 
-              ),
+              ),*/
             ),
           ],
         ),

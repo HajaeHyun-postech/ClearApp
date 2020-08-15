@@ -47,7 +47,6 @@ dependencies:
   progress_indicators: ^0.1.5
   md2_tab_indicator: ^1.0.2
   pull_to_refresh: ^1.6.1
-  flutter_svg: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +71,7 @@ flutter:
     - assets/hotel/
     - assets/menu/
     - assets/img/
-
+    - assets/logo/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -85,6 +84,13 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/RobotoCondensed-Regular.ttf
+        - asset: assets/fonts/RobotoCondensed-Light.ttf
+          weight: 100
+        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+          weight: 700
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
@@ -110,6 +116,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
+    - family: Alata
+      fonts:
+        - asset: assets/fonts/Alata-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
