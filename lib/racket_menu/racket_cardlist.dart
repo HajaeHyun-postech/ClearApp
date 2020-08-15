@@ -19,7 +19,6 @@ class RacketCardList extends StatelessWidget {
     final RacketCardContent = Container(
       margin: EdgeInsets.fromLTRB(
           ScreenUtil().setWidth(70), ScreenUtil().setHeight(0), ScreenUtil().setWidth(70), ScreenUtil().setHeight(0)),
-      //constraints: BoxConstraints.expand(),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -46,7 +45,7 @@ class RacketCardList extends StatelessWidget {
                   Row(
                       children: <Widget>[
                         !racketCard.isavailable ?  
-                          FaIcon(FontAwesomeIcons.ban, size : ScreenUtil().setWidth(60), color: Color(0xFFFF84B1)) ://Color(0xFFF3F781),) :
+                          FaIcon(FontAwesomeIcons.ban, size : ScreenUtil().setWidth(60), color: Color(0xFFFF84B1)) :
                           FaIcon(FontAwesomeIcons.checkCircle, size : ScreenUtil().setWidth(60), color: ClearAppTheme.green,),
                           SizedBox(width: ScreenUtil().setWidth(12),),
                           SizedBox(width: ScreenUtil().setWidth(40),),
