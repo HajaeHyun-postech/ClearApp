@@ -5,12 +5,10 @@ import 'racket_cardlist.dart';
 import 'racket_card.dart';
 import '../util/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; 
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../util/toast_generator.dart';
-
 
 class RacketmenuHomepage extends StatelessWidget{
   @override
@@ -18,45 +16,10 @@ class RacketmenuHomepage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-            CustomAppBar(),/*
-            Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child:
-              Container(
-                alignment: Alignment.centerRight,
-                height: AppBar().preferredSize.height,
-                child:
-                Row(
-                  mainAxisAlignment:MainAxisAlignment.end,
-                  children: <Widget>[
-                 Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(32.0),
-                    ),
-                    onTap: () {
-                      Toast_generator.successToast(context, "Filter Test...");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: FaIcon(FontAwesomeIcons.search, size: ScreenUtil().setWidth(70)),
-                    ),
-                  ),
-                ),
-                  SizedBox(width: ScreenUtil().setWidth(30),),
-                  ],
-                ),
-              ),
-            ),*/
-         
-           
-          
-          RacketScrollView(),
+            CustomAppBar(),
+            RacketScrollView(),
         ],
-        
       )
-    
     );
   }
 }
@@ -68,6 +31,17 @@ class RacketScrollView extends StatefulWidget{
 }
 
 class _RacketScrollView extends State<RacketScrollView>{
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState(){
+    super.initState();
+    _scrollController.addListener(() {
+      print('offset = ${_scrollController.offset}');
+    }
+    );
+  }
 
   int return_available(){
     int count = 0;
@@ -83,16 +57,22 @@ class _RacketScrollView extends State<RacketScrollView>{
     return Expanded(
       child: Container(
         color: ClearAppTheme.buildLightTheme().backgroundColor,
-        child:   
+        child:
          CustomScrollView(
           scrollDirection: Axis.vertical,
+          controller: _scrollController,
           slivers: <Widget>[
+            SliverList(delegate: SliverChildBuilderDelegate(
+                  (context, index) => CustomFilter(),
+                  childCount: 1,
+                ),
+            ),
             SliverPadding(
               padding: EdgeInsets.all(0),
               sliver: SliverList(delegate: SliverChildBuilderDelegate(
                   (context, index) => RacketCardList(racketcardlist[index]),
                   childCount: racketcardlist.length,
-                ),
+              ),
             ),
             ),
           ],
@@ -101,3 +81,50 @@ class _RacketScrollView extends State<RacketScrollView>{
       );
   }
 }
+
+
+class CustomFilter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: ClearAppTheme.white,
+      child: Row(
+      children: <Widget>[
+        SizedBox(width: ScreenUtil().setWidth(70)),
+          InkWell(
+            borderRadius: const BorderRadius.all(
+                      Radius.circular(2.0),
+                    ),
+            onTap: () { 
+        }
+        ,
+            child:
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal : ScreenUtil().setWidth(0), vertical: ScreenUtil().setHeight(5)),
+              child:
+                      Row(
+                        children: <Widget>[
+                          Text('Result',
+                            style: TextStyle(
+                              fontFamily: 'RobotoCondensed',
+                              fontWeight: FontWeight.w600,
+                              fontSize:14,
+                            ),
+                          ),
+                          SizedBox(width: ScreenUtil().setWidth(30)),
+                          FaIcon(FontAwesomeIcons.caretDown, 
+                              size: ScreenUtil().setWidth(45),
+                              color: ClearAppTheme.darkBlue,
+                              ),
+                          ]
+                      )
+                  
+              )
+
+        )
+      ]
+    )
+    );
+  }
+}
+

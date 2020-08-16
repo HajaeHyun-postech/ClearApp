@@ -85,11 +85,13 @@ class RacketCardList extends StatelessWidget {
       child: RacketCardContent,
       height: ScreenUtil().setHeight(340),
       decoration: BoxDecoration(
-        color: ClearAppTheme.white,
+        color: Colors.transparent,
         shape: BoxShape.rectangle,
       ),
     );
-    return GestureDetector(
+    
+    return 
+    InkWell(
         onTap: racketCard.isavailable
             ? () => Navigator.of(context).push(
                   PageRouteBuilder(
@@ -100,11 +102,13 @@ class RacketCardList extends StatelessWidget {
                   ),
                 )
             : () => Toast_generator.errorToast(context, "It is already occupied"),
-        child: Container(
+        child: 
+        Container(
+          color: Colors.transparent,
           child: 
           Column(
            children: <Widget>[
-            RacketCardf,
+                RacketCardf,
                 Divider(
                   indent: ScreenUtil().setWidth(70),
                   endIndent: ScreenUtil().setWidth(70),
@@ -114,6 +118,8 @@ class RacketCardList extends StatelessWidget {
             ]
           )
         )
+        
+    
     );
   }
 }
