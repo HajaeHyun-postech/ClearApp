@@ -38,7 +38,7 @@ class _RacketScrollView extends State<RacketScrollView>{
   void initState(){
     super.initState();
     _scrollController.addListener(() {
-      print('offset = ${_scrollController.offset}');
+      //print('offset = ${_scrollController.offset}');
     }
     );
   }
@@ -68,7 +68,7 @@ class _RacketScrollView extends State<RacketScrollView>{
                 ),
             ),
             SliverPadding(
-              padding: EdgeInsets.all(0),
+              padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
               sliver: SliverList(delegate: SliverChildBuilderDelegate(
                   (context, index) => RacketCardList(racketcardlist[index]),
                   childCount: racketcardlist.length,
@@ -108,7 +108,7 @@ class CustomFilter extends StatelessWidget {
                             style: TextStyle(
                               fontFamily: 'RobotoCondensed',
                               fontWeight: FontWeight.w600,
-                              fontSize:14,
+                              fontSize:15,
                             ),
                           ),
                           SizedBox(width: ScreenUtil().setWidth(30)),
