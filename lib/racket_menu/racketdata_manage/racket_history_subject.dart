@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:clearApp/racket_menu/racket_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../login/login_info.dart';
@@ -15,35 +16,67 @@ import 'racket_current_info.dart';
 class RacketHstrSubject extends ChangeNotifier{
   BuildContext _context;
   bool _isFetching;
-  List<RacketCurrentInfo> _racketCurrentInfoList;
-  List<RacketRentHstr> _userSpecificRacketRentHstrList;
-  List<RacketRentHstr> _totalUserRacketRentHstrList;
+  RacketCurrentMenu _previousFilter;
+  List<RacketCard> _racketList;
+  List<RacketCard> _userSpecificRacketStatusList;
+  List<RacketCard> _userSpecificRacketRentHstrList; //FIx
+  List<RacketCard> _totalUserRacketRentHstrList; //Fix
 
   bool get isFetching => _isFetching;
-  List<RacketCurrentInfo> get racketCurrentInfoList => _racketCurrentInfoList;
+  List<RacketCard> get racketList => _racketList;
 
   RacketHstrSubject(BuildContext context){
     _context = context;
     _isFetching = false;
-    _racketCurrentInfoList = new List<RacketCurrentInfo>();
-    _userSpecificRacketRentHstrList = new List<RacketRentHstr>();
-    _totalUserRacketRentHstrList = new List<RacketRentHstr>();
+    _userSpecificRacketStatusList = new List<RacketCard>();
+    _userSpecificRacketRentHstrList = new List<RacketCard>();
+    _totalUserRacketRentHstrList = new List<RacketCard>();
+    _previousFilter = RacketCurrentMenu.FilterAllRacketStatusEvent;
 
-  }
+    eventHandle(EVENT.FilterChangeEvent, filter: _previousFilter);
+ }
 
   void notifyListenersWith({bool isFetching = false}){
     _isFetching = isFetching;
     notifyListeners();
   }
   
-  Future<void> eventHandle(EVENT eventType,
-  {RacketRentHstr newHstr})async {
+  Future<void> updateFilterMenu(RacketCurrentMenu menu)async{
+      notifyListenersWith(isFetching: true);
+      switch(menu){
+        case RacketCurrentMenu.FilterMyHstrEvent:
+        Logger().i('Filter changed to My history');
+        break;
+
+        case RacketCurrentMenu.FilterMyRacketStatusEvent:
+        Logger().i('Filter changed to My racket status');
+        _racketList = _userSpecificRacketRentHstrList;
+        break;
+
+        case RacketCurrentMenu.FilterAllRacketStatusEvent:
+        _racketList = _userSpecificRacketStatusList;
+        Logger().i('Filter changed to All racket Status');
+        break;
+
+        case RacketCurrentMenu.FilterAllRacketHstrEvent:
+        Logger().i('Filter changed to All Racket History');
+        _racketList = _totalUserRacketRentHstrList;
+        break;
+        
+      }
+      _previousFilter = menu;
+      notifyListenersWith(isFetching: false);
+
+  }
+
+  Future<void> eventHandle(EVENT eventType , {RacketCurrentMenu filter,RacketRentHstr newHstr})async {
     try{
       switch(eventType){
 
       case EVENT.RacketRentEvent:
         Logger().i("Racket Rent event occured");
        // await addNewRentHstr(newHstr);
+       
         Toast_generator.successToast(_context, 'Rented');
         break;
 
@@ -52,25 +85,12 @@ class RacketHstrSubject extends ChangeNotifier{
         //await addNewReturnHstr(newHstr);
         Toast_generator.successToast(_context, 'Returned');
         break;
-        
-      case EVENT.FilterAllRacketStatusEvent:
-        Logger().i("Filter All Racket Status Event occured");
-        //await filterAllRacket(newHstr);
-        Toast_generator.successToast(_context, 'Filterd');
+      
+      case EVENT.FilterChangeEvent:
+        Logger().i("Filter Change event occured");
+        await updateFilterMenu(filter);
+        Toast_generator.successToast(_context, 'Filter Changed');
         break;
-        
-      case EVENT.FilterMyHstrEvent:
-        Logger().i("Filter My history occured");
-        //await filterMyHstr(newHstr);
-        Toast_generator.successToast(_context, 'Filterd');
-        break;
-        
-      case EVENT.FilterMyRacketStatusEvent:
-        Logger().i("Filter My Racket Status Occured");
-        //await filterMyStatus(newHstr);
-        Toast_generator.successToast(_context, 'Filterd');
-        break;
-        
       default:
         Logger().e('ERROR : unknown event: $eventType');
         throw('unknwon event');

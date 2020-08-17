@@ -3,14 +3,18 @@ import '../../login/login_info.dart';
 enum EVENT{
   RacketRentEvent,
   RacketReturnEvent,
+  FilterChangeEvent,
+}
+
+enum RacketCurrentMenu{
   FilterMyHstrEvent,
   FilterMyRacketStatusEvent,
   FilterAllRacketStatusEvent,
-  FilterAllRacketHstrEvent, // for admin
+  FilterAllRacketHstrEvent, 
 }
 
 class RacketMenu{
-  final EVENT eventType;
+  final RacketCurrentMenu eventType;
   final String menu;
   RacketMenu({this.eventType, this.menu});
 }
@@ -20,23 +24,23 @@ class RacketMenus{
   static List<RacketMenu> returnMenus(){
     List<RacketMenu> menus = [
     RacketMenu(
-      eventType: EVENT.FilterMyHstrEvent,
-      menu: 'My History',
+      eventType: RacketCurrentMenu.FilterAllRacketStatusEvent,
+      menu: 'Rent',
     ),
     RacketMenu(
-      eventType: EVENT.FilterMyRacketStatusEvent,
+      eventType: RacketCurrentMenu.FilterMyRacketStatusEvent,
       menu: 'My Status',
     ),
     RacketMenu(
-      eventType: EVENT.FilterAllRacketStatusEvent,
-      menu: 'Rent',
+      eventType: RacketCurrentMenu.FilterMyHstrEvent,
+      menu: 'My History',
     ),
   ];
   if(LoginInfo().isAdmin == true){
       RacketMenu adminFilter = 
         new RacketMenu(
-          eventType: EVENT.FilterAllRacketHstrEvent,
-          menu: 'All Racket Rent History',
+          eventType: RacketCurrentMenu.FilterAllRacketHstrEvent,
+          menu: 'All History',
         );
 
       menus.add(adminFilter);

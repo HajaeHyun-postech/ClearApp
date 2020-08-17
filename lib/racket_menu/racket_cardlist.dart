@@ -40,6 +40,8 @@ class RacketCardList extends StatelessWidget {
                           fontFamily: 'RobotoCondensed',
                           color: Color(0xFF424242),
                           fontWeight: FontWeight.w600,
+                          fontSize: ScreenUtil().setSp(56),
+                          //fontSize: 14,
                           )
                       ),
                   Row(
@@ -69,7 +71,7 @@ class RacketCardList extends StatelessWidget {
                       fontFamily: 'RobotoCondensed',
                       color: Color(0xFF424242),
                       fontWeight: FontWeight.w600,
-                      fontSize: 11,
+                      fontSize: ScreenUtil().setSp(44),
                       )
                     ),
                 ],

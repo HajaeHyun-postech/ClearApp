@@ -6,6 +6,8 @@ import '../util/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; 
 import 'package:flutter/cupertino.dart';
 import 'custom_filter.dart';
+import 'package:selection_menu/selection_menu.dart';
+import 'package:selection_menu/components_configurations.dart';
 
 class RacketmenuHomepage extends StatelessWidget{
   @override
@@ -30,6 +32,7 @@ class RacketScrollView extends StatefulWidget{
 class _RacketScrollView extends State<RacketScrollView>{
 
   final ScrollController _scrollController = ScrollController();
+  SelectionMenuController selectionMenuController;
 
   @override
   void initState(){
@@ -38,6 +41,8 @@ class _RacketScrollView extends State<RacketScrollView>{
       //print('offset = ${_scrollController.offset}');
     }
     );
+    selectionMenuController = SelectionMenuController();
+
   }
 
   int return_available(){
