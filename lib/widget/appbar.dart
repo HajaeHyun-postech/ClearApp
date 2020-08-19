@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'app_theme.dart';
+import '../util/app_theme.dart';
 
 class CustomAppBar extends StatelessWidget {
   @override

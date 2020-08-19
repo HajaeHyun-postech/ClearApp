@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/exception/invalid_req_exception.dart';
 import 'package:clearApp/exception/method_not_allowed_exception.dart';
@@ -7,87 +10,15 @@ import 'package:clearApp/exception/not_found_exception.dart';
 import 'package:clearApp/exception/server_error_exception.dart';
 import 'package:clearApp/exception/unexpected_conflict_exception.dart';
 import 'package:clearApp/exception/unknown_status_code_exception.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 
 class HttpClient {
   static const String APIHost = "49.50.165.208";
   static const String APIPort = "8096";
-  static String token;
+  static String token = "";
 
-  static Future<Map<String, dynamic>> doGet(
-      String baseURL, String action, Map<String, dynamic> params) async {
-    String url = baseURL + '?action=$action';
-    params.forEach((key, value) {
-      url += '&$key=$value';
-    });
-
-    var response = await http.get(url, headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    });
-    var statusCode = response.statusCode;
-    Map<String, dynamic> body = jsonDecode(response.body);
-
-    if (statusCode != 200 || body.containsKey('error')) {
-      Logger().e('error: ${body['error'].toString()}');
-      throw HttpException('Get failed with ${body['error'].toString()}');
-    } else {
-      Logger().i('http  reqeust response success');
-    }
-    return body;
-  }
-
-  static Future<Map<String, dynamic>> doPost(String baseURL, String action,
-      {String body: '{}', Map<String, dynamic> params: const {}}) async {
-    String url = baseURL + '?action=$action';
-    params.forEach((key, value) {
-      url += '&$key=$value';
-    });
-
-    var response = await http.post(url,
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: body);
-
-    var statusCode = response.statusCode;
-
-    if (statusCode == 302) {
-      Logger().i('Redirecting...');
-      var redirectResponse =
-          await http.get(response.headers['location'], headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-      });
-
-      Map<String, dynamic> body = jsonDecode(redirectResponse.body);
-      if (body.containsKey('error')) {
-        Logger().e('error: ${body['error'].toString()}');
-        throw HttpException('Post failed with ${body['error'].toString()}');
-      } else {
-        Logger().i('http  redirect post response success');
-        return body;
-      }
-    } else if (statusCode == 200) {
-      Map<String, dynamic> body = jsonDecode(response.body);
-      if (body.containsKey('error')) {
-        Logger().e('error: ${body['error'].toString()}');
-        throw HttpException('Post failed with ${body['error'].toString()}');
-      } else {
-        Logger().i('http  post response success');
-        return body;
-      }
-    } else {
-      Logger().e('error: $statusCode');
-      throw ('error: $statusCode');
-    }
-  }
-
-  static Future<Map<String, dynamic>> doPatch(
-      {@required String address,
+  static Future<Map<String, dynamic>> send(
+      {@required String method,
+      @required String address,
       Map<String, dynamic> params,
       String body}) async {
     String url = '$APIHost:$APIPort?';
@@ -95,14 +26,15 @@ class HttpClient {
       url += '&$key=$value';
     });
 
-    http
-        .post(url,
-            headers: {
-              HttpHeaders.contentTypeHeader: 'application/json',
-              HttpHeaders.authorizationHeader: 'Bearer $token'
-            },
-            body: body)
-        .then((response) {
+    Function.apply(getHttpFunction(method), [
+      url
+    ], {
+      new Symbol("headers"): {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
+      },
+      new Symbol("body"): body
+    }).then((response) {
       Map<String, dynamic> body = jsonDecode(response.body);
       var statusCode = response.statusCode;
 
@@ -135,5 +67,28 @@ class HttpClient {
         }
       }
     });
+  }
+
+  static Function getHttpFunction(String method) {
+    method = method.toUpperCase();
+    switch (method) {
+      case 'GET':
+        return http.get;
+        break;
+      case 'POST':
+        return http.post;
+        break;
+      case 'PUT':
+        return http.put;
+        break;
+      case 'PATCH':
+        return http.patch;
+        break;
+      case 'DELETE':
+        return http.delete;
+        break;
+      default:
+        return null;
+    }
   }
 }

@@ -12,7 +12,7 @@ import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import './data_manage/events.dart';
 import './data_manage/game_data.dart';
 import '../../util/app_theme.dart';
-import '../../util/appbar.dart';
+import '../../widget/appbar.dart';
 import '../login/login_info.dart';
 import 'data_manage/game_data_subject.dart';
 import 'game_list_view.dart';
