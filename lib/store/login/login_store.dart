@@ -1,4 +1,6 @@
 import 'package:clearApp/exception/auth_exception.dart';
+import 'package:clearApp/store/error/error_store.dart';
+import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/http_client.dart';
 import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +13,10 @@ part 'login_store.g.dart';
 class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store {
+  //Other stores///
+  final ErrorStore errorStore = ErrorStore();
+  final SuccessStore successStore = SuccessStore();
+
   ///Store Variables///
   @observable
   bool loading = false;
@@ -20,8 +26,8 @@ abstract class _LoginStore with Store {
 
   ///Other Variable///
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
-
   String errorMsg;
+  User user;
 
   ///Actions///
   @action
@@ -36,16 +42,26 @@ abstract class _LoginStore with Store {
           .then((response) {
             String token = response['token'];
             HttpClient.token = token;
-            User.fromJson(JwtDecoder.decode(token));
-            success = true;
-            loading = false;
+            user = User.fromJson(JwtDecoder.decode(token));
+            updateOnSuccess("Login Success");
           })
-          .catchError((e) => errorMsg = "Login Failed",
+          .catchError((e) => updateOnError("Login Failed"),
               test: (e) => e is AuthException)
-          .catchError((e) => errorMsg = "Unknown Error Occured");
+          .catchError((e) => updateOnError("Unknown Error"))
+          .whenComplete(() => loading = false);
     } else {
       loading = false;
-      success = false;
     }
+  }
+
+  ///Custom Functions///
+  void updateOnError(String message) {
+    errorStore.errorMessage = message;
+    success = false;
+  }
+
+  void updateOnSuccess(String message) {
+    successStore.successMessage = message;
+    success = true;
   }
 }

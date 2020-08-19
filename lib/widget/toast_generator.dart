@@ -61,7 +61,7 @@ class Toast_generator {
     return SizedBox.shrink();
   }
 
-  static showErroToast(BuildContext context, String decs) {
+  static showErrorToast(BuildContext context, String decs) {
     Future.delayed(Duration(milliseconds: 0), () {
       if (decs != null && decs.isNotEmpty) {
         showToast(

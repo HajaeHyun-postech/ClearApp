@@ -7,6 +7,7 @@
 
 import 'dart:convert';
 
+@deprecated
 class LoginInfo {
   static final LoginInfo _loginInfo = LoginInfo._internal();
   String name;

@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:clearApp/routes.dart';
-import 'package:clearApp/store/login_store.dart';
+import 'package:clearApp/store/login/login_store.dart';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
-import 'FormCard.dart';
+import 'form_card.dart';
 
 class LoginScreenWithProvider extends StatelessWidget {
   @override
@@ -178,10 +177,11 @@ class _LoginScreenState extends State<LoginScreen>
               Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.homescreen, (Route<dynamic> route) => false);
             });
-
-            return Toast_generator.showSuccessToast(context, "Login Success");
+            return Toast_generator.showSuccessToast(
+                context, loginStore.successStore.successMessage);
           } else {
-            return Toast_generator.showErroToast(context, loginStore.errorMsg);
+            return Toast_generator.showErrorToast(
+                context, loginStore.errorStore.errorMessage);
           }
         },
       )
