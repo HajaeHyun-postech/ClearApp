@@ -1,8 +1,11 @@
 import 'dart:io';
-import 'package:best_flutter_ui_templates/app_theme.dart';
+
+import 'package:clearApp/widget/app_theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'login/login_when_start.dart';
+
+import 'routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,14 +28,16 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
-      title: 'Clear App',
+      title: 'Clear Application',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        textTheme: AppTheme.textTheme,
+        textTheme: ClearAppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: LoginScreen(),
+      locale: Locale('en', 'KR'),
+      initialRoute: '/login',
+      routes: Routes.routes,
     );
   }
 }

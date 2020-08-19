@@ -1,11 +1,12 @@
-import 'package:best_flutter_ui_templates/app_theme.dart';
-import 'package:best_flutter_ui_templates/custom_drawer/drawer_user_controller.dart';
-import 'package:best_flutter_ui_templates/custom_drawer/home_drawer.dart';
-import 'package:best_flutter_ui_templates/feedback_screen.dart';
-import 'package:best_flutter_ui_templates/help_screen.dart';
-import 'package:best_flutter_ui_templates/home_screen.dart';
-import 'package:best_flutter_ui_templates/invite_friend_screen.dart';
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
+
+import 'ui/custom_drawer/drawer_user_controller.dart';
+import 'ui/custom_drawer/home_drawer.dart';
+import 'ui/feedback_screen.dart';
+import 'ui/help_screen.dart';
+import 'ui/home_screen.dart';
+import 'ui/invite_friend_screen.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -26,12 +27,12 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.nearlyWhite,
+      color: ClearAppTheme.nearlyWhite,
       child: SafeArea(
         top: false,
         bottom: false,
         child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
+          backgroundColor: ClearAppTheme.nearlyWhite,
           body: DrawerUserController(
             screenIndex: drawerIndex,
             drawerWidth: MediaQuery.of(context).size.width * 0.75,
