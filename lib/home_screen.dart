@@ -1,8 +1,8 @@
+import 'package:clearApp/ui/model/homelist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'util/app_theme.dart';
-import 'model/homelist.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
