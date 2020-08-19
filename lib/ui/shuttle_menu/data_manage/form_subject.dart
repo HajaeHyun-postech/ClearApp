@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 
 import '../../../util/api_service.dart';
-import '../../../util/constants.dart' as Constants;
+import '../../../contants/constants.dart' as Constants;
 import 'events.dart';
 
 class FormSubject extends ChangeNotifier {

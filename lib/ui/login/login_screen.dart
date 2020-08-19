@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:clearApp/util/popup_generator.dart';
-import 'package:clearApp/util/toast_generator.dart';
+import 'package:clearApp/widget_generator/popup_generator.dart';
+import 'package:clearApp/widget_generator/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_indicators/progress_indicators.dart';

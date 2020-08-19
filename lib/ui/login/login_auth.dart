@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:logger/logger.dart';
 
 import '../../util/api_service.dart';
-import '../../util/constants.dart' as Constants;
+import '../../contants/constants.dart' as Constants;
 import 'login_info.dart';
 
 class LoginAuth extends ChangeNotifier {

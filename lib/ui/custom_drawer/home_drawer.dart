@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../util/app_theme.dart';
-import '../../util/popup_generator.dart';
-import '../../util/toast_generator.dart';
+import '../../widget_generator/popup_generator.dart';
+import '../../widget_generator/toast_generator.dart';
 import '../login/login_info.dart';
 
 class HomeDrawer extends StatefulWidget {

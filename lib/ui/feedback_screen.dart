@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'util/app_theme.dart';
+import '../util/app_theme.dart';
 
 class FeedbackScreen extends StatefulWidget {
   @override

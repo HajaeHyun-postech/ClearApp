@@ -1,6 +1,6 @@
 import 'package:clearApp/navigation_home_screen.dart';
 import 'package:clearApp/util/app_theme.dart';
-import 'package:clearApp/util/toast_generator.dart';
+import 'package:clearApp/widget_generator/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'util/app_theme.dart';
 
-class HelpScreen extends StatefulWidget {
+import '../util/app_theme.dart';
+
+class InviteFriend extends StatefulWidget {
   @override
-  _HelpScreenState createState() => _HelpScreenState();
+  _InviteFriendState createState() => _InviteFriendState();
 }
 
-class _HelpScreenState extends State<HelpScreen> {
+class _InviteFriendState extends State<InviteFriend> {
   @override
   void initState() {
     super.initState();
@@ -27,12 +28,12 @@ class _HelpScreenState extends State<HelpScreen> {
                     top: MediaQuery.of(context).padding.top,
                     left: 16,
                     right: 16),
-                child: Image.asset('assets/images/helpImage.png'),
+                child: Image.asset('assets/images/inviteImage.png'),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'How can we help you?',
+                  'Invite Your Friends',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -42,7 +43,7 @@ class _HelpScreenState extends State<HelpScreen> {
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 child: const Text(
-                  'It looks like you are experiencing problems\nwith our sign up process. We are here to\nhelp so please get in touch with us',
+                  'Are you one of those who makes everything\n at the last moment?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -54,7 +55,7 @@ class _HelpScreenState extends State<HelpScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Container(
-                      width: 140,
+                      width: 120,
                       height: 40,
                       decoration: BoxDecoration(
                         color: Colors.blue,
@@ -72,15 +73,26 @@ class _HelpScreenState extends State<HelpScreen> {
                         child: InkWell(
                           onTap: () {},
                           child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                'Chat with Us',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.share,
                                   color: Colors.white,
+                                  size: 22,
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(
+                                    'Share',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

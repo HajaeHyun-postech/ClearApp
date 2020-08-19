@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 import '../../../util/api_service.dart';
-import '../../../util/constants.dart' as Constants;
-import '../../../util/toast_generator.dart';
+import '../../../contants/constants.dart' as Constants;
+import '../../../widget_generator/toast_generator.dart';
 import '../../login/login_info.dart';
 import '../tab_model.dart';
 import 'events.dart';
