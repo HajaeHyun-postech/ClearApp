@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:clearApp/widget_generator/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import 'package:clearApp/util/api_service.dart';
+import 'package:clearApp/util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
 import 'game_data.dart';
 import 'events.dart';
@@ -67,7 +67,7 @@ class GameDataSubject extends ChangeNotifier {
   }
 
   Future<void> makeGame(GameData newGame) async {
-    Map<String, dynamic> response = await APIService.doPost(
+    Map<String, dynamic> response = await HttpClient.doPost(
         Constants.gamesListURL, 'makeGame',
         body: jsonEncode(newGame.toMap()));
     newGame.key = response['data'];
@@ -76,7 +76,7 @@ class GameDataSubject extends ChangeNotifier {
 
   Future<void> getGames() async {
     Map<String, dynamic> response =
-        await APIService.doGet(Constants.gamesListURL, 'getGames', new Map());
+        await HttpClient.doGet(Constants.gamesListURL, 'getGames', new Map());
 
     gameDataList = new List<GameData>();
 

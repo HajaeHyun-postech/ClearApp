@@ -2,7 +2,7 @@ import 'package:clearApp/ui/shuttle_menu/data_manage/shuttle_purchace_history.da
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 
-import '../../../util/api_service.dart';
+import '../../../util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
 import 'events.dart';
 
@@ -64,7 +64,7 @@ class FormSubject extends ChangeNotifier {
     notifyListenersWith(
         isFeching: true, isAddingNewHstr: false, isEditingMode: true);
 
-    Map<String, dynamic> response = await APIService.doGet(
+    Map<String, dynamic> response = await HttpClient.doGet(
         Constants.shuttlecockURL, 'getRemainingCount', new Map());
     int remainingShuttles = response['data'] as int;
     Logger().i('got count : $remainingShuttles');

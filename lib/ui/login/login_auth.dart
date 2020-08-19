@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:logger/logger.dart';
 
-import '../../util/api_service.dart';
+import '../../util/http_client.dart';
 import '../../contants/constants.dart' as Constants;
 import 'login_info.dart';
 
@@ -21,7 +21,7 @@ class LoginAuth extends ChangeNotifier {
         Logger().i('Login with... $povisId, $studentId');
         Map<String, dynamic> map = {'povisId': povisId, 'studentId': studentId};
         var response =
-            await APIService.doGet(Constants.memberlistURL, 'loginAuth', map);
+            await HttpClient.doGet(Constants.memberlistURL, 'loginAuth', map);
 
         LoginInfo.fromMap(response['data']);
       } catch (e) {

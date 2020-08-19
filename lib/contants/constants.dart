@@ -11,3 +11,5 @@ const gamesListURL =
 
 const racketURL =
     'https://script.google.com/macros/s/AKfycbwjy0AU5Ji_kolrOxyM3L8eXVCaWughhtAM1kryYMGZOClTdaY/exec';
+
+const APIHost = "49.50.165.208:8096";

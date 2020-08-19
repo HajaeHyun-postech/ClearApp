@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import '../../../util/api_service.dart';
+import '../../../util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
 import '../../../widget_generator/toast_generator.dart';
 import 'events.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import '../../../util/api_service.dart';
+import '../../../util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
 import '../../../widget_generator/toast_generator.dart';
 import '../../login/login_info.dart';
@@ -90,7 +90,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = {'studentId': LoginInfo().studentId};
     Map<String, dynamic> response =
-        await APIService.doGet(Constants.shuttlecockURL, 'getMyHstr', map);
+        await HttpClient.doGet(Constants.shuttlecockURL, 'getMyHstr', map);
 
     _userSpecificShuttlePrchHstrList = new List<ShuttlePrchHstr>();
 
@@ -106,7 +106,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   Future<void> getAllUnapprHstr() async {
     notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = new Map<String, dynamic>();
-    Map<String, dynamic> response = await APIService.doGet(
+    Map<String, dynamic> response = await HttpClient.doGet(
         Constants.shuttlecockURL, 'getAllUnapprHstr', map);
 
     _totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
@@ -123,7 +123,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
       "key": key,
     };
 
-    await APIService.doPost(Constants.shuttlecockURL, 'updateRcved',
+    await HttpClient.doPost(Constants.shuttlecockURL, 'updateRcved',
         params: map);
 
     _userSpecificShuttlePrchHstrList
@@ -138,7 +138,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
       "key": key,
     };
 
-    await APIService.doPost(Constants.shuttlecockURL, 'updateAppr',
+    await HttpClient.doPost(Constants.shuttlecockURL, 'updateAppr',
         params: map);
 
     _totalUserShuttlePrchHstrList
@@ -152,7 +152,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     Map<String, dynamic> map = {
       "key": key,
     };
-    await APIService.doPost(Constants.shuttlecockURL, 'deleteHstr',
+    await HttpClient.doPost(Constants.shuttlecockURL, 'deleteHstr',
         params: map);
 
     _userSpecificShuttlePrchHstrList
@@ -164,7 +164,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   Future<void> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
     notifyListenersWith(isFetching: true);
 
-    Map<String, dynamic> response = await APIService.doPost(
+    Map<String, dynamic> response = await HttpClient.doPost(
             Constants.shuttlecockURL, 'addNewPrchHstr',
             body: jsonEncode(newHstr.toMap()))
         .catchError((e) {
