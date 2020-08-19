@@ -89,8 +89,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   Future<void> getMyHstr() async {
     notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = {'studentId': LoginInfo().studentId};
-    Map<String, dynamic> response =
-        await HttpClient.doGet(Constants.shuttlecockURL, 'getMyHstr', map);
+    Map<String, dynamic> response = await HttpClient.send();
 
     _userSpecificShuttlePrchHstrList = new List<ShuttlePrchHstr>();
 
@@ -106,8 +105,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   Future<void> getAllUnapprHstr() async {
     notifyListenersWith(isFetching: true);
     Map<String, dynamic> map = new Map<String, dynamic>();
-    Map<String, dynamic> response = await HttpClient.doGet(
-        Constants.shuttlecockURL, 'getAllUnapprHstr', map);
+    Map<String, dynamic> response = await HttpClient.send();
 
     _totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
     List<dynamic> jsonList = response['data'];
@@ -123,8 +121,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
       "key": key,
     };
 
-    await HttpClient.doPost(Constants.shuttlecockURL, 'updateRcved',
-        params: map);
+    await HttpClient.send();
 
     _userSpecificShuttlePrchHstrList
         .firstWhere((element) => element.key == key)
@@ -137,9 +134,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     Map<String, dynamic> map = {
       "key": key,
     };
-
-    await HttpClient.doPost(Constants.shuttlecockURL, 'updateAppr',
-        params: map);
+    await HttpClient.send();
 
     _totalUserShuttlePrchHstrList
         .firstWhere((element) => element.key == key)
@@ -152,8 +147,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     Map<String, dynamic> map = {
       "key": key,
     };
-    await HttpClient.doPost(Constants.shuttlecockURL, 'deleteHstr',
-        params: map);
+    await HttpClient.send();
 
     _userSpecificShuttlePrchHstrList
         .removeWhere((element) => element.key == key);
@@ -164,10 +158,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   Future<void> addNewPrchHstr(ShuttlePrchHstr newHstr) async {
     notifyListenersWith(isFetching: true);
 
-    Map<String, dynamic> response = await HttpClient.doPost(
-            Constants.shuttlecockURL, 'addNewPrchHstr',
-            body: jsonEncode(newHstr.toMap()))
-        .catchError((e) {
+    Map<String, dynamic> response = await HttpClient.send().catchError((e) {
       notifyListenersWith(isFetching: false);
       throw ('Not enough shuttlecocks');
     }, test: (e) => e is HttpException);

@@ -67,16 +67,15 @@ class GameDataSubject extends ChangeNotifier {
   }
 
   Future<void> makeGame(GameData newGame) async {
-    Map<String, dynamic> response = await HttpClient.doPost(
-        Constants.gamesListURL, 'makeGame',
-        body: jsonEncode(newGame.toMap()));
+    Map<String, dynamic> response = await HttpClient.send(
+        method: "get", address: "TODO", body: jsonEncode(newGame.toMap()));
     newGame.key = response['data'];
     gameDataList.add(newGame);
   }
 
   Future<void> getGames() async {
     Map<String, dynamic> response =
-        await HttpClient.doGet(Constants.gamesListURL, 'getGames', new Map());
+        await HttpClient.send(method: "get", address: "TODO");
 
     gameDataList = new List<GameData>();
 

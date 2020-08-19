@@ -64,8 +64,8 @@ class FormSubject extends ChangeNotifier {
     notifyListenersWith(
         isFeching: true, isAddingNewHstr: false, isEditingMode: true);
 
-    Map<String, dynamic> response = await HttpClient.doGet(
-        Constants.shuttlecockURL, 'getRemainingCount', new Map());
+    Map<String, dynamic> response =
+        await HttpClient.send(method: "get", address: "TODO");
     int remainingShuttles = response['data'] as int;
     Logger().i('got count : $remainingShuttles');
 

@@ -21,7 +21,7 @@ class LoginAuth extends ChangeNotifier {
         Logger().i('Login with... $povisId, $studentId');
         Map<String, dynamic> map = {'povisId': povisId, 'studentId': studentId};
         var response =
-            await HttpClient.doGet(Constants.memberlistURL, 'loginAuth', map);
+            await HttpClient.send(method: "get", address: "TODO", params: map);
 
         LoginInfo.fromMap(response['data']);
       } catch (e) {
