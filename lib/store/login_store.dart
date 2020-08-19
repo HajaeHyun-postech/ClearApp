@@ -36,9 +36,7 @@ abstract class _LoginStore with Store {
           .then((response) {
             String token = response['token'];
             HttpClient.token = token;
-            print(token);
             User.fromJson(JwtDecoder.decode(token));
-
             success = true;
             loading = false;
           })

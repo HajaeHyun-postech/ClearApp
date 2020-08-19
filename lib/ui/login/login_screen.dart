@@ -59,116 +59,140 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: new Scaffold(
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: true,
-        body: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 80.0, left: 90),
-                  child: Image.asset("assets/images/badminton_play.png"),
-                ),
-              ],
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 90.0),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: ScreenUtil().setHeight(550),
-                    ),
-                    FormCard(),
-                    SizedBox(height: ScreenUtil().setHeight(50)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: ScreenUtil().setWidth(25),
-                            ),
-                            GestureDetector(
-                              onTap: _radio,
-                              child: radioButton(_isSelected),
-                            ),
-                            SizedBox(
-                              width: ScreenUtil().setWidth(20),
-                            ),
-                            Text("Remember me",
-                                style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(45),
-                                    fontFamily: "Poppins-Medium"))
-                          ],
-                        ),
-                        InkWell(
-                          child: Container(
-                            width: ScreenUtil().setWidth(400),
-                            height: ScreenUtil().setHeight(150),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Color(0xFF17ead9),
-                                  Color(0xFF6078ea)
-                                ]),
-                                borderRadius: BorderRadius.circular(6.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color(0xFF6078ea).withOpacity(.3),
-                                      offset: Offset(0.0, 8.0),
-                                      blurRadius: 8.0)
-                                ]),
-                            child: Observer(builder: (_) {
-                              final loginStore =
-                                  Provider.of<LoginStore>(context);
-                              return Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    if (!loginStore.loading) {
-                                      loginStore.login();
-                                    }
-                                  },
-                                  child: Center(
-                                    child: !loginStore.loading
-                                        ? new Text("SIGNIN",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: ScreenUtil().setSp(55),
-                                              letterSpacing: 1.0,
-                                            ))
-                                        : JumpingText('SIGNIN',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: ScreenUtil().setSp(55),
-                                              letterSpacing: 1.0,
-                                            )),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+    return Stack(children: <Widget>[
+      WillPopScope(
+        child: new Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomPadding: true,
+          body: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 80.0, left: 90),
+                    child: Image.asset("assets/images/badminton_play.png"),
+                  ),
+                ],
               ),
-            )
-          ],
+              SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 90.0),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: ScreenUtil().setHeight(550),
+                      ),
+                      FormCard(),
+                      SizedBox(height: ScreenUtil().setHeight(50)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              SizedBox(
+                                width: ScreenUtil().setWidth(25),
+                              ),
+                              GestureDetector(
+                                onTap: _radio,
+                                child: radioButton(_isSelected),
+                              ),
+                              SizedBox(
+                                width: ScreenUtil().setWidth(20),
+                              ),
+                              Text("Remember me",
+                                  style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(45),
+                                      fontFamily: "Poppins-Medium"))
+                            ],
+                          ),
+                          InkWell(
+                            child: Container(
+                              width: ScreenUtil().setWidth(400),
+                              height: ScreenUtil().setHeight(150),
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xFF17ead9),
+                                    Color(0xFF6078ea)
+                                  ]),
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Color(0xFF6078ea).withOpacity(.3),
+                                        offset: Offset(0.0, 8.0),
+                                        blurRadius: 8.0)
+                                  ]),
+                              child: Observer(builder: (_) {
+                                final loginStore =
+                                    Provider.of<LoginStore>(context);
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (!loginStore.loading) {
+                                        loginStore.login();
+                                      }
+                                    },
+                                    child: Center(
+                                      child: !loginStore.loading
+                                          ? new Text("SIGNIN",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize:
+                                                    ScreenUtil().setSp(55),
+                                                letterSpacing: 1.0,
+                                              ))
+                                          : JumpingText('SIGNIN',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: "Roboto",
+                                                fontWeight: FontWeight.w500,
+                                                fontSize:
+                                                    ScreenUtil().setSp(55),
+                                                letterSpacing: 1.0,
+                                              )),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
+        onWillPop: () {
+          PopupGenerator.closingPopup(context).show();
+        },
       ),
-      onWillPop: () {
-        PopupGenerator.closingPopup(context).show();
-      },
-    );
+      Observer(
+        builder: (_) {
+          final loginStore = Provider.of<LoginStore>(context);
+          print(loginStore.success);
+          return loginStore.success
+              ? _showErrorMessage("Login Success")
+              : _showErrorMessage("Login failed");
+        },
+      )
+    ]);
+  }
+
+  _showErrorMessage(String message) {
+    Future.delayed(Duration(milliseconds: 0), () {
+      if (message != null && message.isNotEmpty) {
+        Toast_generator.successToast(context, "Login Success");
+      }
+    });
+
+    return SizedBox.shrink();
   }
 }
