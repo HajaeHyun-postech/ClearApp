@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 import '../../../util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
-import '../../../widget_generator/toast_generator.dart';
 import '../../login/login_info.dart';
 import '../tab_model.dart';
 import 'events.dart';

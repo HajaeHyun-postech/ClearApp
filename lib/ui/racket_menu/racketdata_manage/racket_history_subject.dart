@@ -1,11 +1,11 @@
 import 'package:clearApp/ui/racket_menu/racket_card.dart';
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 import '../../../util/http_client.dart';
 import '../../../contants/constants.dart' as Constants;
-import '../../../widget_generator/toast_generator.dart';
 import 'events.dart';
 import 'racket_current_info.dart';
 import 'racket_rent_history.dart';

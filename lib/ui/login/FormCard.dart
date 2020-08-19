@@ -1,14 +1,13 @@
+import 'package:clearApp/store/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import 'login_auth.dart';
-
 class FormCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final loginAuth = Provider.of<LoginAuth>(context);
+    final loginStore = Provider.of<LoginStore>(context);
 
     return new Container(
       width: double.infinity,
@@ -29,7 +28,7 @@ class FormCard extends StatelessWidget {
       child: Padding(
           padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
           child: FormBuilder(
-            key: loginAuth.fbKey,
+            key: loginStore.fbKey,
             initialValue: {
               'povisId': 'yshajae',
               'studentId': '20180673',

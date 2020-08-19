@@ -1,19 +1,20 @@
 import 'dart:io';
-import 'package:clearApp/widget_generator/popup_generator.dart';
-import 'package:clearApp/widget_generator/toast_generator.dart';
+import 'package:clearApp/store/login_store.dart';
+import 'package:clearApp/widget/popup_generator.dart';
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 import 'FormCard.dart';
-import 'login_auth.dart';
 
 class LoginScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 1440, height: 2560, allowFontScaling: true);
-    return ChangeNotifierProvider<LoginAuth>(
-      create: (context) => LoginAuth(),
+    return Provider<LoginStore>(
+      create: (_) => LoginStore(),
       child: LoginScreen(),
     );
   }
@@ -58,8 +59,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    final loginAuth = Provider.of<LoginAuth>(context);
-    return new WillPopScope(
+    return WillPopScope(
       child: new Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: true,
@@ -122,46 +122,39 @@ class _LoginScreenState extends State<LoginScreen>
                                       offset: Offset(0.0, 8.0),
                                       blurRadius: 8.0)
                                 ]),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  if (!loginAuth.isFetching) {
-                                    loginAuth
-                                        .doLoginAuth()
-                                        .then((_) => Navigator.pushNamed(
-                                            context, '/homescreen'))
-                                        .catchError(
-                                            (e) => Toast_generator.errorToast(
-                                                context, 'Invalid Format'),
-                                            test: (e) => e is FormatException)
-                                        .catchError(
-                                            (e) => Toast_generator.errorToast(
-                                                context, 'Login failed'),
-                                            test: (e) => e is HttpException);
-                                  }
-                                },
-                                child: Center(
-                                  child: !loginAuth.isFetching
-                                      ? new Text("SIGNIN",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: "Roboto",
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: ScreenUtil().setSp(55),
-                                            letterSpacing: 1.0,
-                                          ))
-                                      : JumpingText('SIGNIN',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: "Roboto",
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: ScreenUtil().setSp(55),
-                                            letterSpacing: 1.0,
-                                          )),
+                            child: Observer(builder: (_) {
+                              final loginStore =
+                                  Provider.of<LoginStore>(context);
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    if (!loginStore.loading) {
+                                      loginStore.login();
+                                    }
+                                  },
+                                  child: Center(
+                                    child: !loginStore.loading
+                                        ? new Text("SIGNIN",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: ScreenUtil().setSp(55),
+                                              letterSpacing: 1.0,
+                                            ))
+                                        : JumpingText('SIGNIN',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: ScreenUtil().setSp(55),
+                                              letterSpacing: 1.0,
+                                            )),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            }),
                           ),
                         )
                       ],

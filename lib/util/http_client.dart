@@ -19,54 +19,54 @@ class HttpClient {
   static Future<Map<String, dynamic>> send(
       {@required String method,
       @required String address,
-      Map<String, dynamic> params,
-      String body}) async {
-    String url = '$APIHost:$APIPort?';
+      Map<String, dynamic> params = const {},
+      Map<String, dynamic> body = const {}}) async {
+    String url = 'http://$APIHost:$APIPort$address?';
     params.forEach((key, value) {
-      url += '&$key=$value';
+      url += '$key=$value&';
     });
 
-    Function.apply(getHttpFunction(method), [
+    var response = await Function.apply(getHttpFunction(method), [
       url
     ], {
       new Symbol("headers"): {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer $token'
       },
-      new Symbol("body"): body
-    }).then((response) {
-      Map<String, dynamic> body = jsonDecode(response.body);
-      var statusCode = response.statusCode;
-
-      if (statusCode == 200) {
-        return body;
-      } else {
-        String errMsg = body['err'];
-        switch (statusCode) {
-          case 400:
-            return Future.error(InvalidReqException(errMsg));
-            break;
-          case 401:
-            return Future.error(AuthException(errMsg));
-            break;
-          case 403:
-            return Future.error(NotFoundException(errMsg));
-            break;
-          case 405:
-            return Future.error(MethodNotAllowedException(errMsg));
-            break;
-          case 409:
-            return Future.error(UnexpectedConflictException(errMsg));
-            break;
-          case 500:
-            return Future.error(ServerErrorException(errMsg));
-            break;
-          default:
-            return Future.error(UnknownStatusCodeException(errMsg));
-            break;
-        }
-      }
+      new Symbol("body"): jsonEncode(body)
     });
+
+    Map<String, dynamic> responseBody = jsonDecode(response.body);
+    var statusCode = response.statusCode;
+
+    if (statusCode == 200) {
+      return responseBody;
+    } else {
+      String errMsg = responseBody['err'];
+      switch (statusCode) {
+        case 400:
+          return Future.error(InvalidReqException(errMsg));
+          break;
+        case 401:
+          return Future.error(AuthException(errMsg));
+          break;
+        case 403:
+          return Future.error(NotFoundException(errMsg));
+          break;
+        case 405:
+          return Future.error(MethodNotAllowedException(errMsg));
+          break;
+        case 409:
+          return Future.error(UnexpectedConflictException(errMsg));
+          break;
+        case 500:
+          return Future.error(ServerErrorException(errMsg));
+          break;
+        default:
+          return Future.error(UnknownStatusCodeException(errMsg));
+          break;
+      }
+    }
   }
 
   static Function getHttpFunction(String method) {
