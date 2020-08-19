@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:clearApp/routes.dart';
 import 'package:clearApp/store/login_store.dart';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
@@ -59,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final loginStore = Provider.of<LoginStore>(context);
+
     return Stack(children: <Widget>[
       WillPopScope(
         child: new Scaffold(
@@ -125,16 +128,10 @@ class _LoginScreenState extends State<LoginScreen>
                                         blurRadius: 8.0)
                                   ]),
                               child: Observer(builder: (_) {
-                                final loginStore =
-                                    Provider.of<LoginStore>(context);
                                 return Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    onTap: () {
-                                      if (!loginStore.loading) {
-                                        loginStore.login();
-                                      }
-                                    },
+                                    onTap: loginStore.login,
                                     child: Center(
                                       child: !loginStore.loading
                                           ? new Text("SIGNIN",
@@ -176,23 +173,18 @@ class _LoginScreenState extends State<LoginScreen>
       ),
       Observer(
         builder: (_) {
-          final loginStore = Provider.of<LoginStore>(context);
-          print(loginStore.success);
-          return loginStore.success
-              ? _showErrorMessage("Login Success")
-              : _showErrorMessage("Login failed");
+          if (loginStore.success) {
+            Future.delayed(Duration(milliseconds: 0), () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.homescreen, (Route<dynamic> route) => false);
+            });
+
+            return Toast_generator.showSuccessToast(context, "Login Success");
+          } else {
+            return Toast_generator.showErroToast(context, loginStore.errorMsg);
+          }
         },
       )
     ]);
-  }
-
-  _showErrorMessage(String message) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
-        Toast_generator.successToast(context, "Login Success");
-      }
-    });
-
-    return SizedBox.shrink();
   }
 }

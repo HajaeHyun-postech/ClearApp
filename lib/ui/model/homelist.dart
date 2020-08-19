@@ -1,3 +1,5 @@
+import 'package:clearApp/routes.dart';
+
 class HomeList {
   HomeList({
     this.navigateScreen,
@@ -13,27 +15,27 @@ class HomeList {
   static List<HomeList> homeList = [
     HomeList(
       imagePath: 'assets/menu/shuttleCock.png',
-      navigateScreen: '/homescreen/shuttlemenu',
+      navigateScreen: Routes.shuttlecockMenu,
       title: 'Shuttlecock',
     ),
     HomeList(
       imagePath: 'assets/menu/racket.png',
-      navigateScreen: '/homescreen/racketmenu',
+      navigateScreen: Routes.racketMenu,
       title: 'Racket',
     ),
     HomeList(
       imagePath: 'assets/menu/games.png',
-      navigateScreen: '/homescreen/gamesmenu',
+      navigateScreen: Routes.gamesMenu,
       title: 'Games',
     ),
     HomeList(
       imagePath: 'assets/menu/scores.png',
-      navigateScreen: '/homescreen/scoresmenu',
+      navigateScreen: Routes.scoresMenu,
       title: 'deprecated',
     ),
     HomeList(
       imagePath: 'assets/menu/gatcha.png',
-      navigateScreen: '/homescreen/gatchamenu',
+      navigateScreen: Routes.gatchaMenu,
       title: 'Gatcha',
     ),
   ];

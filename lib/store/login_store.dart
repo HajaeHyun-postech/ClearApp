@@ -42,11 +42,7 @@ abstract class _LoginStore with Store {
           })
           .catchError((e) => errorMsg = "Login Failed",
               test: (e) => e is AuthException)
-          .catchError((e) => errorMsg = "Unknown Error Occured")
-          .whenComplete(() {
-            loading = false;
-            success = false;
-          });
+          .catchError((e) => errorMsg = "Unknown Error Occured");
     } else {
       loading = false;
       success = false;
