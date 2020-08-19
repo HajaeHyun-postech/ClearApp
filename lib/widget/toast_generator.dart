@@ -1,5 +1,5 @@
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
-import '../util/app_theme.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

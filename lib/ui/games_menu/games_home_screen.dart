@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,6 @@ import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 import './data_manage/events.dart';
 import './data_manage/game_data.dart';
-import '../../util/app_theme.dart';
 import '../../widget/appbar.dart';
 import '../login/login_info.dart';
 import 'data_manage/game_data_subject.dart';

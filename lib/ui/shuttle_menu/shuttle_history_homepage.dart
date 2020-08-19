@@ -1,5 +1,5 @@
 import 'package:clearApp/ui/shuttle_menu/prch_hstr_tile.dart';
-import 'package:clearApp/util/app_theme.dart';
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

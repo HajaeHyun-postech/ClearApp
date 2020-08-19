@@ -1,4 +1,4 @@
-import 'package:clearApp/util/app_theme.dart';
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';

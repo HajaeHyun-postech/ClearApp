@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'routes.dart';
-import 'util/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
