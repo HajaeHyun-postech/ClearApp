@@ -27,7 +27,6 @@ class OrderForm extends StatefulWidget {
 class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
   ScrollController _scrollController;
   AnimationController _remainingController;
-  AnimationController _invalidUsageController;
   ShuttleFormStore shuttleFormStore;
   UsageLists _selectedUsage;
 
@@ -39,8 +38,6 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     _scrollController = ScrollController();
     _remainingController = AnimationController(
         duration: const Duration(milliseconds: 100), vsync: this);
-    _invalidUsageController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -112,7 +109,6 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
       bool selected, String usage, UsageLists selectedUsage) {
     setState(() {
       if (selected) {
-        _invalidUsageController.reverse();
         _selectedUsage = selectedUsage;
         shuttleFormStore.setUsageString(usage);
       } else {
@@ -237,7 +233,6 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
               _remainingController.reverse();
             }
           });
-
     return Stack(
       children: <Widget>[
         Column(
@@ -258,17 +253,6 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                           fontFamily: 'Roboto',
                           fontSize: ScreenUtil().setSp(72),
                         ),
-                      ),
-                      SizedBox(width: ScreenUtil().setWidth(40)),
-                      FadeTransition(
-                        child: Text(
-                          'Usage is required',
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: ScreenUtil().setSp(40),
-                              color: Colors.red),
-                        ),
-                        opacity: _invalidUsageController,
                       ),
                     ],
                   ),

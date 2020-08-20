@@ -20,7 +20,9 @@ abstract class _ShuttleFormStore with Store {
   _ShuttleFormStore() {
     _disposers = [
       reaction((_) => invalidAmount, (value) => invalidAmount = false,
-          delay: 200),
+          delay: 1000),
+      reaction((_) => invalidUsage, (value) => invalidUsage = false,
+          delay: 1000),
     ];
   }
 
@@ -33,6 +35,9 @@ abstract class _ShuttleFormStore with Store {
 
   @observable
   bool invalidAmount = false;
+
+  @observable
+  bool invalidUsage = false;
 
   @observable
   int remaining = 0;
@@ -64,6 +69,10 @@ abstract class _ShuttleFormStore with Store {
 
   @action
   Future addOrder() async {
+    if (usageString == '') {
+      updateOnError("Usage가 없습니다");
+      return;
+    }
     if (loading) return;
     loading = true;
 
