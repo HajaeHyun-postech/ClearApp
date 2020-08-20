@@ -9,14 +9,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'tab_model.dart';
-import 'data_manage/events.dart';
 import 'package:provider/provider.dart';
-import 'data_manage/shuttle_history_subject.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'add_prch_form.dart';
-import 'data_manage/form_subject.dart';
 
 class ShuttleMenuScreenWithProvider extends StatelessWidget {
   @override
@@ -73,6 +70,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   Widget build(BuildContext context) {
     final shuttleStore = Provider.of<ShuttleStore>(context);
+    final bool isAdminTab = TAB.values[_tabController.index] == TAB.Admin;
+    final bool isNotRcvedTab =
+        TAB.values[_tabController.index] == TAB.Not_Rcved;
+    final bool isTotalTab = TAB.values[_tabController.index] == TAB.Total;
 
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
@@ -105,12 +106,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                           height: ScreenUtil().setHeight(40),
                                         ),
                                         Observer(builder: (_) {
-                                          return TAB.values[
-                                                      _tabController.index] ==
-                                                  TAB.Admin
+                                          return isAdminTab
                                               ? Topcard(
                                                   'Unconfirmed',
-                                                  shuttleStore.wholeUnconfirmedHistorires.toString() + ' \₩',
+                                                  shuttleStore.wholeUnconfirmedPrice.toString() + ' \₩',
                                                   [
                                                       ClearAppTheme.orange
                                                           .withAlpha(230),
@@ -151,18 +150,13 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                   builder: (_) {
                                     int itemCount;
                                     List<ShuttleOrderHistory> list;
-                                    if (TAB.values[_tabController.index] ==
-                                        TAB.Admin) {
+                                    if (isAdminTab) {
                                       list = shuttleStore
                                           .wholeUnconfirmedHistorires;
-                                    } else if (TAB
-                                            .values[_tabController.index] ==
-                                        TAB.Not_Rcved) {
+                                    } else if (isNotRcvedTab) {
                                       list = shuttleStore
                                           .usersNotReceivedHistories;
-                                    } else if (TAB
-                                            .values[_tabController.index] ==
-                                        TAB.Total) {
+                                    } else if (isTotalTab) {
                                       list = shuttleStore.usersHistories;
                                     }
                                     itemCount = list.length;
@@ -204,13 +198,47 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                             1.0,
                                                             curve: Curves
                                                                 .fastOutSlowIn)));
-                                                final String title = TAB.values[
-                                                            _tabController
-                                                                .index] ==
-                                                        TAB.Admin
-                                                    ? '${list[index].orderUsage}:${list[index].user.name}'
-                                                    : '${list[index].orderUsage}';
 
+                                                String title;
+                                                String firstActionCaption;
+                                                String secondActionCaption;
+                                                Function firstTapAction;
+                                                Function secondTapAction;
+                                                if (isAdminTab) {
+                                                  title =
+                                                      '${list[index].orderUsage} : ${list[index].user.name}';
+                                                  firstActionCaption =
+                                                      'Confirm';
+                                                  secondActionCaption =
+                                                      'Delete';
+                                                  firstTapAction = () =>
+                                                      shuttleStore
+                                                          .confirmDeposit(
+                                                              list[index]
+                                                                  .idList);
+                                                  secondTapAction = () =>
+                                                      shuttleStore
+                                                          .receiveShuttle(
+                                                              list[index]
+                                                                  .idList);
+                                                } else {
+                                                  title =
+                                                      '${list[index].orderUsage}';
+                                                  firstActionCaption =
+                                                      'Receive';
+                                                  secondActionCaption =
+                                                      'Delete';
+                                                  firstTapAction = () =>
+                                                      shuttleStore
+                                                          .receiveShuttle(
+                                                              list[index]
+                                                                  .idList);
+                                                  secondTapAction = () =>
+                                                      shuttleStore
+                                                          .receiveShuttle(
+                                                              list[index]
+                                                                  .idList);
+                                                }
                                                 animationController.forward();
                                                 return PrchHstrTile(
                                                   animation: animation,
@@ -226,6 +254,14 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                       .depositConfirmed,
                                                   received:
                                                       list[index].received,
+                                                  firstActionCaption:
+                                                      firstActionCaption,
+                                                  secondActionCaption:
+                                                      secondActionCaption,
+                                                  firstTapAction:
+                                                      firstTapAction,
+                                                  secondTapAction:
+                                                      secondTapAction,
                                                 );
                                               });
                                   },
@@ -246,6 +282,7 @@ class Topcard extends StatelessWidget {
   Topcard(this.titel, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
+    final shuttleStore = Provider.of<ShuttleStore>(context);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
         child: Row(
@@ -328,18 +365,8 @@ class Topcard extends StatelessWidget {
                       builder: (context, scrollController) => Material(
                           child: CupertinoPageScaffold(
                         child: SafeArea(
-                          child: ChangeNotifierProvider<FormSubject>(
-                              create: (context) => FormSubject(
-                                  callback: (newHstr) async {
-                                    //TODO
-                                    print("in");
-                                    Navigator.popUntil(
-                                        context,
-                                        (route) =>
-                                            route.settings.name ==
-                                            '/homescreen/shuttlemenu');
-                                  },
-                                  context: context),
+                          child: Provider<ShuttleStore>(
+                              create: (context) => shuttleStore,
                               child: AddPrchForm()),
                         ),
                       )),

@@ -1,6 +1,5 @@
 import 'package:clearApp/store/shuttle/shuttle_store.dart';
 import 'package:clearApp/ui/shuttle_menu/add_prch_button.dart';
-import 'package:clearApp/ui/shuttle_menu/data_manage/events.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +7,6 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
-
-import 'data_manage/form_subject.dart';
-import 'data_manage/shuttle_purchace_history.dart';
 
 enum UsageLists {
   Regular_Meeting,
@@ -66,12 +62,6 @@ class AddPrchFormState extends State<AddPrchForm>
     if (_selectedAmount < 1) throw FormatException('amount');
 
     Logger().i('Usage: $_selectedUsage, Amount: $_selectedAmount');
-
-    ShuttlePrchHstr newHstr =
-        new ShuttlePrchHstr(_selectedUsageString, 0, _selectedAmount);
-
-    final formSubject = Provider.of<FormSubject>(context, listen: false);
-    await formSubject.eventHandle(EVENT.AddNewEvent, newHstr: newHstr);
   }
 
   @override
@@ -146,7 +136,7 @@ class AddPrchFormState extends State<AddPrchForm>
   }
 
   Column _buildAmountSelection(Animation<double> animation) {
-    final formSubject = Provider.of<FormSubject>(context);
+    final shuttleStore = Provider.of<ShuttleStore>(context);
 
     return Column(children: <Widget>[
       AnimatedBuilder(
@@ -175,10 +165,10 @@ class AddPrchFormState extends State<AddPrchForm>
                       right: (20.0 - animation.value) < 0
                           ? 0
                           : 20.0 - animation.value),
-                  child: formSubject.isFeching
+                  child: shuttleStore.loading
                       ? JumpingText('...',
                           style: TextStyle(fontSize: ScreenUtil().setSp(100)))
-                      : Text(formSubject.remainingShuttles.toString(),
+                      : Text('100',
                           style: TextStyle(
                               fontFamily: ClearAppTheme.fontName,
                               fontSize: ScreenUtil().setSp(100),
@@ -233,7 +223,7 @@ class AddPrchFormState extends State<AddPrchForm>
           SizedBox(width: ScreenUtil().setWidth(70)),
           GestureDetector(
             onTap: () {
-              if (_selectedAmount + 1 <= formSubject.remainingShuttles)
+              if (_selectedAmount + 1 <= 100)
                 setState(() {
                   _amountOverflowed = false;
                   _selectedAmount = _selectedAmount + 1;

@@ -1,10 +1,9 @@
+import 'package:clearApp/store/shuttle/shuttle_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
-
-import 'data_manage/form_subject.dart';
 
 class AddPrchButton extends StatefulWidget {
   //screen size
@@ -42,8 +41,7 @@ class _AddPrchButtonState extends State<AddPrchButton>
 
   @override
   Widget build(BuildContext context) {
-    final formSubject = Provider.of<FormSubject>(context);
-
+    final shuttleStore = Provider.of<ShuttleStore>(context);
     _controller.forward();
 
     return Container(
@@ -60,9 +58,7 @@ class _AddPrchButtonState extends State<AddPrchButton>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            if (!formSubject.isAddingNewHstr) widget.tapCallback();
-          },
+          onTap: () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -75,7 +71,7 @@ class _AddPrchButtonState extends State<AddPrchButton>
                 axis: Axis.horizontal,
                 axisAlignment: -1.0,
                 child: Center(
-                  child: formSubject.isAddingNewHstr
+                  child: shuttleStore.loading
                       ? JumpingText('BUY',
                           style: TextStyle(
                               fontFamily: 'Roboto',

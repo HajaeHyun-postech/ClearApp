@@ -18,6 +18,10 @@ class PrchHstrTile extends StatefulWidget {
   final DateTime orderDate;
   final bool depositConfirmed;
   final bool received;
+  final String firstActionCaption;
+  final String secondActionCaption;
+  final Function firstTapAction;
+  final Function secondTapAction;
 
   const PrchHstrTile(
       {Key key,
@@ -29,7 +33,11 @@ class PrchHstrTile extends StatefulWidget {
       this.price,
       this.orderDate,
       this.depositConfirmed,
-      this.received})
+      this.received,
+      this.firstActionCaption,
+      this.secondActionCaption,
+      this.firstTapAction,
+      this.secondTapAction})
       : super(key: key);
 
   @override
@@ -44,7 +52,6 @@ class PrchHstrTileState extends State<PrchHstrTile> {
 
   @override
   Widget build(BuildContext context) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
     return AnimatedBuilder(
         animation: widget.animationController,
         builder: (BuildContext context, Widget child) {
@@ -57,51 +64,30 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                   children: <Widget>[
                     SizedBox(width: 10),
                     Expanded(
-                        child: shuttleStore.loading
-                            ? GlowingProgressIndicator(
-                                child: ValueCard(
-                                    widget.title,
-                                    widget.name,
-                                    widget.price,
-                                    widget.orderDate,
-                                    widget.idList,
-                                    widget.depositConfirmed,
-                                    widget.received),
-                              )
-                            : ValueCard(
-                                widget.title,
-                                widget.name,
-                                widget.price,
-                                widget.orderDate,
-                                widget.idList,
-                                widget.depositConfirmed,
-                                widget.received)),
+                        child: ValueCard(
+                            widget.title,
+                            widget.name,
+                            widget.price,
+                            widget.orderDate,
+                            widget.idList,
+                            widget.depositConfirmed,
+                            widget.received)),
                     SizedBox(width: 10),
                   ],
                 ),
-                actions: widget.isAdminTab
-                    ? <Widget>[
-                        IconSlideAction(
-                            caption: 'Confirm',
-                            color: ClearAppTheme.darkBlue,
-                            icon: Icons.check,
-                            onTap: () =>
-                                shuttleStore.confirmDeposit(widget.idList))
-                      ]
-                    : <Widget>[
-                        IconSlideAction(
-                            caption: 'Receive',
-                            color: ClearAppTheme.darkBlue,
-                            icon: Icons.check,
-                            onTap: () =>
-                                shuttleStore.receiveShuttle(widget.idList))
-                      ],
+                actions: <Widget>[
+                  IconSlideAction(
+                      caption: widget.firstActionCaption,
+                      color: ClearAppTheme.darkBlue,
+                      icon: Icons.check,
+                      onTap: widget.firstTapAction)
+                ],
                 secondaryActions: <Widget>[
                   IconSlideAction(
-                      caption: 'Delete',
+                      caption: widget.secondActionCaption,
                       color: ClearAppTheme.postechRed,
                       icon: Icons.delete,
-                      onTap: () {})
+                      onTap: widget.secondTapAction)
                 ],
               ));
         });
