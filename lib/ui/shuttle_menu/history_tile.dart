@@ -5,10 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
-import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
-class PrchHstrTile extends StatefulWidget {
+class HistoryTile extends StatefulWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
   final List<int> idList;
@@ -23,7 +22,7 @@ class PrchHstrTile extends StatefulWidget {
   final Function firstTapAction;
   final Function secondTapAction;
 
-  const PrchHstrTile(
+  const HistoryTile(
       {Key key,
       this.animationController,
       this.animation,
@@ -41,10 +40,10 @@ class PrchHstrTile extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => PrchHstrTileState();
+  State<StatefulWidget> createState() => HistoryTileState();
 }
 
-class PrchHstrTileState extends State<PrchHstrTile> {
+class HistoryTileState extends State<HistoryTile> {
   @override
   void initState() {
     super.initState();
@@ -62,7 +61,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                 actionExtentRatio: 0.25,
                 child: Row(
                   children: <Widget>[
-                    SizedBox(width: 10),
+                    SizedBox(width: ScreenUtil().setWidth(60)),
                     Expanded(
                         child: ValueCard(
                             widget.title,
@@ -72,7 +71,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             widget.idList,
                             widget.depositConfirmed,
                             widget.received)),
-                    SizedBox(width: 10),
+                    SizedBox(width: ScreenUtil().setWidth(60)),
                   ],
                 ),
                 actions: <Widget>[
@@ -113,8 +112,6 @@ class ValueCard extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
-
     return Container(
         padding: EdgeInsets.symmetric(
             horizontal: ScreenUtil().setWidth(35), vertical: 4.0),
@@ -126,36 +123,23 @@ class ValueCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                      fontSize: ScreenUtil().setSp(55),
+                      fontSize: ScreenUtil().setSp(52),
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w500,
                       color: Colors.black.withOpacity(0.7)),
                 ),
-                Observer(builder: (_) {
-                  return shuttleStore.loading
-                      ? JumpingText(price.toString() + ' \‎₩',
-                          style: TextStyle(
-                              color: depositConfirmed
-                                  ? ClearAppTheme.darkBlue
-                                  : ClearAppTheme.pink,
-                              fontSize: ScreenUtil().setSp(55),
-                              fontWeight: FontWeight.bold,
-                              decoration: depositConfirmed
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none))
-                      : Text(
-                          price.toString() + ' \‎₩',
-                          style: TextStyle(
-                              color: depositConfirmed
-                                  ? ClearAppTheme.darkBlue
-                                  : ClearAppTheme.pink,
-                              fontSize: ScreenUtil().setSp(55),
-                              fontWeight: FontWeight.bold,
-                              decoration: depositConfirmed
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none),
-                        );
-                })
+                Text(
+                  price.toString() + ' \‎₩',
+                  style: TextStyle(
+                      color: depositConfirmed
+                          ? ClearAppTheme.darkBlue
+                          : ClearAppTheme.pink,
+                      fontSize: ScreenUtil().setSp(52),
+                      fontWeight: FontWeight.bold,
+                      decoration: depositConfirmed
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none),
+                )
               ],
             ),
             SizedBox(
@@ -171,31 +155,18 @@ class ValueCard extends StatelessWidget {
                     fontSize: ScreenUtil().setSp(44),
                   ),
                 ),
-                Observer(builder: (_) {
-                  return shuttleStore.loading
-                      ? JumpingText(idList.toString(),
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: ScreenUtil().setSp(44),
-                              color: received
-                                  ? Colors.grey
-                                  : ClearAppTheme.orange.withAlpha(230),
-                              decoration: received
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none))
-                      : Text(
-                          idList.toString(),
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: ScreenUtil().setSp(44),
-                              color: received
-                                  ? Colors.grey
-                                  : ClearAppTheme.orange.withAlpha(230),
-                              decoration: received
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none),
-                        );
-                }),
+                Text(
+                  idList.toString(),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: ScreenUtil().setSp(44),
+                      color: received
+                          ? Colors.grey
+                          : ClearAppTheme.orange.withAlpha(230),
+                      decoration: received
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none),
+                )
               ],
             ),
             SizedBox(

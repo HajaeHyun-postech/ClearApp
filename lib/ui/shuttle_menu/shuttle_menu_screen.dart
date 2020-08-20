@@ -1,5 +1,6 @@
+import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/store/shuttle/shuttle_store.dart';
-import 'package:clearApp/ui/shuttle_menu/prch_hstr_tile.dart';
+import 'package:clearApp/ui/shuttle_menu/history_tile.dart';
 import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
@@ -8,12 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'tab_model.dart';
 import 'package:provider/provider.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'add_prch_form.dart';
+import 'order_form.dart';
 
 class ShuttleMenuScreenWithProvider extends StatelessWidget {
   @override
@@ -25,6 +25,8 @@ class ShuttleMenuScreenWithProvider extends StatelessWidget {
   }
 }
 
+enum TAB { Total, Not_Rcved, Admin }
+
 class ShuttleMenuScreen extends StatefulWidget {
   @override
   ShuttleMenuScreenState createState() => ShuttleMenuScreenState();
@@ -35,6 +37,27 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   AnimationController animationController;
   ScrollController _scrollController = ScrollController();
   TabController _tabController;
+
+  final List<Widget> _tabs = [
+    Tab(
+      child: Align(
+        alignment: Alignment.center,
+        child: Text('TOTAL'),
+      ),
+    ),
+    Tab(
+      child: Align(
+        alignment: Alignment.center,
+        child: Text('NOT RCVED'),
+      ),
+    ),
+    Tab(
+      child: Align(
+        alignment: Alignment.center,
+        child: Text('ADMIN'),
+      ),
+    ),
+  ];
 
   @override
   void initState() {
@@ -133,7 +156,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                     floating: true,
                                     delegate: ContestTabHeader(_MyTabBar(
                                         tabController: _tabController,
-                                        tabs: ShuttleTab.getShuttleTab())))
+                                        tabs: _tabs)))
                               ];
                             },
                             body: Container(
@@ -195,7 +218,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                 Function secondTapAction;
                                                 if (isAdminTab) {
                                                   title =
-                                                      '${list[index].orderUsage} : ${list[index].user.name}';
+                                                      '${list[index].user.name} : ${list[index].orderUsage}';
                                                   firstActionCaption =
                                                       'Confirm';
                                                   secondActionCaption =
@@ -229,7 +252,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                                   .idList);
                                                 }
                                                 animationController.forward();
-                                                return PrchHstrTile(
+                                                return HistoryTile(
                                                   animation: animation,
                                                   animationController:
                                                       animationController,
@@ -354,9 +377,10 @@ class Topcard extends StatelessWidget {
                       builder: (context, scrollController) => Material(
                           child: CupertinoPageScaffold(
                         child: SafeArea(
-                          child: Provider<ShuttleStore>(
-                              create: (context) => shuttleStore,
-                              child: AddPrchForm()),
+                          child: Provider<ShuttleFormStore>(
+                              create: (context) =>
+                                  shuttleStore.shuttleFormStore,
+                              child: OrderForm()),
                         ),
                       )),
                     );

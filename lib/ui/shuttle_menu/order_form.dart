@@ -1,4 +1,4 @@
-import 'package:clearApp/store/shuttle/shuttle_store.dart';
+import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/add_prch_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
@@ -16,17 +16,14 @@ enum UsageLists {
   Prize
 }
 
-class AddPrchForm extends StatefulWidget {
-  const AddPrchForm({Key key}) : super(key: key);
+class OrderForm extends StatefulWidget {
+  const OrderForm({Key key}) : super(key: key);
 
   @override
-  AddPrchFormState createState() {
-    return new AddPrchFormState();
-  }
+  OrderFormState createState() => OrderFormState();
 }
 
-class AddPrchFormState extends State<AddPrchForm>
-    with TickerProviderStateMixin {
+class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
   ScrollController _scrollController;
   AnimationController _remainingController;
   AnimationController _invalidUsageController;
@@ -136,7 +133,7 @@ class AddPrchFormState extends State<AddPrchForm>
   }
 
   Column _buildAmountSelection(Animation<double> animation) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
+    final shuttleFormStore = Provider.of<ShuttleFormStore>(context);
 
     return Column(children: <Widget>[
       AnimatedBuilder(
@@ -165,10 +162,10 @@ class AddPrchFormState extends State<AddPrchForm>
                       right: (20.0 - animation.value) < 0
                           ? 0
                           : 20.0 - animation.value),
-                  child: shuttleStore.loading
+                  child: shuttleFormStore.loading
                       ? JumpingText('...',
                           style: TextStyle(fontSize: ScreenUtil().setSp(100)))
-                      : Text('100',
+                      : Text(shuttleFormStore.remaining.toString(),
                           style: TextStyle(
                               fontFamily: ClearAppTheme.fontName,
                               fontSize: ScreenUtil().setSp(100),

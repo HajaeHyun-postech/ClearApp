@@ -1,5 +1,6 @@
 import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
+import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
 import 'package:clearApp/util/http_client.dart';
@@ -14,6 +15,7 @@ abstract class _ShuttleStore with Store {
   // other stores:--------------------------------------------------------------
   final ErrorStore errorStore = ErrorStore();
   final SuccessStore successStore = SuccessStore();
+  final ShuttleFormStore shuttleFormStore = ShuttleFormStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> _disposers;
@@ -27,16 +29,38 @@ abstract class _ShuttleStore with Store {
   // store variables:-----------------------------------------------------------
   @observable
   List<ShuttleOrderHistory> histories;
+
   @observable
   bool loading = false;
 
   @observable
   bool success = false;
 
+  @observable
+  int remaining = 0;
+
   @computed
   int get unconfirmedPrice => calUnconfirmedPrice(histories);
 
   // actions:-------------------------------------------------------------------
+  @action
+  Future getRemaining() async {
+    if (loading) return;
+    loading = true;
+    Map<String, dynamic> params = {'type': 'remaining'};
+
+    HttpClient.send(
+            method: "GET", address: "/api/clear/shuttle", params: params)
+        .then((response) {
+          remaining = response['remaining'];
+          updateOnSuccess("Loading Complete");
+        })
+        .catchError((e) => updateOnError("Invalid User"),
+            test: (e) => e is AuthException)
+        .catchError((e) => updateOnError(e.cause))
+        .whenComplete(() => loading = false);
+  }
+
   @action
   Future getUsersHistories() async {
     if (loading) return;

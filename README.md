@@ -1,4 +1,4 @@
-# Clear Application Develoasdfpment
+# Clear Application Development
 
 Application for postech badminton club CLEAR
 
@@ -43,28 +43,11 @@ Application for postech badminton club CLEAR
       - https://github.com/josealvaradoo/card-wallet-flutter (카드)
       - https://stackoverflow.com/questions/52227846/how-can-i-add-shadow-to-the-widget-in-flutter (box shadow)
       - https://levelup.gitconnected.com/credit-card-slider-flutter-1edec451103a (카드 도오오오오록)
-     
-        
- - 윤주형 :
-    - 정모 참가 (이걸 먼저 구현하도록)
-      - https://github.com/abuanwar072/Food-App (이걸 그대로 써도 됨. 언더바 만 추가로 구현하면 될듯)
-      - https://www.youtube.com/watch?v=pAhxtz491TA
-      
-    - 대진표 생성& 수정 (백엔드 구현) (어떤 format을 기반으로 구현할 건지 명확하게 정해놓고 들어갈 것)
 
 ## 브랜치
 
 <u>__commit을 자주 할 것!!!!!!!!!!__</u>
 
-각자의 브랜치에서 clone 받을 것.
-각자의 브랜치로만 push 할 것 !!!
-
-이후에 필요할 때 pull request를 통해 dev로 합쳐준다.
-
 master는 손대지 말 것.
 
 만약에 dev에 수정사항이 생기면, 웬만해선 pull 을 통해 dev 걸 받아온 다음 개발에 착수할 것. 안그러면 나중에 merge 할 때 문제가 발생할 가능성이 높아짐.
-
- - 하재현 : Login_Main_Branch
- - 이상오 : Menus_UI_Branch
- - 윤주형 : Match_System_Branch
