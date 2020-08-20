@@ -1,12 +1,12 @@
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
 
-import 'ui/custom_drawer/drawer_user_controller.dart';
-import 'ui/custom_drawer/home_drawer.dart';
-import 'ui/feedback_screen.dart';
-import 'ui/help_screen.dart';
-import 'ui/home_screen.dart';
-import 'ui/invite_friend_screen.dart';
+import 'custom_drawer/drawer_user_controller.dart';
+import 'custom_drawer/home_drawer.dart';
+import 'feedback_screen.dart';
+import 'help_screen.dart';
+import 'home_screen.dart';
+import 'invite_friend_screen.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override

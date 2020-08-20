@@ -1,9 +1,9 @@
-import 'package:clearApp/navigation_home_screen.dart';
+import 'package:clearApp/ui/navigation_home_screen.dart';
 import 'package:clearApp/ui/fitness_app/fitness_app_home_screen.dart';
 import 'package:clearApp/ui/games_menu/games_home_screen.dart';
 import 'package:clearApp/ui/hotel_booking/hotel_home_screen.dart';
 import 'package:clearApp/ui/login/login_screen.dart';
-import 'package:clearApp/navigation_home_screen.dart';
+import 'package:clearApp/ui/navigation_home_screen.dart';
 import 'package:clearApp/ui/racket_menu/racket_menu_homepage.dart';
 import 'package:clearApp/ui/shuttle_menu/shuttle_history_homepage.dart';
 import 'package:flutter/material.dart';

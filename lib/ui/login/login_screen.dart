@@ -1,5 +1,6 @@
 import 'package:clearApp/routes.dart';
 import 'package:clearApp/store/login/login_store.dart';
+import 'package:clearApp/util/async_navigation.dart';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
@@ -166,17 +167,13 @@ class _LoginScreenState extends State<LoginScreen>
             ],
           ),
         ),
-        onWillPop: () {
-          PopupGenerator.closingPopup(context).show();
-        },
+        onWillPop: () => PopupGenerator.closingPopup(context).show(),
       ),
       Observer(
         builder: (_) {
           if (loginStore.success) {
-            Future.delayed(Duration(milliseconds: 0), () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.homescreen, (Route<dynamic> route) => false);
-            });
+            AsyncNavigation.pushNamedAndRemoveUntilAsync(
+                context, Routes.homescreen, (Route<dynamic> route) => false);
             return Toast_generator.showSuccessToast(
                 context, loginStore.successStore.successMessage);
           } else {

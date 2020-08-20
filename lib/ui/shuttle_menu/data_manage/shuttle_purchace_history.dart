@@ -3,6 +3,7 @@ import 'dart:core';
 
 import '../../login/login_info.dart';
 
+@deprecated
 class ShuttlePrchHstr {
   String key;
   String name;

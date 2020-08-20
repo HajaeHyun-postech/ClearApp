@@ -1,4 +1,4 @@
-import 'package:clearApp/navigation_home_screen.dart';
+import 'package:clearApp/ui/navigation_home_screen.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';

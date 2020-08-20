@@ -13,6 +13,7 @@ import '../tab_model.dart';
 import 'events.dart';
 import 'shuttle_purchace_history.dart';
 
+@deprecated
 class ShuttlePrchHstrSubject extends ChangeNotifier {
   ShuttleMenuCurrentTab _previousTab;
   BuildContext _context;

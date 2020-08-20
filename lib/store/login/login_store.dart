@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
@@ -26,12 +28,13 @@ abstract class _LoginStore with Store {
 
   ///Other Variable///
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
-  String errorMsg;
   User user;
 
   ///Actions///
   @action
   Future login() async {
+    if (loading) return; //No login during login
+
     loading = true;
     if (fbKey.currentState.saveAndValidate()) {
       String povisId = fbKey.currentState.value['povisId'];
@@ -47,7 +50,7 @@ abstract class _LoginStore with Store {
           })
           .catchError((e) => updateOnError("Login Failed"),
               test: (e) => e is AuthException)
-          .catchError((e) => updateOnError("Unknown Error"))
+          .catchError((e) => updateOnError(e.cause))
           .whenComplete(() => loading = false);
     } else {
       loading = false;
