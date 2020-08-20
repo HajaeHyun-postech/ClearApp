@@ -1,24 +1,24 @@
-import 'package:clearApp/store/shuttle/shuttle_store.dart';
+import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:logger/logger.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
-class AddPrchButton extends StatefulWidget {
+class OrderButton extends StatefulWidget {
   //screen size
   final Function tapCallback;
 
-  const AddPrchButton({
+  const OrderButton({
     Key key,
     this.tapCallback,
   }) : super(key: key);
 
   @override
-  _AddPrchButtonState createState() => _AddPrchButtonState();
+  _OrderButtonState createState() => _OrderButtonState();
 }
 
-class _AddPrchButtonState extends State<AddPrchButton>
+class _OrderButtonState extends State<OrderButton>
     with SingleTickerProviderStateMixin {
   ButtonState buttonState = ButtonState.Small;
   AnimationController _controller;
@@ -41,7 +41,7 @@ class _AddPrchButtonState extends State<AddPrchButton>
 
   @override
   Widget build(BuildContext context) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
+    final shuttleFormStore = Provider.of<ShuttleFormStore>(context);
     _controller.forward();
 
     return Container(
@@ -70,21 +70,23 @@ class _AddPrchButtonState extends State<AddPrchButton>
                 sizeFactor: _buttonTextAnimation,
                 axis: Axis.horizontal,
                 axisAlignment: -1.0,
-                child: Center(
-                  child: shuttleStore.loading
-                      ? JumpingText('BUY',
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: ScreenUtil().setSp(50),
-                              color: Colors.white))
-                      : Text(
-                          'BUY',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Roboto',
-                              fontSize: ScreenUtil().setSp(50)),
-                        ),
-                ),
+                child: Center(child: Observer(
+                  builder: (_) {
+                    return shuttleFormStore.loading
+                        ? JumpingText('BUY',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: ScreenUtil().setSp(50),
+                                color: Colors.white))
+                        : Text(
+                            'BUY',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Roboto',
+                                fontSize: ScreenUtil().setSp(50)),
+                          );
+                  },
+                )),
               ),
             ],
           ),

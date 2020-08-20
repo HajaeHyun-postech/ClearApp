@@ -1,5 +1,5 @@
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
-import 'package:clearApp/ui/shuttle_menu/add_prch_button.dart';
+import 'package:clearApp/ui/shuttle_menu/order_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -300,7 +300,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
               SizedBox(height: ScreenUtil().setHeight(90)),
               _buildAmountSelection(offsetAnimation),
               SizedBox(height: ScreenUtil().setHeight(90)),
-              AddPrchButton(
+              OrderButton(
                 tapCallback: () => validateNewPrch()
                     .catchError((e) => _invalidUsageController.forward(),
                         test: (e) =>

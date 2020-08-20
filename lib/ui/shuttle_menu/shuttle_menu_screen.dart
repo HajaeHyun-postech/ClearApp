@@ -370,6 +370,7 @@ class Topcard extends StatelessWidget {
                     Radius.circular(38.0),
                   ),
                   onTap: () {
+                    shuttleStore.shuttleFormStore.getRemaining();
                     showBarModalBottomSheet(
                       expand: false,
                       context: context,
