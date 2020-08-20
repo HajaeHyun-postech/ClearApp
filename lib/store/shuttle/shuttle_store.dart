@@ -1,6 +1,7 @@
 import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
+import 'package:clearApp/util/convert_util.dart';
 import 'package:clearApp/util/http_client.dart';
 import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:mobx/mobx.dart';
@@ -18,7 +19,11 @@ abstract class _ShuttleStore with Store {
   List<ReactionDisposer> _disposers;
 
   // constructor:---------------------------------------------------------------
-  _ShuttleStore();
+  _ShuttleStore() {
+    usersHistories = new List<ShuttleOrderHistory>();
+    wholeUnconfirmedHistorires = new List<ShuttleOrderHistory>();
+    getUsersHistories();
+  }
 
   // store variables:-----------------------------------------------------------
   @observable
@@ -28,10 +33,10 @@ abstract class _ShuttleStore with Store {
   List<ShuttleOrderHistory> wholeUnconfirmedHistorires;
 
   @observable
-  bool loading;
+  bool loading = false;
 
   @observable
-  bool success;
+  bool success = false;
 
   @computed
   List<ShuttleOrderHistory> get usersNotReceivedHistories =>
@@ -49,12 +54,13 @@ abstract class _ShuttleStore with Store {
   Future getUsersHistories() async {
     if (loading) return;
     loading = true;
-    Map<String, dynamic> params = {'type': 'histories'};
+    Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
     HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
-          print(response);
+          usersHistories = ConvertUtil.jsonArrayToObjectList(
+              response, (json) => ShuttleOrderHistory.fromJson(json));
           updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
@@ -67,12 +73,13 @@ abstract class _ShuttleStore with Store {
   Future getWholeUnconfirmedHistorires() async {
     if (loading) return;
     loading = true;
-    Map<String, dynamic> params = {'type': 'histories'};
+    Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
     HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
-          print(response);
+          wholeUnconfirmedHistorires = ConvertUtil.jsonArrayToObjectList(
+              response, (json) => ShuttleOrderHistory.fromJson(json));
           updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
@@ -94,7 +101,6 @@ abstract class _ShuttleStore with Store {
             params: params,
             body: body)
         .then((response) {
-          print(response);
           updateOnSuccess("Received");
         })
         .catchError((e) => updateOnError("Invalid User"),
@@ -116,7 +122,6 @@ abstract class _ShuttleStore with Store {
             params: params,
             body: body)
         .then((response) {
-          print(response);
           updateOnSuccess("Confirmed");
         })
         .catchError((e) => updateOnError("Invalid User"),

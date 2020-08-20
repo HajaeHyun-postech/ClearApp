@@ -132,27 +132,29 @@ class _LoginScreenState extends State<LoginScreen>
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: loginStore.login,
-                                    child: Center(
-                                      child: !loginStore.loading
-                                          ? new Text("SIGNIN",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily: "Roboto",
-                                                fontWeight: FontWeight.w500,
-                                                fontSize:
-                                                    ScreenUtil().setSp(55),
-                                                letterSpacing: 1.0,
-                                              ))
-                                          : JumpingText('SIGNIN',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily: "Roboto",
-                                                fontWeight: FontWeight.w500,
-                                                fontSize:
-                                                    ScreenUtil().setSp(55),
-                                                letterSpacing: 1.0,
-                                              )),
-                                    ),
+                                    child: Center(child: Observer(
+                                      builder: (_) {
+                                        return !loginStore.loading
+                                            ? new Text("SIGNIN",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: "Roboto",
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize:
+                                                      ScreenUtil().setSp(55),
+                                                  letterSpacing: 1.0,
+                                                ))
+                                            : JumpingText('SIGNIN',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: "Roboto",
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize:
+                                                      ScreenUtil().setSp(55),
+                                                  letterSpacing: 1.0,
+                                                ));
+                                      },
+                                    )),
                                   ),
                                 );
                               }),

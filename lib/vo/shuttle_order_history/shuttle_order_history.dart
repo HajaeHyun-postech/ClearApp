@@ -3,18 +3,27 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'shuttle_order_history.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable(nullable: true)
 class ShuttleOrderHistory {
-  final int id;
+  final List<int> idList;
   final int price;
   final bool available;
   final User user;
+  final String orderUsage;
   final DateTime orderDate;
   final bool received;
   final bool depositConfirmed;
 
-  ShuttleOrderHistory(this.id, this.price, this.available, this.user,
-      this.orderDate, this.received, this.depositConfirmed);
+  ShuttleOrderHistory(
+    this.idList,
+    this.price,
+    this.available,
+    this.user,
+    this.orderDate,
+    this.received,
+    this.depositConfirmed,
+    this.orderUsage,
+  );
 
   factory ShuttleOrderHistory.fromJson(Map<String, dynamic> json) =>
       _$ShuttleOrderHistoryFromJson(json);

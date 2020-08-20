@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:clearApp/exception/auth_exception.dart';
@@ -16,7 +17,7 @@ class HttpClient {
   static const String APIPort = "8096";
   static String token = "";
 
-  static Future<Map<String, dynamic>> send(
+  static Future<dynamic> send(
       {@required String method,
       @required String address,
       Map<String, dynamic> params = const {},
@@ -26,23 +27,22 @@ class HttpClient {
       url += '$key=$value&';
     });
 
-    var response = await Function.apply(getHttpFunction(method), [
-      url
-    ], {
-      new Symbol("headers"): {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer $token'
-      },
-      new Symbol("body"): jsonEncode(body)
-    });
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+      HttpHeaders.authorizationHeader: 'Bearer $token'
+    };
 
-    Map<String, dynamic> responseBody = jsonDecode(response.body);
+    var response =
+        await getHttpFunction(method, url, headers, jsonEncode(body)).call();
+
+    dynamic responseBody = jsonDecode(response.body);
     var statusCode = response.statusCode;
 
     if (statusCode == 200) {
       return responseBody;
     } else {
       String errMsg = responseBody['err'];
+      print(errMsg);
       switch (statusCode) {
         case 400:
           return Future.error(InvalidReqException(errMsg));
@@ -69,23 +69,24 @@ class HttpClient {
     }
   }
 
-  static Function getHttpFunction(String method) {
+  static Function getHttpFunction(
+      String method, String url, Map<String, String> headers, String body) {
     method = method.toUpperCase();
     switch (method) {
       case 'GET':
-        return http.get;
+        return () => http.get(url, headers: headers);
         break;
       case 'POST':
-        return http.post;
+        return () => http.post(url, headers: headers, body: body);
         break;
       case 'PUT':
-        return http.put;
+        return () => http.put(url, headers: headers, body: body);
         break;
       case 'PATCH':
-        return http.patch;
+        return () => http.patch(url, headers: headers, body: body);
         break;
       case 'DELETE':
-        return http.delete;
+        return () => http.delete(url, headers: headers);
         break;
       default:
         return null;

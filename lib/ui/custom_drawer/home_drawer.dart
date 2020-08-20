@@ -1,10 +1,8 @@
-import 'package:clearApp/store/login/login_store.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import '../login/login_info.dart';
 
 class HomeDrawer extends StatefulWidget {

@@ -1,8 +1,9 @@
-import 'package:clearApp/ui/shuttle_menu/data_manage/shuttle_history_subject.dart';
-import 'package:clearApp/ui/shuttle_menu/data_manage/shuttle_purchace_history.dart';
+import 'package:clearApp/store/shuttle/shuttle_store.dart';
+import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'data_manage/events.dart';
 import 'package:provider/provider.dart';
 
 class PrchHstrTile extends StatefulWidget {
-  final ShuttlePrchHstr prchHstr;
+  final ShuttleOrderHistory prchHstr;
   final bool isAdminTab;
   final AnimationController animationController;
   final Animation<dynamic> animation;
@@ -30,21 +31,14 @@ class PrchHstrTile extends StatefulWidget {
 }
 
 class PrchHstrTileState extends State<PrchHstrTile> {
-  bool _isReceiving;
-  bool _isDeleting;
-  bool _isApproving;
-
   @override
   void initState() {
     super.initState();
-    _isReceiving = false;
-    _isDeleting = false;
-    _isApproving = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
+    final shuttleStore = Provider.of<ShuttleStore>(context);
 
     return AnimatedBuilder(
         animation: widget.animationController,
@@ -58,31 +52,27 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                   children: <Widget>[
                     SizedBox(width: 10),
                     Expanded(
-                      child: _isDeleting
+                      child: shuttleStore.loading
                           ? GlowingProgressIndicator(
                               child: ValueCard(
-                                  widget.prchHstr.usage,
-                                  widget.prchHstr.name,
+                                  widget.prchHstr.orderUsage,
+                                  widget.prchHstr.user.name,
                                   widget.prchHstr.price,
-                                  widget.prchHstr.date,
-                                  widget.prchHstr.shuttleList,
+                                  widget.prchHstr.orderDate,
+                                  null,
                                   widget.isAdminTab,
-                                  widget.prchHstr.approved,
-                                  widget.prchHstr.received,
-                                  _isReceiving,
-                                  _isApproving),
+                                  widget.prchHstr.depositConfirmed,
+                                  widget.prchHstr.received),
                             )
                           : ValueCard(
-                              widget.prchHstr.usage,
-                              widget.prchHstr.name,
+                              widget.prchHstr.orderUsage,
+                              widget.prchHstr.user.name,
                               widget.prchHstr.price,
-                              widget.prchHstr.date,
-                              widget.prchHstr.shuttleList,
+                              widget.prchHstr.orderDate,
+                              null,
                               widget.isAdminTab,
-                              widget.prchHstr.approved,
-                              widget.prchHstr.received,
-                              _isReceiving,
-                              _isApproving),
+                              widget.prchHstr.depositConfirmed,
+                              widget.prchHstr.received),
                     ),
                     SizedBox(width: 10),
                   ],
@@ -93,7 +83,7 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                             caption: 'Approved',
                             color: ClearAppTheme.darkBlue,
                             icon: Icons.check,
-                            onTap: widget.prchHstr.approved
+                            onTap: widget.prchHstr.depositConfirmed
                                 ? () => Toast_generator.errorToast(
                                     context, 'Already Approved!')
                                 : () => PopupGenerator.remindPopupWidget(
@@ -101,12 +91,6 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                         'REMIND',
                                         'Are you sure about this?',
                                         () => Navigator.pop(context), () {
-                                      setState(() => _isApproving = true);
-                                      shuttlePrchHstrSubject
-                                          .eventHandle(EVENT.UpdateApprEvent,
-                                              key: widget.prchHstr.key)
-                                          .then((_) => setState(
-                                              () => _isApproving = false));
                                       Navigator.pop(context);
                                     }).show())
                       ]
@@ -123,12 +107,6 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                                         'REMIND',
                                         'Are you sure about this?',
                                         () => Navigator.pop(context), () {
-                                      setState(() => _isReceiving = true);
-                                      shuttlePrchHstrSubject
-                                          .eventHandle(EVENT.UpdateRcvedEvent,
-                                              key: widget.prchHstr.key)
-                                          .then((_) => setState(
-                                              () => _isReceiving = false));
                                       Navigator.pop(context);
                                     }).show())
                       ],
@@ -140,10 +118,10 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                       onTap: () {
                         //validate
                         bool timeValidate = DateTime.now()
-                                .difference(widget.prchHstr.date)
+                                .difference(widget.prchHstr.orderDate)
                                 .inMinutes <=
                             10;
-                        if (!widget.prchHstr.approved &&
+                        if (!widget.prchHstr.depositConfirmed &&
                             !widget.prchHstr.received &&
                             timeValidate &&
                             !widget.isAdminTab) {
@@ -152,18 +130,12 @@ class PrchHstrTileState extends State<PrchHstrTile> {
                               'ALERT',
                               'Are you sure about this?',
                               () => Navigator.pop(context), () {
-                            setState(() => _isDeleting = true);
-                            shuttlePrchHstrSubject
-                                .eventHandle(EVENT.DeleteHstrEvent,
-                                    key: widget.prchHstr.key)
-                                .then(
-                                    (_) => setState(() => _isDeleting = false));
                             Navigator.pop(context);
                           }).show();
                         } else {
                           Toast_generator.errorToast(
                               context,
-                              widget.prchHstr.approved
+                              widget.prchHstr.depositConfirmed
                                   ? "Error: approved history"
                                   : (widget.prchHstr.received
                                       ? "Error: received history"
@@ -187,22 +159,20 @@ class ValueCard extends StatelessWidget {
   final bool isAdminTab;
   final bool approved;
   final bool rcved;
-  final bool _isReceiving;
-  final bool _isApproving;
-
   ValueCard(
-      this.usage,
-      this.name,
-      this.price,
-      this.date,
-      this.shuttleList,
-      this.isAdminTab,
-      this.approved,
-      this.rcved,
-      this._isReceiving,
-      this._isApproving);
+    this.usage,
+    this.name,
+    this.price,
+    this.date,
+    this.shuttleList,
+    this.isAdminTab,
+    this.approved,
+    this.rcved,
+  );
   @override
   Widget build(BuildContext context) {
+    final shuttleStore = Provider.of<ShuttleStore>(context);
+
     return Container(
         padding: EdgeInsets.symmetric(
             horizontal: ScreenUtil().setWidth(35), vertical: 4.0),
@@ -219,29 +189,31 @@ class ValueCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: Colors.black.withOpacity(0.7)),
                 ),
-                _isApproving
-                    ? JumpingText(price.toString() + ' \‎₩',
-                        style: TextStyle(
-                            color: approved
-                                ? ClearAppTheme.darkBlue
-                                : ClearAppTheme.pink,
-                            fontSize: ScreenUtil().setSp(55),
-                            fontWeight: FontWeight.bold,
-                            decoration: approved
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none))
-                    : Text(
-                        price.toString() + ' \‎₩',
-                        style: TextStyle(
-                            color: approved
-                                ? ClearAppTheme.darkBlue
-                                : ClearAppTheme.pink,
-                            fontSize: ScreenUtil().setSp(55),
-                            fontWeight: FontWeight.bold,
-                            decoration: approved
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none),
-                      )
+                Observer(builder: (_) {
+                  return shuttleStore.loading
+                      ? JumpingText(price.toString() + ' \‎₩',
+                          style: TextStyle(
+                              color: approved
+                                  ? ClearAppTheme.darkBlue
+                                  : ClearAppTheme.pink,
+                              fontSize: ScreenUtil().setSp(55),
+                              fontWeight: FontWeight.bold,
+                              decoration: approved
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none))
+                      : Text(
+                          price.toString() + ' \‎₩',
+                          style: TextStyle(
+                              color: approved
+                                  ? ClearAppTheme.darkBlue
+                                  : ClearAppTheme.pink,
+                              fontSize: ScreenUtil().setSp(55),
+                              fontWeight: FontWeight.bold,
+                              decoration: approved
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
+                        );
+                })
               ],
             ),
             SizedBox(
@@ -257,29 +229,31 @@ class ValueCard extends StatelessWidget {
                     fontSize: ScreenUtil().setSp(44),
                   ),
                 ),
-                _isReceiving
-                    ? JumpingText(shuttleList.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: ScreenUtil().setSp(44),
-                            color: rcved
-                                ? Colors.grey
-                                : ClearAppTheme.orange.withAlpha(230),
-                            decoration: rcved
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none))
-                    : Text(
-                        shuttleList.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: ScreenUtil().setSp(44),
-                            color: rcved
-                                ? Colors.grey
-                                : ClearAppTheme.orange.withAlpha(230),
-                            decoration: rcved
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none),
-                      )
+                Observer(builder: (_) {
+                  return shuttleStore.loading
+                      ? JumpingText(shuttleList.toString(),
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(44),
+                              color: rcved
+                                  ? Colors.grey
+                                  : ClearAppTheme.orange.withAlpha(230),
+                              decoration: rcved
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none))
+                      : Text(
+                          shuttleList.toString(),
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(44),
+                              color: rcved
+                                  ? Colors.grey
+                                  : ClearAppTheme.orange.withAlpha(230),
+                              decoration: rcved
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
+                        );
+                }),
               ],
             ),
             SizedBox(

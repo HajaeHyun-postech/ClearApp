@@ -1,8 +1,11 @@
+import 'package:clearApp/store/shuttle/shuttle_store.dart';
 import 'package:clearApp/ui/shuttle_menu/prch_hstr_tile.dart';
+import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'tab_model.dart';
@@ -15,11 +18,11 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'add_prch_form.dart';
 import 'data_manage/form_subject.dart';
 
-class ShuttleMenuHomePage extends StatelessWidget {
+class ShuttleHstrScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ShuttlePrchHstrSubject>(
-      create: (context) => ShuttlePrchHstrSubject(context),
+    return Provider<ShuttleStore>(
+      create: (_) => ShuttleStore(),
       child: ShuttleHstrScreen(),
     );
   }
@@ -33,10 +36,7 @@ class ShuttleHstrScreen extends StatefulWidget {
 class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
-  List<String> shuttleListToRcv;
-
-  final ScrollController _scrollController = ScrollController();
-
+  ScrollController _scrollController = ScrollController();
   TabController _tabController;
 
   @override
@@ -46,14 +46,21 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
     //animation setting
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    _tabController =
-        TabController(length: ShuttleMenuCurrentTab.values.length, vsync: this);
+    _tabController = TabController(length: TAB.values.length, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final shuttleStore = Provider.of<ShuttleStore>(context, listen: false);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        final shuttlePrchHstrSubject =
-            Provider.of<ShuttlePrchHstrSubject>(context, listen: false);
-        shuttlePrchHstrSubject.eventHandle(EVENT.TabChangeEvent,
-            tab: ShuttleMenuCurrentTab.values[_tabController.index]);
+        if (TAB.values[_tabController.index] == TAB.Admin) {
+          shuttleStore.getWholeUnconfirmedHistorires();
+        } else {
+          shuttleStore.getUsersHistories();
+        }
       }
     });
   }
@@ -64,18 +71,9 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
     super.dispose();
   }
 
-  int moneyToPayCal() {
-    int moneyToPay = 0;
-    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
-    shuttlePrchHstrSubject.shuttlePrchHstrList.forEach((element) {
-      element.approved ? moneyToPay += 0 : moneyToPay += element.price;
-    });
-    return moneyToPay;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
+    final shuttleStore = Provider.of<ShuttleStore>(context);
 
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
@@ -107,14 +105,32 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
                                         SizedBox(
                                           height: ScreenUtil().setHeight(40),
                                         ),
-                                        Topcard(
-                                            'Unapproved',
-                                            moneyToPayCal().toString() + ' \₩',
-                                            [
-                                              ClearAppTheme.orange
-                                                  .withAlpha(230),
-                                              ClearAppTheme.pink.withAlpha(230)
-                                            ]),
+                                        Observer(builder: (_) {
+                                          return TAB.values[
+                                                      _tabController.index] ==
+                                                  TAB.Admin
+                                              ? Topcard(
+                                                  'Unconfirmed',
+                                                  shuttleStore.wholeUnconfirmedHistorires.toString() + ' \₩',
+                                                  [
+                                                      ClearAppTheme.orange
+                                                          .withAlpha(230),
+                                                      ClearAppTheme.pink
+                                                          .withAlpha(230)
+                                                    ])
+                                              : Topcard(
+                                                  'Amount due',
+                                                  shuttleStore
+                                                          .usersUnconfirmedPrice
+                                                          .toString() +
+                                                      ' \₩',
+                                                  [
+                                                      ClearAppTheme.orange
+                                                          .withAlpha(230),
+                                                      ClearAppTheme.pink
+                                                          .withAlpha(230)
+                                                    ]);
+                                        }),
                                         SizedBox(
                                             height: ScreenUtil().setHeight(40)),
                                       ],
@@ -130,57 +146,79 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
                               ];
                             },
                             body: Container(
-                              color: ClearAppTheme.buildLightTheme()
-                                  .backgroundColor,
-                              child: ListView.builder(
-                                  itemCount: shuttlePrchHstrSubject.isFetching
-                                      ? 1
-                                      : shuttlePrchHstrSubject
-                                          .shuttlePrchHstrList.length,
-                                  padding: const EdgeInsets.only(bottom: 1),
-                                  scrollDirection: Axis.vertical,
-                                  itemBuilder: shuttlePrchHstrSubject.isFetching
-                                      ? (BuildContext context, int index) {
-                                          return Column(children: <Widget>[
-                                            SizedBox(
-                                              height:
-                                                  ScreenUtil().setHeight(60),
-                                            ),
-                                            JumpingText('Loading...',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        ScreenUtil().setSp(45)))
-                                          ]);
-                                        }
-                                      : (BuildContext context, int index) {
-                                          final int count =
-                                              shuttlePrchHstrSubject
-                                                  .shuttlePrchHstrList.length;
-                                          final Animation<double>
-                                              animation = Tween<double>(
-                                                      begin: 0.0, end: 1.0)
-                                                  .animate(CurvedAnimation(
-                                                      parent:
-                                                          animationController,
-                                                      curve: Interval(
-                                                          (1 / count) * index,
-                                                          1.0,
-                                                          curve: Curves
-                                                              .fastOutSlowIn)));
-                                          animationController.forward();
-                                          return PrchHstrTile(
-                                            animation: animation,
-                                            animationController:
-                                                animationController,
-                                            prchHstr: shuttlePrchHstrSubject
-                                                .shuttlePrchHstrList[index],
-                                            isAdminTab:
-                                                ShuttleMenuCurrentTab.values[
-                                                        _tabController.index] ==
-                                                    ShuttleMenuCurrentTab.Admin,
-                                          );
-                                        }),
-                            )))
+                                color: ClearAppTheme.buildLightTheme()
+                                    .backgroundColor,
+                                child: Observer(
+                                  builder: (_) {
+                                    int itemCount;
+                                    List<ShuttleOrderHistory> list;
+                                    if (TAB.values[_tabController.index] ==
+                                        TAB.Admin) {
+                                      list = shuttleStore
+                                          .wholeUnconfirmedHistorires;
+                                    } else if (TAB
+                                            .values[_tabController.index] ==
+                                        TAB.Not_Rcved) {
+                                      list = shuttleStore
+                                          .usersNotReceivedHistories;
+                                    } else if (TAB
+                                            .values[_tabController.index] ==
+                                        TAB.Total) {
+                                      list = shuttleStore.usersHistories;
+                                    }
+                                    itemCount = list.length;
+
+                                    return ListView.builder(
+                                        itemCount: itemCount,
+                                        padding:
+                                            const EdgeInsets.only(bottom: 1),
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: shuttleStore.loading
+                                            ? (BuildContext context,
+                                                int index) {
+                                                return Column(
+                                                    children: <Widget>[
+                                                      SizedBox(
+                                                        height: ScreenUtil()
+                                                            .setHeight(60),
+                                                      ),
+                                                      JumpingText('Loading...',
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  ScreenUtil()
+                                                                      .setSp(
+                                                                          45)))
+                                                    ]);
+                                              }
+                                            : (BuildContext context,
+                                                int index) {
+                                                final Animation<
+                                                    double> animation = Tween<
+                                                            double>(
+                                                        begin: 0.0, end: 1.0)
+                                                    .animate(CurvedAnimation(
+                                                        parent:
+                                                            animationController,
+                                                        curve: Interval(
+                                                            (1 / itemCount) *
+                                                                index,
+                                                            1.0,
+                                                            curve: Curves
+                                                                .fastOutSlowIn)));
+                                                animationController.forward();
+                                                return PrchHstrTile(
+                                                  animation: animation,
+                                                  animationController:
+                                                      animationController,
+                                                  prchHstr: list[index],
+                                                  isAdminTab: TAB.values[
+                                                          _tabController
+                                                              .index] ==
+                                                      TAB.Admin,
+                                                );
+                                              });
+                                  },
+                                ))))
                   ],
                 ),
               )
@@ -197,7 +235,6 @@ class Topcard extends StatelessWidget {
   Topcard(this.titel, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
-    final shuttlePrchHstrSubject = Provider.of<ShuttlePrchHstrSubject>(context);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
         child: Row(
@@ -283,9 +320,8 @@ class Topcard extends StatelessWidget {
                           child: ChangeNotifierProvider<FormSubject>(
                               create: (context) => FormSubject(
                                   callback: (newHstr) async {
-                                    await shuttlePrchHstrSubject.eventHandle(
-                                        EVENT.AddNewEvent,
-                                        newHstr: newHstr);
+                                    //TODO
+                                    print("in");
                                     Navigator.popUntil(
                                         context,
                                         (route) =>

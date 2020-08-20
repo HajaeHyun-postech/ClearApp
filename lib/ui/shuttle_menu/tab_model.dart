@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../login/login_info.dart';
 
-enum ShuttleMenuCurrentTab { Total, Not_Rcved, Admin }
+enum TAB { Total, Not_Rcved, Admin }
 
 class ShuttleTab {
   static List<Widget> getShuttleTab() {
@@ -25,7 +25,8 @@ class ShuttleTab {
       ),
     ));
 
-    if (LoginInfo().isAdmin) {
+    //TODO
+    if (true) {
       tab.add(Tab(
         child: Align(
           alignment: Alignment.center,

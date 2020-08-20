@@ -15,7 +15,7 @@ import 'shuttle_purchace_history.dart';
 
 @deprecated
 class ShuttlePrchHstrSubject extends ChangeNotifier {
-  ShuttleMenuCurrentTab _previousTab;
+  TAB _previousTab;
   BuildContext _context;
   bool _isFetching;
   List<ShuttlePrchHstr> _shuttlePrchHstrList;
@@ -31,9 +31,9 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     _shuttlePrchHstrList = new List<ShuttlePrchHstr>();
     _userSpecificShuttlePrchHstrList = new List<ShuttlePrchHstr>();
     _totalUserShuttlePrchHstrList = new List<ShuttlePrchHstr>();
-    _previousTab = ShuttleMenuCurrentTab.Admin;
+    _previousTab = TAB.Admin;
 
-    eventHandle(EVENT.TabChangeEvent, tab: ShuttleMenuCurrentTab.Total);
+    eventHandle(EVENT.TabChangeEvent, tab: TAB.Total);
   }
 
   void notifyListenersWith({bool isFetching = false}) {
@@ -42,7 +42,7 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
   }
 
   Future<void> eventHandle(EVENT eventType,
-      {ShuttleMenuCurrentTab tab, String key, ShuttlePrchHstr newHstr}) async {
+      {TAB tab, String key, ShuttlePrchHstr newHstr}) async {
     try {
       switch (eventType) {
         case EVENT.TabChangeEvent:
@@ -174,27 +174,27 @@ class ShuttlePrchHstrSubject extends ChangeNotifier {
     notifyListenersWith(isFetching: false);
   }
 
-  Future<void> updateTabChanged(ShuttleMenuCurrentTab tab) async {
+  Future<void> updateTabChanged(TAB tab) async {
     notifyListenersWith(isFetching: true);
     switch (tab) {
-      case ShuttleMenuCurrentTab.Total:
+      case TAB.Total:
         Logger().i('Tab changed to Total');
-        if (_previousTab == ShuttleMenuCurrentTab.Admin) {
+        if (_previousTab == TAB.Admin) {
           await getMyHstr();
         }
         _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList;
         break;
 
-      case ShuttleMenuCurrentTab.Not_Rcved:
+      case TAB.Not_Rcved:
         Logger().i('Tab changed to Not rcved');
-        if (_previousTab == ShuttleMenuCurrentTab.Admin) {
+        if (_previousTab == TAB.Admin) {
           await getMyHstr();
         }
         _shuttlePrchHstrList = _userSpecificShuttlePrchHstrList
             .where((element) => element.received == false)
             .toList();
         break;
-      case ShuttleMenuCurrentTab.Admin:
+      case TAB.Admin:
         Logger().i('Tab changed to Admin');
         await getAllUnapprHstr();
         _shuttlePrchHstrList = _totalUserShuttlePrchHstrList;

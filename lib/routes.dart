@@ -23,7 +23,7 @@ class Routes {
   static final routes = <String, WidgetBuilder>{
     login: (BuildContext context) => LoginScreenWithProvider(),
     homescreen: (BuildContext context) => NavigationHomeScreen(),
-    shuttlecockMenu: (BuildContext context) => ShuttleMenuHomePage(),
+    shuttlecockMenu: (BuildContext context) => ShuttleHstrScreenWithProvider(),
     gamesMenu: (BuildContext context) => GamesHomeScreenWithProvider(),
     racketMenu: (BuildContext context) => RacketmenuHomepage(),
     scoresMenu: (BuildContext context) => HotelHomeScreen(),
