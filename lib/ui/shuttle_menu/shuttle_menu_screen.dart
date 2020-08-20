@@ -54,6 +54,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
       if (!_tabController.indexIsChanging) {
         if (TAB.values[_tabController.index] == TAB.Admin) {
           shuttleStore.getWholeUnconfirmedHistorires();
+        } else if (TAB.values[_tabController.index] == TAB.Not_Rcved) {
+          shuttleStore.getNotReceivedUsersHistories();
         } else {
           shuttleStore.getUsersHistories();
         }
@@ -70,10 +72,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   Widget build(BuildContext context) {
     final shuttleStore = Provider.of<ShuttleStore>(context);
-    final bool isAdminTab = TAB.values[_tabController.index] == TAB.Admin;
-    final bool isNotRcvedTab =
-        TAB.values[_tabController.index] == TAB.Not_Rcved;
-    final bool isTotalTab = TAB.values[_tabController.index] == TAB.Total;
 
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
@@ -106,28 +104,23 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                           height: ScreenUtil().setHeight(40),
                                         ),
                                         Observer(builder: (_) {
-                                          return isAdminTab
-                                              ? Topcard(
-                                                  'Unconfirmed',
-                                                  shuttleStore.wholeUnconfirmedPrice.toString() + ' \₩',
-                                                  [
-                                                      ClearAppTheme.orange
-                                                          .withAlpha(230),
-                                                      ClearAppTheme.pink
-                                                          .withAlpha(230)
-                                                    ])
-                                              : Topcard(
-                                                  'Amount due',
-                                                  shuttleStore
-                                                          .usersUnconfirmedPrice
-                                                          .toString() +
-                                                      ' \₩',
-                                                  [
-                                                      ClearAppTheme.orange
-                                                          .withAlpha(230),
-                                                      ClearAppTheme.pink
-                                                          .withAlpha(230)
-                                                    ]);
+                                          final bool isAdminTab = TAB.values[
+                                                  _tabController.index] ==
+                                              TAB.Admin;
+                                          String title = isAdminTab
+                                              ? 'Unconfirmed'
+                                              : 'Amount due';
+                                          return Topcard(
+                                              title,
+                                              shuttleStore.unconfirmedPrice
+                                                      .toString() +
+                                                  ' \₩',
+                                              [
+                                                ClearAppTheme.orange
+                                                    .withAlpha(230),
+                                                ClearAppTheme.pink
+                                                    .withAlpha(230)
+                                              ]);
                                         }),
                                         SizedBox(
                                             height: ScreenUtil().setHeight(40)),
@@ -149,16 +142,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                 child: Observer(
                                   builder: (_) {
                                     int itemCount;
-                                    List<ShuttleOrderHistory> list;
-                                    if (isAdminTab) {
-                                      list = shuttleStore
-                                          .wholeUnconfirmedHistorires;
-                                    } else if (isNotRcvedTab) {
-                                      list = shuttleStore
-                                          .usersNotReceivedHistories;
-                                    } else if (isTotalTab) {
-                                      list = shuttleStore.usersHistories;
-                                    }
+                                    List<ShuttleOrderHistory> list =
+                                        shuttleStore.histories;
                                     itemCount = list.length;
 
                                     return ListView.builder(
@@ -185,6 +170,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                               }
                                             : (BuildContext context,
                                                 int index) {
+                                                final bool isAdminTab = TAB
+                                                            .values[
+                                                        _tabController.index] ==
+                                                    TAB.Admin;
                                                 final Animation<
                                                     double> animation = Tween<
                                                             double>(
@@ -276,10 +265,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 }
 
 class Topcard extends StatelessWidget {
-  final titel;
+  final title;
   final value;
   final colors;
-  Topcard(this.titel, this.value, this.colors);
+  Topcard(this.title, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
     final shuttleStore = Provider.of<ShuttleStore>(context);
@@ -316,7 +305,7 @@ class Topcard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          titel,
+                          title,
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,

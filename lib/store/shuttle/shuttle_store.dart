@@ -20,18 +20,13 @@ abstract class _ShuttleStore with Store {
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
-    usersHistories = new List<ShuttleOrderHistory>();
-    wholeUnconfirmedHistorires = new List<ShuttleOrderHistory>();
+    histories = new List<ShuttleOrderHistory>();
     getUsersHistories();
   }
 
   // store variables:-----------------------------------------------------------
   @observable
-  List<ShuttleOrderHistory> usersHistories;
-
-  @observable
-  List<ShuttleOrderHistory> wholeUnconfirmedHistorires;
-
+  List<ShuttleOrderHistory> histories;
   @observable
   bool loading = false;
 
@@ -39,15 +34,7 @@ abstract class _ShuttleStore with Store {
   bool success = false;
 
   @computed
-  List<ShuttleOrderHistory> get usersNotReceivedHistories =>
-      filterNotRecieved(usersHistories);
-
-  @computed
-  int get usersUnconfirmedPrice => calUnconfirmedPrice(usersHistories);
-
-  @computed
-  int get wholeUnconfirmedPrice =>
-      calUnconfirmedPrice(wholeUnconfirmedHistorires);
+  int get unconfirmedPrice => calUnconfirmedPrice(histories);
 
   // actions:-------------------------------------------------------------------
   @action
@@ -59,8 +46,27 @@ abstract class _ShuttleStore with Store {
     HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
-          usersHistories = ConvertUtil.jsonArrayToObjectList(
+          histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
+          updateOnSuccess("Loading Complete");
+        })
+        .catchError((e) => updateOnError("Invalid User"),
+            test: (e) => e is AuthException)
+        .catchError((e) => updateOnError(e.cause))
+        .whenComplete(() => loading = false);
+  }
+
+  @action
+  Future getNotReceivedUsersHistories() async {
+    if (loading) return;
+    loading = true;
+    Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
+
+    HttpClient.send(
+            method: "GET", address: "/api/clear/shuttle", params: params)
+        .then((response) {
+          histories = filterNotRecieved(ConvertUtil.jsonArrayToObjectList(
+              response, (json) => ShuttleOrderHistory.fromJson(json)));
           updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
@@ -78,7 +84,7 @@ abstract class _ShuttleStore with Store {
     HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
-          wholeUnconfirmedHistorires = ConvertUtil.jsonArrayToObjectList(
+          histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
           updateOnSuccess("Loading Complete");
         })
