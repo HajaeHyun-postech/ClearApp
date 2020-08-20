@@ -2,9 +2,10 @@ import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/order_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:logger/logger.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
@@ -27,23 +28,12 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
   ScrollController _scrollController;
   AnimationController _remainingController;
   AnimationController _invalidUsageController;
-
-  bool _amountOverflowed;
-  int _selectedAmount;
+  ShuttleFormStore shuttleFormStore;
   UsageLists _selectedUsage;
-  String _selectedUsageString;
-
-  void _setInitial() {
-    _selectedAmount = 0;
-    _selectedUsage = null;
-    _selectedUsageString = '';
-    _amountOverflowed = false;
-  }
 
   @override
   void initState() {
     super.initState();
-    _setInitial();
 
     /*Animation Settings*/
     _scrollController = ScrollController();
@@ -53,13 +43,13 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
-  Future<void> validateNewPrch() async {
-    //form validation check
-    if (_selectedUsageString == '') throw FormatException('usage');
-    if (_selectedAmount < 1) throw FormatException('amount');
-
-    Logger().i('Usage: $_selectedUsage, Amount: $_selectedAmount');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    shuttleFormStore = Provider.of<ShuttleFormStore>(context, listen: false);
   }
+
+  Future<void> addOrder() async {}
 
   @override
   void dispose() {
@@ -123,18 +113,16 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     setState(() {
       if (selected) {
         _invalidUsageController.reverse();
-        _selectedUsageString = usage;
         _selectedUsage = selectedUsage;
+        shuttleFormStore.setUsageString(usage);
       } else {
-        _selectedUsageString = '';
         _selectedUsage = null;
+        shuttleFormStore.setUsageString('');
       }
     });
   }
 
   Column _buildAmountSelection(Animation<double> animation) {
-    final shuttleFormStore = Provider.of<ShuttleFormStore>(context);
-
     return Column(children: <Widget>[
       AnimatedBuilder(
         animation: animation,
@@ -147,13 +135,17 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                     right: (20.0 - animation.value) < 0
                         ? 0
                         : 20.0 - animation.value),
-                child: Text('Remaining',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: ScreenUtil().setSp(50),
-                        color: _amountOverflowed
-                            ? ClearAppTheme.lightRed
-                            : ClearAppTheme.grey)),
+                child: Observer(
+                  builder: (_) {
+                    return Text('Remaining',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: ScreenUtil().setSp(50),
+                            color: shuttleFormStore.invalidAmount
+                                ? ClearAppTheme.lightRed
+                                : ClearAppTheme.grey));
+                  },
+                ),
               ),
               Container(
                   padding: EdgeInsets.only(
@@ -162,16 +154,21 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                       right: (20.0 - animation.value) < 0
                           ? 0
                           : 20.0 - animation.value),
-                  child: shuttleFormStore.loading
-                      ? JumpingText('...',
-                          style: TextStyle(fontSize: ScreenUtil().setSp(100)))
-                      : Text(shuttleFormStore.remaining.toString(),
-                          style: TextStyle(
-                              fontFamily: ClearAppTheme.fontName,
-                              fontSize: ScreenUtil().setSp(100),
-                              color: _amountOverflowed
-                                  ? ClearAppTheme.lightRed
-                                  : ClearAppTheme.grey))),
+                  child: Observer(
+                    builder: (_) {
+                      return shuttleFormStore.loading
+                          ? JumpingText('...',
+                              style:
+                                  TextStyle(fontSize: ScreenUtil().setSp(100)))
+                          : Text(shuttleFormStore.remaining.toString(),
+                              style: TextStyle(
+                                  fontFamily: ClearAppTheme.fontName,
+                                  fontSize: ScreenUtil().setSp(100),
+                                  color: shuttleFormStore.invalidAmount
+                                      ? ClearAppTheme.lightRed
+                                      : ClearAppTheme.grey));
+                    },
+                  )),
             ],
           );
         },
@@ -181,19 +178,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           GestureDetector(
-            onTap: () {
-              if (_selectedAmount - 1 >= 0)
-                setState(() {
-                  _amountOverflowed = false;
-                  _selectedAmount = _selectedAmount - 1;
-                });
-              else {
-                setState(() {
-                  _remainingController.forward(from: 0.0);
-                  _amountOverflowed = true;
-                });
-              }
-            },
+            onTap: shuttleFormStore.incrementAmount,
             child: Container(
               decoration: BoxDecoration(
                 color: ClearAppTheme.white.withOpacity(0),
@@ -210,28 +195,18 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
             ),
           ),
           SizedBox(width: ScreenUtil().setWidth(70)),
-          Container(
-            child: Text(
-              _selectedAmount.toString(),
-              style: TextStyle(
-                  fontFamily: 'Roboto', fontSize: ScreenUtil().setSp(65)),
-            ),
-          ),
+          Container(child: Observer(
+            builder: (_) {
+              return Text(
+                shuttleFormStore.amount.toString(),
+                style: TextStyle(
+                    fontFamily: 'Roboto', fontSize: ScreenUtil().setSp(65)),
+              );
+            },
+          )),
           SizedBox(width: ScreenUtil().setWidth(70)),
           GestureDetector(
-            onTap: () {
-              if (_selectedAmount + 1 <= 100)
-                setState(() {
-                  _amountOverflowed = false;
-                  _selectedAmount = _selectedAmount + 1;
-                });
-              else {
-                setState(() {
-                  _remainingController.forward(from: 0.0);
-                  _amountOverflowed = true;
-                });
-              }
-            },
+            onTap: shuttleFormStore.decrementAmount,
             child: Container(
               decoration: BoxDecoration(
                 color: ClearAppTheme.white..withOpacity(0),
@@ -263,59 +238,67 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
             }
           });
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
       children: <Widget>[
-        Container(
-          color: Colors.white,
-          child: ListView(
-            controller: _scrollController,
-            padding: EdgeInsets.all(25.0),
-            shrinkWrap: true,
-            children: <Widget>[
-              Row(
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              child: ListView(
+                controller: _scrollController,
+                padding: EdgeInsets.all(25.0),
+                shrinkWrap: true,
                 children: <Widget>[
-                  Text(
-                    'Select Usage',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: ScreenUtil().setSp(72),
-                    ),
-                  ),
-                  SizedBox(width: ScreenUtil().setWidth(40)),
-                  FadeTransition(
-                    child: Text(
-                      'Usage is required',
-                      style: TextStyle(
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Select Usage',
+                        style: TextStyle(
                           fontFamily: 'Roboto',
-                          fontSize: ScreenUtil().setSp(40),
-                          color: Colors.red),
-                    ),
-                    opacity: _invalidUsageController,
+                          fontSize: ScreenUtil().setSp(72),
+                        ),
+                      ),
+                      SizedBox(width: ScreenUtil().setWidth(40)),
+                      FadeTransition(
+                        child: Text(
+                          'Usage is required',
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(40),
+                              color: Colors.red),
+                        ),
+                        opacity: _invalidUsageController,
+                      ),
+                    ],
                   ),
+                  SizedBox(height: ScreenUtil().setHeight(70)),
+                  _buildUsageSelectionRow(),
+                  SizedBox(height: ScreenUtil().setHeight(90)),
+                  _buildAmountSelection(offsetAnimation),
+                  SizedBox(height: ScreenUtil().setHeight(90)),
+                  OrderButton(
+                    onTap: shuttleFormStore.addOrder,
+                  )
                 ],
               ),
-              SizedBox(height: ScreenUtil().setHeight(70)),
-              _buildUsageSelectionRow(),
-              SizedBox(height: ScreenUtil().setHeight(90)),
-              _buildAmountSelection(offsetAnimation),
-              SizedBox(height: ScreenUtil().setHeight(90)),
-              OrderButton(
-                tapCallback: () => validateNewPrch()
-                    .catchError((e) => _invalidUsageController.forward(),
-                        test: (e) =>
-                            e is FormatException && e.message == 'usage')
-                    .catchError(
-                        (e) => setState(() {
-                              _remainingController.forward(from: 0.0);
-                              _amountOverflowed = true;
-                            }),
-                        test: (e) =>
-                            e is FormatException && e.message == 'amount'),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
+        Observer(
+          builder: (_) {
+            if (shuttleFormStore.invalidAmount) {
+              _remainingController.forward();
+            }
+            if (shuttleFormStore.success) {
+              return Toast_generator.showSuccessToast(
+                  context, shuttleFormStore.successStore.successMessage);
+            } else {
+              return Toast_generator.showErrorToast(
+                  context, shuttleFormStore.errorStore.errorMessage);
+            }
+          },
+        )
       ],
     );
   }

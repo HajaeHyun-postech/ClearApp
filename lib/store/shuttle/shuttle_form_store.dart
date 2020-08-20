@@ -26,7 +26,16 @@ abstract class _ShuttleFormStore with Store {
   bool success = false;
 
   @observable
+  bool invalidAmount = false;
+
+  @observable
   int remaining = 0;
+
+  @observable
+  int amount = 1;
+
+  @observable
+  String usageString = '';
 
   // actions:-------------------------------------------------------------------
   @action
@@ -39,12 +48,53 @@ abstract class _ShuttleFormStore with Store {
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           remaining = response['remaining'];
-          updateOnSuccess("Loading Complete");
+          updateOnSuccess("");
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
+  }
+
+  @action
+  Future addOrder() async {
+    if (loading) return;
+    loading = true;
+
+    Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
+    HttpClient.send(method: "POST", address: "/api/clear/shuttle", body: body)
+        .then((response) {
+          updateOnSuccess("Order Successful");
+        })
+        .catchError((e) => updateOnError("Invalid User"),
+            test: (e) => e is AuthException)
+        .catchError((e) => updateOnError(e.cause))
+        .whenComplete(() => loading = false);
+  }
+
+  @action
+  void setUsageString(String usage) {
+    usageString = usage;
+  }
+
+  @action
+  void incrementAmount() {
+    if (amount + 1 > remaining) {
+      invalidAmount = true;
+    } else {
+      invalidAmount = false;
+      amount += 1;
+    }
+  }
+
+  @action
+  void decrementAmount() {
+    if (amount - 1 < 1) {
+      invalidAmount = true;
+    } else {
+      invalidAmount = false;
+      amount -= 1;
+    }
   }
 
   // dispose:-------------------------------------------------------------------

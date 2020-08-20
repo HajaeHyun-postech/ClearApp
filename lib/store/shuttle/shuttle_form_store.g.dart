@@ -39,6 +39,21 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
+  final _$invalidAmountAtom = Atom(name: '_ShuttleFormStore.invalidAmount');
+
+  @override
+  bool get invalidAmount {
+    _$invalidAmountAtom.reportRead();
+    return super.invalidAmount;
+  }
+
+  @override
+  set invalidAmount(bool value) {
+    _$invalidAmountAtom.reportWrite(value, super.invalidAmount, () {
+      super.invalidAmount = value;
+    });
+  }
+
   final _$remainingAtom = Atom(name: '_ShuttleFormStore.remaining');
 
   @override
@@ -54,6 +69,36 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
+  final _$amountAtom = Atom(name: '_ShuttleFormStore.amount');
+
+  @override
+  int get amount {
+    _$amountAtom.reportRead();
+    return super.amount;
+  }
+
+  @override
+  set amount(int value) {
+    _$amountAtom.reportWrite(value, super.amount, () {
+      super.amount = value;
+    });
+  }
+
+  final _$usageStringAtom = Atom(name: '_ShuttleFormStore.usageString');
+
+  @override
+  String get usageString {
+    _$usageStringAtom.reportRead();
+    return super.usageString;
+  }
+
+  @override
+  set usageString(String value) {
+    _$usageStringAtom.reportWrite(value, super.usageString, () {
+      super.usageString = value;
+    });
+  }
+
   final _$getRemainingAsyncAction =
       AsyncAction('_ShuttleFormStore.getRemaining');
 
@@ -62,8 +107,48 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     return _$getRemainingAsyncAction.run(() => super.getRemaining());
   }
 
+  final _$addOrderAsyncAction = AsyncAction('_ShuttleFormStore.addOrder');
+
+  @override
+  Future<dynamic> addOrder() {
+    return _$addOrderAsyncAction.run(() => super.addOrder());
+  }
+
   final _$_ShuttleFormStoreActionController =
       ActionController(name: '_ShuttleFormStore');
+
+  @override
+  void setUsageString(String usage) {
+    final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
+        name: '_ShuttleFormStore.setUsageString');
+    try {
+      return super.setUsageString(usage);
+    } finally {
+      _$_ShuttleFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void incrementAmount() {
+    final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
+        name: '_ShuttleFormStore.incrementAmount');
+    try {
+      return super.incrementAmount();
+    } finally {
+      _$_ShuttleFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void decrementAmount() {
+    final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
+        name: '_ShuttleFormStore.decrementAmount');
+    try {
+      return super.decrementAmount();
+    } finally {
+      _$_ShuttleFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic dispose() {
@@ -81,7 +166,10 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     return '''
 loading: ${loading},
 success: ${success},
-remaining: ${remaining}
+invalidAmount: ${invalidAmount},
+remaining: ${remaining},
+amount: ${amount},
+usageString: ${usageString}
     ''';
   }
 }

@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 
 class OrderButton extends StatefulWidget {
   //screen size
-  final Function tapCallback;
+  final Function onTap;
 
   const OrderButton({
     Key key,
-    this.tapCallback,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class _OrderButtonState extends State<OrderButton>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: widget.onTap,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
