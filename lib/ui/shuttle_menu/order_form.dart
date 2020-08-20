@@ -178,7 +178,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           GestureDetector(
-            onTap: shuttleFormStore.incrementAmount,
+            onTap: shuttleFormStore.decrementAmount,
             child: Container(
               decoration: BoxDecoration(
                 color: ClearAppTheme.white.withOpacity(0),
@@ -206,7 +206,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
           )),
           SizedBox(width: ScreenUtil().setWidth(70)),
           GestureDetector(
-            onTap: shuttleFormStore.decrementAmount,
+            onTap: shuttleFormStore.incrementAmount,
             child: Container(
               decoration: BoxDecoration(
                 color: ClearAppTheme.white..withOpacity(0),

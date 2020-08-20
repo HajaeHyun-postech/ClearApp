@@ -17,6 +17,12 @@ abstract class _ShuttleFormStore with Store {
   List<ReactionDisposer> _disposers;
 
   // constructor:---------------------------------------------------------------
+  _ShuttleFormStore() {
+    _disposers = [
+      reaction((_) => invalidAmount, (value) => invalidAmount = false,
+          delay: 200),
+    ];
+  }
 
   // store variables:-----------------------------------------------------------
   @observable
@@ -95,6 +101,11 @@ abstract class _ShuttleFormStore with Store {
       invalidAmount = false;
       amount -= 1;
     }
+  }
+
+  @action
+  void reset() {
+    invalidAmount = false;
   }
 
   // dispose:-------------------------------------------------------------------
