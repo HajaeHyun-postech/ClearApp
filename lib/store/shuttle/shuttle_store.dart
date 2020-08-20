@@ -89,11 +89,11 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future receiveShuttle(int id) async {
+  Future receiveShuttle(List<int> idList) async {
     if (loading) return;
     loading = true;
     Map<String, dynamic> params = {'type': 'receive'};
-    Map<String, dynamic> body = {'id': id};
+    Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
             method: "PATCH",
@@ -110,11 +110,11 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future confirmDeposit(int id) async {
+  Future confirmDeposit(List<int> idList) async {
     if (loading) return;
     loading = true;
     Map<String, dynamic> params = {'type': 'confirm'};
-    Map<String, dynamic> body = {'id': id};
+    Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
             method: "PATCH",

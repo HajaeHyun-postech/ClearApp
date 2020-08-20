@@ -18,22 +18,22 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'add_prch_form.dart';
 import 'data_manage/form_subject.dart';
 
-class ShuttleHstrScreenWithProvider extends StatelessWidget {
+class ShuttleMenuScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<ShuttleStore>(
       create: (_) => ShuttleStore(),
-      child: ShuttleHstrScreen(),
+      child: ShuttleMenuScreen(),
     );
   }
 }
 
-class ShuttleHstrScreen extends StatefulWidget {
+class ShuttleMenuScreen extends StatefulWidget {
   @override
-  ShuttleHstrScreenState createState() => ShuttleHstrScreenState();
+  ShuttleMenuScreenState createState() => ShuttleMenuScreenState();
 }
 
-class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
+class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
   ScrollController _scrollController = ScrollController();
@@ -43,7 +43,6 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
   void initState() {
     super.initState();
 
-    //animation setting
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     _tabController = TabController(length: TAB.values.length, vsync: this);
@@ -205,16 +204,28 @@ class ShuttleHstrScreenState extends State<ShuttleHstrScreen>
                                                             1.0,
                                                             curve: Curves
                                                                 .fastOutSlowIn)));
+                                                final String title = TAB.values[
+                                                            _tabController
+                                                                .index] ==
+                                                        TAB.Admin
+                                                    ? '${list[index].orderUsage}:${list[index].user.name}'
+                                                    : '${list[index].orderUsage}';
+
                                                 animationController.forward();
                                                 return PrchHstrTile(
                                                   animation: animation,
                                                   animationController:
                                                       animationController,
-                                                  prchHstr: list[index],
-                                                  isAdminTab: TAB.values[
-                                                          _tabController
-                                                              .index] ==
-                                                      TAB.Admin,
+                                                  idList: list[index].idList,
+                                                  title: title,
+                                                  name: list[index].user.name,
+                                                  price: list[index].price,
+                                                  orderDate:
+                                                      list[index].orderDate,
+                                                  depositConfirmed: list[index]
+                                                      .depositConfirmed,
+                                                  received:
+                                                      list[index].received,
                                                 );
                                               });
                                   },
