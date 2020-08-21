@@ -8,6 +8,7 @@ import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:mobx/mobx.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
@@ -47,14 +48,32 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    shuttleFormStore = Provider.of<ShuttleFormStore>(context, listen: false);
-  }
+    shuttleFormStore = Provider.of<ShuttleFormStore>(context);
 
-  Future<void> addOrder() async {}
+    shuttleFormStore.disposers
+      ..add(when((_) => shuttleFormStore.invalidAmount == true, () {
+        _remainingController.forward();
+        Future.delayed(Duration(milliseconds: 600),
+            () => shuttleFormStore.invalidAmount = false);
+      }))
+      ..add(reaction((_) => shuttleFormStore.amount,
+          (_) => shuttleFormStore.getRemaining()))
+      ..add(autorun((_) {
+        if (shuttleFormStore.success) {
+          AsyncNavigation.popUntilAsync(context, Routes.shuttlecockMenu);
+          Toast_generator.successToast(
+              context, shuttleFormStore.successStore.successMessage);
+        } else {
+          Toast_generator.errorToast(
+              context, shuttleFormStore.errorStore.errorMessage);
+        }
+      }));
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    shuttleFormStore.dispose();
     super.dispose();
   }
 
@@ -237,57 +256,38 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
               _remainingController.reverse();
             }
           });
-    return Stack(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              child: ListView(
-                controller: _scrollController,
-                padding: EdgeInsets.all(25.0),
-                shrinkWrap: true,
+        Container(
+          color: Colors.white,
+          child: ListView(
+            controller: _scrollController,
+            padding: EdgeInsets.all(25.0),
+            shrinkWrap: true,
+            children: <Widget>[
+              Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Select Usage',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: ScreenUtil().setSp(72),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Select Usage',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: ScreenUtil().setSp(72),
+                    ),
                   ),
-                  SizedBox(height: ScreenUtil().setHeight(70)),
-                  _buildUsageSelectionRow(),
-                  SizedBox(height: ScreenUtil().setHeight(90)),
-                  _buildAmountSelection(offsetAnimation),
-                  SizedBox(height: ScreenUtil().setHeight(90)),
-                  OrderButton(
-                    onTap: () => shuttleFormStore.addOrder(),
-                  )
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: ScreenUtil().setHeight(70)),
+              _buildUsageSelectionRow(),
+              SizedBox(height: ScreenUtil().setHeight(90)),
+              _buildAmountSelection(offsetAnimation),
+              SizedBox(height: ScreenUtil().setHeight(90)),
+              OrderButton(
+                onTap: () => shuttleFormStore.addOrder(),
+              )
+            ],
+          ),
         ),
-        Observer(
-          builder: (_) {
-            if (shuttleFormStore.invalidAmount) {
-              _remainingController.forward();
-            }
-            if (shuttleFormStore.success) {
-              AsyncNavigation.popUntilAsync(context, Routes.shuttlecockMenu);
-              return Toast_generator.showSuccessToast(
-                  context, shuttleFormStore.successStore.successMessage);
-            } else {
-              return Toast_generator.showErrorToast(
-                  context, shuttleFormStore.errorStore.errorMessage);
-            }
-          },
-        )
       ],
     );
   }

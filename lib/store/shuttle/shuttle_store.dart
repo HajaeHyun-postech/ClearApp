@@ -1,6 +1,5 @@
 import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
-import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
 import 'package:clearApp/util/http_client.dart';
@@ -15,20 +14,18 @@ abstract class _ShuttleStore with Store {
   // other stores:--------------------------------------------------------------
   final ErrorStore errorStore = ErrorStore();
   final SuccessStore successStore = SuccessStore();
-  final ShuttleFormStore shuttleFormStore = ShuttleFormStore();
 
   // disposers:-----------------------------------------------------------------
-  List<ReactionDisposer> _disposers;
+  List<ReactionDisposer> disposers;
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
-    histories = new List<ShuttleOrderHistory>();
     getUsersHistories();
   }
 
   // store variables:-----------------------------------------------------------
   @observable
-  List<ShuttleOrderHistory> histories;
+  List<ShuttleOrderHistory> histories = new List<ShuttleOrderHistory>();
 
   @observable
   bool loading = false;
@@ -142,7 +139,7 @@ abstract class _ShuttleStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    for (final d in _disposers) {
+    for (final d in disposers) {
       d();
     }
   }

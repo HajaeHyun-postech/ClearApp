@@ -54,21 +54,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
-  final _$invalidUsageAtom = Atom(name: '_ShuttleFormStore.invalidUsage');
-
-  @override
-  bool get invalidUsage {
-    _$invalidUsageAtom.reportRead();
-    return super.invalidUsage;
-  }
-
-  @override
-  set invalidUsage(bool value) {
-    _$invalidUsageAtom.reportWrite(value, super.invalidUsage, () {
-      super.invalidUsage = value;
-    });
-  }
-
   final _$remainingAtom = Atom(name: '_ShuttleFormStore.remaining');
 
   @override
@@ -166,17 +151,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
   }
 
   @override
-  void reset() {
-    final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
-        name: '_ShuttleFormStore.reset');
-    try {
-      return super.reset();
-    } finally {
-      _$_ShuttleFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   dynamic dispose() {
     final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
         name: '_ShuttleFormStore.dispose');
@@ -193,7 +167,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
 loading: ${loading},
 success: ${success},
 invalidAmount: ${invalidAmount},
-invalidUsage: ${invalidUsage},
 remaining: ${remaining},
 amount: ${amount},
 usageString: ${usageString}

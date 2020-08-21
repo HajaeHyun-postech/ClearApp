@@ -14,16 +14,11 @@ abstract class _ShuttleFormStore with Store {
   final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
-  List<ReactionDisposer> _disposers;
+  List<ReactionDisposer> disposers = [];
 
   // constructor:---------------------------------------------------------------
   _ShuttleFormStore() {
-    _disposers = [
-      reaction((_) => invalidAmount, (value) => invalidAmount = false,
-          delay: 1000),
-      reaction((_) => invalidUsage, (value) => invalidUsage = false,
-          delay: 1000),
-    ];
+    getRemaining();
   }
 
   // store variables:-----------------------------------------------------------
@@ -35,9 +30,6 @@ abstract class _ShuttleFormStore with Store {
 
   @observable
   bool invalidAmount = false;
-
-  @observable
-  bool invalidUsage = false;
 
   @observable
   int remaining = 0;
@@ -100,7 +92,6 @@ abstract class _ShuttleFormStore with Store {
       invalidAmount = false;
       amount += 1;
     }
-    getRemaining();
   }
 
   @action
@@ -111,18 +102,12 @@ abstract class _ShuttleFormStore with Store {
       invalidAmount = false;
       amount -= 1;
     }
-    getRemaining();
-  }
-
-  @action
-  void reset() {
-    invalidAmount = false;
   }
 
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    for (final d in _disposers) {
+    for (final d in disposers) {
       d();
     }
   }

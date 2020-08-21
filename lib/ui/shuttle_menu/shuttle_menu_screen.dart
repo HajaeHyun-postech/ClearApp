@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:progress_indicators/progress_indicators.dart';
@@ -73,13 +74,25 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    shuttleStore = Provider.of<ShuttleStore>(context, listen: false);
+    shuttleStore = Provider.of<ShuttleStore>(context);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         tabChangeEvent();
       }
     });
+
+    shuttleStore.disposers
+      ..add(autorun((_) {
+        if (shuttleStore.success) {
+          tabChangeEvent();
+          Toast_generator.successToast(
+              context, shuttleStore.successStore.successMessage);
+        } else {
+          Toast_generator.errorToast(
+              context, shuttleStore.errorStore.errorMessage);
+        }
+      }));
   }
 
   void tabChangeEvent() {
@@ -106,211 +119,172 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
         data: ClearAppTheme.buildLightTheme(),
         child: Container(
             child: Scaffold(
-          body: Stack(
+                body: InkWell(
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Column(
             children: <Widget>[
-              InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Column(
-                  children: <Widget>[
-                    CustomAppBar(),
-                    Expanded(
-                        child: NestedScrollView(
-                            controller: _scrollController,
-                            headerSliverBuilder: (context, innerBoxIsScrolled) {
-                              return <Widget>[
-                                SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                      (context, index) {
-                                    return Column(
-                                      children: <Widget>[
-                                        SizedBox(
-                                          height: ScreenUtil().setHeight(40),
-                                        ),
-                                        Observer(builder: (_) {
+              CustomAppBar(),
+              Expanded(
+                  child: NestedScrollView(
+                      controller: _scrollController,
+                      headerSliverBuilder: (context, innerBoxIsScrolled) {
+                        return <Widget>[
+                          SliverList(
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                              return Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: ScreenUtil().setHeight(40),
+                                  ),
+                                  Observer(builder: (_) {
+                                    final bool isAdminTab =
+                                        TAB.values[_tabController.index] ==
+                                            TAB.Admin;
+                                    String title = isAdminTab
+                                        ? 'Unconfirmed'
+                                        : 'Amount due';
+                                    return Topcard(
+                                        title,
+                                        shuttleStore.unconfirmedPrice
+                                                .toString() +
+                                            ' \₩',
+                                        [
+                                          ClearAppTheme.orange.withAlpha(230),
+                                          ClearAppTheme.pink.withAlpha(230)
+                                        ]);
+                                  }),
+                                  SizedBox(height: ScreenUtil().setHeight(40)),
+                                ],
+                              );
+                            }, childCount: 1),
+                          ),
+                          SliverPersistentHeader(
+                              pinned: true,
+                              floating: true,
+                              delegate: ContestTabHeader(_MyTabBar(
+                                  tabController: _tabController, tabs: _tabs)))
+                        ];
+                      },
+                      body: Container(
+                          color:
+                              ClearAppTheme.buildLightTheme().backgroundColor,
+                          child: Observer(
+                            builder: (_) {
+                              int itemCount;
+                              List<ShuttleOrderHistory> list =
+                                  shuttleStore.histories;
+                              itemCount = list.length;
+
+                              return ListView.builder(
+                                  itemCount:
+                                      shuttleStore.loading ? 1 : itemCount,
+                                  padding: const EdgeInsets.only(bottom: 1),
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: shuttleStore.loading
+                                      ? (BuildContext context, int index) {
+                                          return Column(children: <Widget>[
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(60),
+                                            ),
+                                            JumpingText('Loading...',
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        ScreenUtil().setSp(45)))
+                                          ]);
+                                        }
+                                      : (BuildContext context, int index) {
                                           final bool isAdminTab = TAB.values[
                                                   _tabController.index] ==
                                               TAB.Admin;
-                                          String title = isAdminTab
-                                              ? 'Unconfirmed'
-                                              : 'Amount due';
-                                          return Topcard(
-                                              title,
-                                              shuttleStore.unconfirmedPrice
-                                                      .toString() +
-                                                  ' \₩',
-                                              [
-                                                ClearAppTheme.orange
-                                                    .withAlpha(230),
-                                                ClearAppTheme.pink
-                                                    .withAlpha(230)
-                                              ]);
-                                        }),
-                                        SizedBox(
-                                            height: ScreenUtil().setHeight(40)),
-                                      ],
-                                    );
-                                  }, childCount: 1),
-                                ),
-                                SliverPersistentHeader(
-                                    pinned: true,
-                                    floating: true,
-                                    delegate: ContestTabHeader(_MyTabBar(
-                                        tabController: _tabController,
-                                        tabs: _tabs)))
-                              ];
-                            },
-                            body: Container(
-                                color: ClearAppTheme.buildLightTheme()
-                                    .backgroundColor,
-                                child: Observer(
-                                  builder: (_) {
-                                    int itemCount;
-                                    List<ShuttleOrderHistory> list =
-                                        shuttleStore.histories;
-                                    itemCount = list.length;
+                                          final Animation<double>
+                                              animation = Tween<double>(
+                                                      begin: 0.0, end: 1.0)
+                                                  .animate(CurvedAnimation(
+                                                      parent:
+                                                          animationController,
+                                                      curve: Interval(
+                                                          (1 / itemCount) *
+                                                              index,
+                                                          1.0,
+                                                          curve: Curves
+                                                              .fastOutSlowIn)));
 
-                                    return ListView.builder(
-                                        itemCount: shuttleStore.loading
-                                            ? 1
-                                            : itemCount,
-                                        padding:
-                                            const EdgeInsets.only(bottom: 1),
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: shuttleStore.loading
-                                            ? (BuildContext context,
-                                                int index) {
-                                                return Column(
-                                                    children: <Widget>[
-                                                      SizedBox(
-                                                        height: ScreenUtil()
-                                                            .setHeight(60),
-                                                      ),
-                                                      JumpingText('Loading...',
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  ScreenUtil()
-                                                                      .setSp(
-                                                                          45)))
-                                                    ]);
+                                          String title;
+                                          String firstActionCaption;
+                                          String secondActionCaption;
+                                          Function firstTapAction;
+                                          Function secondTapAction;
+                                          if (isAdminTab) {
+                                            title =
+                                                '${list[index].user.name} : ${list[index].orderUsage}';
+                                            firstActionCaption = 'Confirm';
+                                            secondActionCaption = 'Delete';
+                                            firstTapAction = () {
+                                              if (list[index]
+                                                  .depositConfirmed) {
+                                                shuttleStore.updateOnError(
+                                                    "Alreay confirmed");
+                                              } else {
+                                                shuttleStore.confirmDeposit(
+                                                    list[index].idList);
                                               }
-                                            : (BuildContext context,
-                                                int index) {
-                                                final bool isAdminTab = TAB
-                                                            .values[
-                                                        _tabController.index] ==
-                                                    TAB.Admin;
-                                                final Animation<
-                                                    double> animation = Tween<
-                                                            double>(
-                                                        begin: 0.0, end: 1.0)
-                                                    .animate(CurvedAnimation(
-                                                        parent:
-                                                            animationController,
-                                                        curve: Interval(
-                                                            (1 / itemCount) *
-                                                                index,
-                                                            1.0,
-                                                            curve: Curves
-                                                                .fastOutSlowIn)));
-
-                                                String title;
-                                                String firstActionCaption;
-                                                String secondActionCaption;
-                                                Function firstTapAction;
-                                                Function secondTapAction;
-                                                if (isAdminTab) {
-                                                  title =
-                                                      '${list[index].user.name} : ${list[index].orderUsage}';
-                                                  firstActionCaption =
-                                                      'Confirm';
-                                                  secondActionCaption =
-                                                      'Delete';
-                                                  firstTapAction = () {
-                                                    shuttleStore
-                                                        .confirmDeposit(
-                                                            list[index].idList)
-                                                        .then((_) =>
-                                                            tabChangeEvent());
-                                                  };
-                                                  secondTapAction = () =>
-                                                      shuttleStore
-                                                          .receiveShuttle(
-                                                              list[index]
-                                                                  .idList)
-                                                          .then((_) =>
-                                                              tabChangeEvent());
-                                                } else {
-                                                  title =
-                                                      '${list[index].orderUsage}';
-                                                  firstActionCaption =
-                                                      'Receive';
-                                                  secondActionCaption =
-                                                      'Delete';
-                                                  firstTapAction = () =>
-                                                      shuttleStore
-                                                          .receiveShuttle(
-                                                              list[index]
-                                                                  .idList)
-                                                          .then((_) =>
-                                                              tabChangeEvent());
-                                                  secondTapAction = () =>
-                                                      shuttleStore
-                                                          .receiveShuttle(
-                                                              list[index]
-                                                                  .idList)
-                                                          .then((_) =>
-                                                              tabChangeEvent());
-                                                }
-                                                animationController.forward();
-                                                return HistoryTile(
-                                                  animation: animation,
-                                                  animationController:
-                                                      animationController,
-                                                  idList: list[index].idList,
-                                                  title: title,
-                                                  name: list[index].user.name,
-                                                  price: list[index].price,
-                                                  orderDate:
-                                                      list[index].orderDate,
-                                                  depositConfirmed: list[index]
-                                                      .depositConfirmed,
-                                                  received:
-                                                      list[index].received,
-                                                  firstActionCaption:
-                                                      firstActionCaption,
-                                                  secondActionCaption:
-                                                      secondActionCaption,
-                                                  firstTapAction:
-                                                      firstTapAction,
-                                                  secondTapAction:
-                                                      secondTapAction,
-                                                );
-                                              });
-                                  },
-                                ))))
-                  ],
-                ),
-              ),
-              Observer(
-                builder: (_) {
-                  if (shuttleStore.success) {
-                    return Toast_generator.showSuccessToast(
-                        context, shuttleStore.successStore.successMessage);
-                  } else {
-                    return Toast_generator.showErrorToast(
-                        context, shuttleStore.errorStore.errorMessage);
-                  }
-                },
-              )
+                                            };
+                                            secondTapAction = () => shuttleStore
+                                                .receiveShuttle(
+                                                    list[index].idList)
+                                                .then((_) => tabChangeEvent());
+                                          } else {
+                                            title = '${list[index].orderUsage}';
+                                            firstActionCaption = 'Receive';
+                                            secondActionCaption = 'Delete';
+                                            firstTapAction = () {
+                                              if (list[index].received) {
+                                                shuttleStore.updateOnError(
+                                                    "Alreay Received");
+                                              } else {
+                                                shuttleStore.receiveShuttle(
+                                                    list[index].idList);
+                                              }
+                                            };
+                                            secondTapAction = () {
+                                              shuttleStore.receiveShuttle(
+                                                  list[index].idList);
+                                            };
+                                          }
+                                          animationController.forward();
+                                          return HistoryTile(
+                                            animation: animation,
+                                            animationController:
+                                                animationController,
+                                            idList: list[index].idList,
+                                            title: title,
+                                            name: list[index].user.name,
+                                            price: list[index].price,
+                                            orderDate: list[index].orderDate,
+                                            depositConfirmed:
+                                                list[index].depositConfirmed,
+                                            received: list[index].received,
+                                            firstActionCaption:
+                                                firstActionCaption,
+                                            secondActionCaption:
+                                                secondActionCaption,
+                                            firstTapAction: firstTapAction,
+                                            secondTapAction: secondTapAction,
+                                          );
+                                        });
+                            },
+                          ))))
             ],
           ),
-        )));
+        ))));
   }
 }
 
@@ -321,7 +295,6 @@ class Topcard extends StatelessWidget {
   Topcard(this.title, this.value, this.colors);
   @override
   Widget build(BuildContext context) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
         child: Row(
@@ -397,7 +370,6 @@ class Topcard extends StatelessWidget {
                     Radius.circular(38.0),
                   ),
                   onTap: () {
-                    shuttleStore.shuttleFormStore.getRemaining();
                     showBarModalBottomSheet(
                       expand: false,
                       context: context,
@@ -406,8 +378,7 @@ class Topcard extends StatelessWidget {
                           child: CupertinoPageScaffold(
                         child: SafeArea(
                           child: Provider<ShuttleFormStore>(
-                              create: (context) =>
-                                  shuttleStore.shuttleFormStore,
+                              create: (context) => ShuttleFormStore(),
                               child: OrderForm()),
                         ),
                       )),
