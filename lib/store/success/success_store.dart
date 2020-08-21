@@ -9,7 +9,7 @@ abstract class _SuccessStore with Store {
   List<ReactionDisposer> _disposers;
 
   // constructor:---------------------------------------------------------------
-  _ErrorStore() {
+  _SuccessStore() {
     _disposers = [
       reaction((_) => successMessage, reset, delay: 200),
     ];

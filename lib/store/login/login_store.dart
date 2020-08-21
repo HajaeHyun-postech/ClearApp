@@ -1,3 +1,4 @@
+import 'package:clearApp/exception/internet_connection_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -45,6 +46,7 @@ abstract class _LoginStore with Store {
 
       HttpClient.send(method: "POST", address: "/api/clear/login", body: body)
           .then((response) {
+            print(response);
             String token = response['token'];
             HttpClient.token = token;
             user = User.fromJson(JwtDecoder.decode(token));
@@ -52,6 +54,8 @@ abstract class _LoginStore with Store {
           })
           .catchError((e) => updateOnError("Login Failed"),
               test: (e) => e is AuthException)
+          .catchError((e) => updateOnError("No Internet Connection"),
+              test: (e) => e is InternetConnectionException)
           .catchError((e) => updateOnError(e.cause))
           .whenComplete(() => loading = false);
     } else {

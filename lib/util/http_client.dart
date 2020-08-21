@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:clearApp/exception/internet_connection_exception.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:clearApp/exception/auth_exception.dart';
@@ -31,9 +33,11 @@ class HttpClient {
       HttpHeaders.authorizationHeader: 'Bearer $token'
     };
 
-    var response =
-        await getHttpFunction(method, url, headers, jsonEncode(body)).call();
+    Function func =
+        await getHttpFunction(method, url, headers, jsonEncode(body))
+            .catchError((e) => throw e);
 
+    var response = await func.call();
     dynamic responseBody = jsonDecode(response.body);
     var statusCode = response.statusCode;
 
@@ -68,9 +72,14 @@ class HttpClient {
     }
   }
 
-  static Function getHttpFunction(
-      String method, String url, Map<String, String> headers, String body) {
+  static Future<Function> getHttpFunction(String method, String url,
+      Map<String, String> headers, String body) async {
     method = method.toUpperCase();
+    await Connectivity().checkConnectivity().then((result) {
+      if (result == ConnectivityResult.none)
+        throw InternetConnectionException(result.toString());
+    });
+
     switch (method) {
       case 'GET':
         return () => http.get(url, headers: headers);

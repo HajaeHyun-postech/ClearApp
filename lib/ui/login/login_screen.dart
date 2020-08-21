@@ -1,3 +1,5 @@
+import 'package:clearApp/routes.dart';
+import 'package:clearApp/util/async_navigation.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -44,6 +46,8 @@ class _LoginScreenState extends State<LoginScreen>
     loginStore.disposers
       ..add(autorun((_) {
         if (loginStore.success) {
+          AsyncNavigation.pushNamedAndRemoveUntilAsync(
+              context, Routes.homescreen, (Route<dynamic> route) => false);
           ToastGenerator.successToast(
               context, loginStore.successStore.successMessage);
         } else {

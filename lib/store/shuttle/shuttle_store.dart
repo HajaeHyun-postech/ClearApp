@@ -1,4 +1,5 @@
 import 'package:clearApp/exception/auth_exception.dart';
+import 'package:clearApp/exception/internet_connection_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
@@ -52,6 +53,8 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
+        .catchError((e) => updateOnError("No Internet Connection"),
+            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -71,6 +74,8 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
+        .catchError((e) => updateOnError("No Internet Connection"),
+            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -90,6 +95,8 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
+        .catchError((e) => updateOnError("No Internet Connection"),
+            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -116,6 +123,8 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
+        .catchError((e) => updateOnError("No Internet Connection"),
+            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -142,6 +151,8 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
+        .catchError((e) => updateOnError("No Internet Connection"),
+            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
