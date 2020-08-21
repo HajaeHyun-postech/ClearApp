@@ -55,11 +55,10 @@ abstract class _ShuttleFormStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'remaining'};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           remaining = response['remaining'];
-          updateOnSuccess("");
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
@@ -77,7 +76,8 @@ abstract class _ShuttleFormStore with Store {
     loading = true;
 
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
-    HttpClient.send(method: "POST", address: "/api/clear/shuttle", body: body)
+    await HttpClient.send(
+            method: "POST", address: "/api/clear/shuttle", body: body)
         .then((response) {
           updateOnSuccess("Order Successful");
         })
@@ -100,6 +100,7 @@ abstract class _ShuttleFormStore with Store {
       invalidAmount = false;
       amount += 1;
     }
+    getRemaining();
   }
 
   @action
@@ -110,6 +111,7 @@ abstract class _ShuttleFormStore with Store {
       invalidAmount = false;
       amount -= 1;
     }
+    getRemaining();
   }
 
   @action

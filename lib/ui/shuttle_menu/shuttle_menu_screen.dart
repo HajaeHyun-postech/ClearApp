@@ -4,6 +4,7 @@ import 'package:clearApp/ui/shuttle_menu/history_tile.dart';
 import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -37,6 +38,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   AnimationController animationController;
   ScrollController _scrollController = ScrollController();
   TabController _tabController;
+  ShuttleStore shuttleStore;
 
   final List<Widget> _tabs = [
     Tab(
@@ -71,19 +73,23 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    shuttleStore = Provider.of<ShuttleStore>(context, listen: false);
 
-    final shuttleStore = Provider.of<ShuttleStore>(context, listen: false);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        if (TAB.values[_tabController.index] == TAB.Admin) {
-          shuttleStore.getWholeUnconfirmedHistorires();
-        } else if (TAB.values[_tabController.index] == TAB.Not_Rcved) {
-          shuttleStore.getNotReceivedUsersHistories();
-        } else {
-          shuttleStore.getUsersHistories();
-        }
+        tabChangeEvent();
       }
     });
+  }
+
+  void tabChangeEvent() {
+    if (TAB.values[_tabController.index] == TAB.Admin) {
+      shuttleStore.getWholeUnconfirmedHistorires();
+    } else if (TAB.values[_tabController.index] == TAB.Not_Rcved) {
+      shuttleStore.getNotReceivedUsersHistories();
+    } else {
+      shuttleStore.getUsersHistories();
+    }
   }
 
   @override
@@ -170,7 +176,9 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                     itemCount = list.length;
 
                                     return ListView.builder(
-                                        itemCount: itemCount,
+                                        itemCount: shuttleStore.loading
+                                            ? 1
+                                            : itemCount,
                                         padding:
                                             const EdgeInsets.only(bottom: 1),
                                         scrollDirection: Axis.vertical,
@@ -223,16 +231,20 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                       'Confirm';
                                                   secondActionCaption =
                                                       'Delete';
-                                                  firstTapAction = () =>
-                                                      shuttleStore
-                                                          .confirmDeposit(
-                                                              list[index]
-                                                                  .idList);
+                                                  firstTapAction = () {
+                                                    shuttleStore
+                                                        .confirmDeposit(
+                                                            list[index].idList)
+                                                        .then((_) =>
+                                                            tabChangeEvent());
+                                                  };
                                                   secondTapAction = () =>
                                                       shuttleStore
                                                           .receiveShuttle(
                                                               list[index]
-                                                                  .idList);
+                                                                  .idList)
+                                                          .then((_) =>
+                                                              tabChangeEvent());
                                                 } else {
                                                   title =
                                                       '${list[index].orderUsage}';
@@ -244,12 +256,16 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                       shuttleStore
                                                           .receiveShuttle(
                                                               list[index]
-                                                                  .idList);
+                                                                  .idList)
+                                                          .then((_) =>
+                                                              tabChangeEvent());
                                                   secondTapAction = () =>
                                                       shuttleStore
                                                           .receiveShuttle(
                                                               list[index]
-                                                                  .idList);
+                                                                  .idList)
+                                                          .then((_) =>
+                                                              tabChangeEvent());
                                                 }
                                                 animationController.forward();
                                                 return HistoryTile(
@@ -280,6 +296,17 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                 ))))
                   ],
                 ),
+              ),
+              Observer(
+                builder: (_) {
+                  if (shuttleStore.success) {
+                    return Toast_generator.showSuccessToast(
+                        context, shuttleStore.successStore.successMessage);
+                  } else {
+                    return Toast_generator.showErrorToast(
+                        context, shuttleStore.errorStore.errorMessage);
+                  }
+                },
               )
             ],
           ),
@@ -421,6 +448,7 @@ class _MyTabBar extends StatelessWidget {
                 padding:
                     const EdgeInsets.only(left: 0, right: 0, top: 8, bottom: 8),
                 child: TabBar(
+                  labelStyle: TextStyle(fontSize: ScreenUtil().setSp(45)),
                   indicator: MD2Indicator(
                       indicatorHeight: 4,
                       indicatorColor: ClearAppTheme.black,

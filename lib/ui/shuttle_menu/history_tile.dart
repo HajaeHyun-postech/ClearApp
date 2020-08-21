@@ -1,11 +1,9 @@
-import 'package:clearApp/store/shuttle/shuttle_store.dart';
-import 'package:clearApp/widget/app_theme.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter/material.dart';
-import 'package:date_format/date_format.dart';
-import 'package:provider/provider.dart';
+
+import '../../widget/app_theme.dart';
 
 class HistoryTile extends StatefulWidget {
   final AnimationController animationController;

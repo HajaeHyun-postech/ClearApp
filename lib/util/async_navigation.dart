@@ -14,4 +14,8 @@ class AsyncNavigation {
       Navigator.of(context).pushNamed(Routes.homescreen);
     });
   }
+
+  static popUntilAsync(BuildContext context, String route) {
+    Navigator.popUntil(context, (route) => route.settings.name == route);
+  }
 }

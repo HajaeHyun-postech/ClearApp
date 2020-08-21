@@ -1,6 +1,8 @@
+import 'package:clearApp/routes.dart';
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/order_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
+import 'package:clearApp/util/async_navigation.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,9 @@ enum UsageLists {
 }
 
 class OrderForm extends StatefulWidget {
-  const OrderForm({Key key}) : super(key: key);
+  final Function onTapCallback;
+
+  const OrderForm({Key key, this.onTapCallback}) : super(key: key);
 
   @override
   OrderFormState createState() => OrderFormState();
@@ -262,7 +266,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                   _buildAmountSelection(offsetAnimation),
                   SizedBox(height: ScreenUtil().setHeight(90)),
                   OrderButton(
-                    onTap: shuttleFormStore.addOrder,
+                    onTap: () => shuttleFormStore.addOrder(),
                   )
                 ],
               ),
@@ -275,6 +279,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
               _remainingController.forward();
             }
             if (shuttleFormStore.success) {
+              AsyncNavigation.popUntilAsync(context, Routes.shuttlecockMenu);
               return Toast_generator.showSuccessToast(
                   context, shuttleFormStore.successStore.successMessage);
             } else {

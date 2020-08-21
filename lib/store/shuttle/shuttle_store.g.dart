@@ -77,13 +77,6 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     });
   }
 
-  final _$getRemainingAsyncAction = AsyncAction('_ShuttleStore.getRemaining');
-
-  @override
-  Future<dynamic> getRemaining() {
-    return _$getRemainingAsyncAction.run(() => super.getRemaining());
-  }
-
   final _$getUsersHistoriesAsyncAction =
       AsyncAction('_ShuttleStore.getUsersHistories');
 

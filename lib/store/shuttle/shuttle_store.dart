@@ -44,35 +44,16 @@ abstract class _ShuttleStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  Future getRemaining() async {
-    if (loading) return;
-    loading = true;
-    Map<String, dynamic> params = {'type': 'remaining'};
-
-    HttpClient.send(
-            method: "GET", address: "/api/clear/shuttle", params: params)
-        .then((response) {
-          remaining = response['remaining'];
-          updateOnSuccess("Loading Complete");
-        })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
-  }
-
-  @action
   Future getUsersHistories() async {
     if (loading) return;
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
-          updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
@@ -86,12 +67,11 @@ abstract class _ShuttleStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = filterNotRecieved(ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json)));
-          updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
@@ -105,12 +85,11 @@ abstract class _ShuttleStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
-          updateOnSuccess("Loading Complete");
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
@@ -125,7 +104,7 @@ abstract class _ShuttleStore with Store {
     Map<String, dynamic> params = {'type': 'receive'};
     Map<String, dynamic> body = {'id': idList};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "PATCH",
             address: "/api/clear/shuttle",
             params: params,
@@ -146,7 +125,7 @@ abstract class _ShuttleStore with Store {
     Map<String, dynamic> params = {'type': 'confirm'};
     Map<String, dynamic> body = {'id': idList};
 
-    HttpClient.send(
+    await HttpClient.send(
             method: "PATCH",
             address: "/api/clear/shuttle",
             params: params,
