@@ -1,13 +1,10 @@
-import 'package:clearApp/ui/racket_menu/racket_card.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import '../../../util/http_client.dart';
-import '../../../contants/constants.dart' as Constants;
+import '../racket_card.dart';
 import 'events.dart';
-import 'racket_current_info.dart';
 import 'racket_rent_history.dart';
 
 class RacketHstrSubject extends ChangeNotifier {
@@ -72,19 +69,19 @@ class RacketHstrSubject extends ChangeNotifier {
           Logger().i("Racket Rent event occured");
           // await addNewRentHstr(newHstr);
 
-          Toast_generator.successToast(_context, 'Rented');
+          ToastGenerator.successToast(_context, 'Rented');
           break;
 
         case EVENT.RacketReturnEvent:
           Logger().i("Racket Return event occured");
           //await addNewReturnHstr(newHstr);
-          Toast_generator.successToast(_context, 'Returned');
+          ToastGenerator.successToast(_context, 'Returned');
           break;
 
         case EVENT.FilterChangeEvent:
           Logger().i("Filter Change event occured");
           await updateFilterMenu(filter);
-          Toast_generator.successToast(_context, 'Filter Changed');
+          ToastGenerator.successToast(_context, 'Filter Changed');
           break;
         default:
           Logger().e('ERROR : unknown event: $eventType');
@@ -92,7 +89,7 @@ class RacketHstrSubject extends ChangeNotifier {
       }
     } catch (error) {
       Logger().e('error...$error');
-      Toast_generator.errorToast(_context, '$error');
+      ToastGenerator.errorToast(_context, '$error');
     } finally {
       Logger().i('Event handling finished');
     }

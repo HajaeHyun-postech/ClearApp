@@ -14,22 +14,25 @@ part 'login_store.g.dart';
 class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store {
-  //Other stores///
+  // other stores:--------------------------------------------------------------
   final ErrorStore errorStore = ErrorStore();
   final SuccessStore successStore = SuccessStore();
 
-  ///Store Variables///
+  // disposers:-----------------------------------------------------------------
+  List<ReactionDisposer> disposers = [];
+
+  // store variables:-----------------------------------------------------------
   @observable
   bool loading = false;
 
   @observable
   bool success = false;
 
-  ///Other Variable///
+  // other variables:-----------------------------------------------------------
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
   User user;
 
-  ///Actions///
+  // actions:-------------------------------------------------------------------
   @action
   Future login() async {
     if (loading) return; //No login during login
@@ -56,7 +59,15 @@ abstract class _LoginStore with Store {
     }
   }
 
-  ///Custom Functions///
+  // dispose:-------------------------------------------------------------------
+  @action
+  dispose() {
+    for (final d in disposers) {
+      d();
+    }
+  }
+
+  // functions:-----------------------------------------------------------------
   void updateOnError(String message) {
     errorStore.errorMessage = message;
     success = false;

@@ -1,9 +1,9 @@
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../widget/app_theme.dart';
 import '../../widget/popup_generator.dart';
-import '../../widget/toast_generator.dart';
 import '../login/login_info.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -175,7 +175,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     textAlign: TextAlign.left,
                   ),
                   onTap: () {
-                    Toast_generator.infoToast(context, 'Logout');
+                    ToastGenerator.infoToast(context, 'Logout');
                     Navigator.pop(context);
                   },
                 ),

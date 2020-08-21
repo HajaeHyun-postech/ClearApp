@@ -86,10 +86,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
       ..add(autorun((_) {
         if (shuttleStore.success) {
           tabChangeEvent();
-          Toast_generator.successToast(
+          ToastGenerator.successToast(
               context, shuttleStore.successStore.successMessage);
         } else {
-          Toast_generator.errorToast(
+          ToastGenerator.errorToast(
               context, shuttleStore.errorStore.errorMessage);
         }
       }));
@@ -113,8 +113,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
   @override
   Widget build(BuildContext context) {
-    final shuttleStore = Provider.of<ShuttleStore>(context);
-
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
         child: Container(

@@ -1,13 +1,11 @@
-import 'package:clearApp/ui/navigation_home_screen.dart';
-import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/toast_generator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-import 'racketdata_manage/racket_history_subject.dart';
+
+import '../../widget/app_theme.dart';
 import 'racket_card.dart';
 import 'rent_window.dart';
 
@@ -106,18 +104,18 @@ class RacketCardList extends StatelessWidget {
     return InkWell(
         onTap: racketCard.isavailable
             ? () => showBarModalBottomSheet(
-                      expand: false,
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (context, scrollController) => Material(
-                          child: CupertinoPageScaffold(
-                        child: SafeArea(
-                             child: RentWindow(racketCard),
-                        ),
-                      )),
-                    )
+                  expand: false,
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (context, scrollController) => Material(
+                      child: CupertinoPageScaffold(
+                    child: SafeArea(
+                      child: RentWindow(racketCard),
+                    ),
+                  )),
+                )
             : () =>
-                Toast_generator.errorToast(context, "It is already occupied"),
+                ToastGenerator.errorToast(context, "It is already occupied"),
         child: Container(
             color: Colors.transparent,
             child: Column(children: <Widget>[
