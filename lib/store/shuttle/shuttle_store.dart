@@ -53,8 +53,6 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
-        .catchError((e) => updateOnError("No Internet Connection"),
-            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -74,8 +72,6 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
-        .catchError((e) => updateOnError("No Internet Connection"),
-            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -95,8 +91,6 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
-        .catchError((e) => updateOnError("No Internet Connection"),
-            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -123,8 +117,6 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
-        .catchError((e) => updateOnError("No Internet Connection"),
-            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -151,8 +143,6 @@ abstract class _ShuttleStore with Store {
         })
         .catchError((e) => updateOnError("Invalid User"),
             test: (e) => e is AuthException)
-        .catchError((e) => updateOnError("No Internet Connection"),
-            test: (e) => e is InternetConnectionException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }

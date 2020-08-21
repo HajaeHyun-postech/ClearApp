@@ -54,8 +54,6 @@ abstract class _LoginStore with Store {
           })
           .catchError((e) => updateOnError("Login Failed"),
               test: (e) => e is AuthException)
-          .catchError((e) => updateOnError("No Internet Connection"),
-              test: (e) => e is InternetConnectionException)
           .catchError((e) => updateOnError(e.cause))
           .whenComplete(() => loading = false);
     } else {

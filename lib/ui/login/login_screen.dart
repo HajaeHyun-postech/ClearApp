@@ -133,22 +133,22 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                         InkWell(
                           child: Container(
-                            width: ScreenUtil().setWidth(400),
-                            height: ScreenUtil().setHeight(150),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Color(0xFF17ead9),
-                                  Color(0xFF6078ea)
-                                ]),
-                                borderRadius: BorderRadius.circular(6.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color(0xFF6078ea).withOpacity(.3),
-                                      offset: Offset(0.0, 8.0),
-                                      blurRadius: 8.0)
-                                ]),
-                            child: Observer(builder: (_) {
-                              return Material(
+                              width: ScreenUtil().setWidth(400),
+                              height: ScreenUtil().setHeight(150),
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xFF17ead9),
+                                    Color(0xFF6078ea)
+                                  ]),
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Color(0xFF6078ea).withOpacity(.3),
+                                        offset: Offset(0.0, 8.0),
+                                        blurRadius: 8.0)
+                                  ]),
+                              child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: loginStore.login,
@@ -176,9 +176,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     },
                                   )),
                                 ),
-                              );
-                            }),
-                          ),
+                              )),
                         )
                       ],
                     ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clearApp/exception/internet_connection_exception.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:clearApp/exception/auth_exception.dart';
@@ -33,11 +33,13 @@ class HttpClient {
       HttpHeaders.authorizationHeader: 'Bearer $token'
     };
 
-    Function func =
-        await getHttpFunction(method, url, headers, jsonEncode(body))
-            .catchError((e) => throw e);
+    bool hasConnection = await DataConnectionChecker().hasConnection;
+    if (!hasConnection)
+      return Future.error(
+          InternetConnectionException("No Internet Connection"));
 
-    var response = await func.call();
+    var response =
+        await getHttpFunction(method, url, headers, jsonEncode(body)).call();
     dynamic responseBody = jsonDecode(response.body);
     var statusCode = response.statusCode;
 
@@ -72,14 +74,9 @@ class HttpClient {
     }
   }
 
-  static Future<Function> getHttpFunction(String method, String url,
-      Map<String, String> headers, String body) async {
+  static Function getHttpFunction(
+      String method, String url, Map<String, String> headers, String body) {
     method = method.toUpperCase();
-    await Connectivity().checkConnectivity().then((result) {
-      if (result == ConnectivityResult.none)
-        throw InternetConnectionException(result.toString());
-    });
-
     switch (method) {
       case 'GET':
         return () => http.get(url, headers: headers);
