@@ -33,9 +33,6 @@ abstract class _ShuttleStore with Store {
   @observable
   bool success = false;
 
-  @observable
-  int remaining = 0;
-
   @computed
   int get unconfirmedPrice => calUnconfirmedPrice(histories);
 

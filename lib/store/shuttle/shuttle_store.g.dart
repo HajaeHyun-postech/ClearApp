@@ -62,21 +62,6 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     });
   }
 
-  final _$remainingAtom = Atom(name: '_ShuttleStore.remaining');
-
-  @override
-  int get remaining {
-    _$remainingAtom.reportRead();
-    return super.remaining;
-  }
-
-  @override
-  set remaining(int value) {
-    _$remainingAtom.reportWrite(value, super.remaining, () {
-      super.remaining = value;
-    });
-  }
-
   final _$getUsersHistoriesAsyncAction =
       AsyncAction('_ShuttleStore.getUsersHistories');
 
@@ -139,7 +124,6 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
 histories: ${histories},
 loading: ${loading},
 success: ${success},
-remaining: ${remaining},
 unconfirmedPrice: ${unconfirmedPrice}
     ''';
   }
