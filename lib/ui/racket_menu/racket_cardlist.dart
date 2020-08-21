@@ -17,7 +17,7 @@ class RacketCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RacketCardContent = Container(
+    final racketCardContent = Container(
       margin: EdgeInsets.fromLTRB(
           ScreenUtil().setWidth(70),
           ScreenUtil().setHeight(0),
@@ -92,8 +92,8 @@ class RacketCardList extends StatelessWidget {
       ),
     );
 
-    final RacketCardf = Container(
-      child: RacketCardContent,
+    final racketCardf = Container(
+      child: racketCardContent,
       height: ScreenUtil().setHeight(340),
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -119,7 +119,7 @@ class RacketCardList extends StatelessWidget {
         child: Container(
             color: Colors.transparent,
             child: Column(children: <Widget>[
-              RacketCardf,
+              racketCardf,
               Divider(
                 indent: ScreenUtil().setWidth(70),
                 endIndent: ScreenUtil().setWidth(70),

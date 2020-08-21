@@ -25,7 +25,7 @@ class Routes {
     homescreen: (BuildContext context) => NavigationHomeScreen(),
     shuttlecockMenu: (BuildContext context) => ShuttleMenuScreenWithProvider(),
     gamesMenu: (BuildContext context) => GamesHomeScreenWithProvider(),
-    racketMenu: (BuildContext context) => RacketmenuHomepage(),
+    racketMenu: (BuildContext context) => RacketmenuHomepageWithProvider(),
     scoresMenu: (BuildContext context) => HotelHomeScreen(),
     gatchaMenu: (BuildContext context) => FitnessAppHomeScreen(),
   };

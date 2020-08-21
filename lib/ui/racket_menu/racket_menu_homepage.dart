@@ -1,7 +1,9 @@
 import 'package:clearApp/store/racket/racket_store.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
+import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'racket_cardlist.dart';
 import 'racket_card.dart';
@@ -42,6 +44,7 @@ class RacketScrollView extends StatefulWidget {
 class _RacketScrollView extends State<RacketScrollView> {
   final ScrollController _scrollController = ScrollController();
   SelectionMenuController selectionMenuController;
+  RacketStore racketStore;
 
   @override
   void initState() {
@@ -52,12 +55,28 @@ class _RacketScrollView extends State<RacketScrollView> {
     selectionMenuController = SelectionMenuController();
   }
 
-  int return_available() {
-    int count = 0;
-    for (int i = 0; i < racketcardlist.length; i++) {
-      if (racketcardlist[i].isavailable) count++;
-    }
-    return count;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    racketStore = Provider.of<RacketStore>(context);
+
+    racketStore.disposers
+      ..add(autorun((_) {
+        if (racketStore.success) {
+          racketStore.getRackets();
+          ToastGenerator.successToast(
+              context, racketStore.successStore.successMessage);
+        } else {
+          ToastGenerator.errorToast(
+              context, racketStore.errorStore.errorMessage);
+        }
+      }));
+
+    ///racketStore.rackets 에 라켓 정보가 들어있음
+    ///위 코드는 check out/ in 이 성공 / 실패 할때마다 토스트를 띄우고, refresh 하는 코드.
+    ///shuttle_menu/order_form 을 참고하면 됨.
+    ///프로바이더 패턴으로 racketStore을 얻어서, store 의 action 함수를 실행하면 됨.
+    ///toast message는 위 코드에서 알아서 띄우므로, UI 쪽에서 코드를 집어넣을 필요 없음.
   }
 
   @override

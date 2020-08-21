@@ -1,5 +1,4 @@
 import 'package:clearApp/exception/auth_exception.dart';
-import 'package:clearApp/exception/internet_connection_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
