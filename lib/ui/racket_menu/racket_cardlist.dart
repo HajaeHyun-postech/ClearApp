@@ -7,7 +7,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
-import 'racket_card.dart';
 import 'rent_window.dart';
 import 'package:clearApp/store/racket/racket_store.dart';
 

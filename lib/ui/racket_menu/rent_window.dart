@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
-import 'racket_card.dart';
 import 'package:clearApp/store/racket/racket_store.dart';
 
 class RentWindow extends StatefulWidget {

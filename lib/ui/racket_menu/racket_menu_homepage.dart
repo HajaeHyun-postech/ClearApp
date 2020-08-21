@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'racket_cardlist.dart';
-import 'racket_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'custom_filter.dart';
 import 'package:selection_menu/selection_menu.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class RacketmenuHomepageWithProvider extends StatelessWidget {
   @override
@@ -81,35 +81,36 @@ class _RacketScrollView extends State<RacketScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    //print(racketStore.rackets[0].name);
     return Expanded(
       child: Container(
         color: ClearAppTheme.buildLightTheme().backgroundColor,
-        child: CustomScrollView(
-          scrollDirection: Axis.vertical,
-          controller: _scrollController,
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => Row(children: <Widget>[
-                  SizedBox(width: ScreenUtil().setWidth(70)),
-                  CustomFilter(),
-                ]),
-                childCount: 1,
-              ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
-              sliver: SliverList(
+        child: Observer(builder: (_) {
+          return CustomScrollView(
+            scrollDirection: Axis.vertical,
+            controller: _scrollController,
+            slivers: <Widget>[
+              SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) =>
-                      RacketCardList(racketStore.rackets[index]),
-                  childCount: racketcardlist.length,
+                  (context, index) => Row(children: <Widget>[
+                    SizedBox(width: ScreenUtil().setWidth(70)),
+                    CustomFilter(),
+                  ]),
+                  childCount: 1,
                 ),
               ),
-            ),
-          ],
-        ),
+              SliverPadding(
+                padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                        RacketCardList(racketStore.rackets[index]),
+                    childCount: racketStore.rackets.length,
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
