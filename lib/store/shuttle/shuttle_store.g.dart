@@ -101,9 +101,9 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
       AsyncAction('_ShuttleStore.confirmDeposit');
 
   @override
-  Future<dynamic> confirmDeposit(List<int> idList, bool comfirmed) {
+  Future<dynamic> confirmDeposit(List<int> idList, bool confirmed) {
     return _$confirmDepositAsyncAction
-        .run(() => super.confirmDeposit(idList, comfirmed));
+        .run(() => super.confirmDeposit(idList, confirmed));
   }
 
   final _$_ShuttleStoreActionController =

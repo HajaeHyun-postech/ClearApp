@@ -1,12 +1,24 @@
+import 'package:clearApp/store/racket/racket_store.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'racket_cardlist.dart';
 import 'racket_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'custom_filter.dart';
 import 'package:selection_menu/selection_menu.dart';
+
+class RacketmenuHomepageWithProvider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Provider<RacketStore>(
+      create: (_) => RacketStore(),
+      child: RacketmenuHomepage(),
+    );
+  }
+}
 
 class RacketmenuHomepage extends StatelessWidget {
   @override
