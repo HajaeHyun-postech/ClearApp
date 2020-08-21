@@ -47,7 +47,7 @@ abstract class _RacketStore with Store {
 
     HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
         .then((response) {
-          histories = ConvertUtil.jsonArrayToObjectList(
+          rackets = ConvertUtil.jsonArrayToObjectList(
               response, (json) => Racket.fromJson(json));
         })
         .catchError((e) => updateOnError("Invalid User"),
