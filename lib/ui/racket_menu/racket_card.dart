@@ -3,6 +3,9 @@ class RacketCard {
   final String name;
   final String location;
   final String image;
+  final String type;
+  final String balance;
+  final int weight;
   final bool isavailable;
 
   RacketCard({
@@ -11,9 +14,11 @@ class RacketCard {
     this.location,
     this.image,
     this.isavailable,
+    this.balance,
+    this.type,
+    this.weight,
   });
 }
-
 
 List<RacketCard> testlist = [
   RacketCard(
@@ -21,6 +26,9 @@ List<RacketCard> testlist = [
     name: "YONEX",
     location: "TEST1",
     image: 'assets/logo/yonex.png',
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -28,6 +36,9 @@ List<RacketCard> testlist = [
     name: "VICTOR",
     location: "TEST1",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -35,6 +46,9 @@ List<RacketCard> testlist = [
     name: "VICTOR",
     location: "TEST1",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -42,6 +56,9 @@ List<RacketCard> testlist = [
     name: "Earth",
     location: "TEST1",
     image: 'assets/logo/yonex.png',
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -49,6 +66,9 @@ List<RacketCard> testlist = [
     name: "Mercury",
     location: "TEST1",
     image: "assets/logo/yonex.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -56,9 +76,12 @@ List<RacketCard> testlist = [
     name: "Mercury",
     location: "TEST1",
     image: "assets/logo/yonex.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
-  ];
+];
 
 List<RacketCard> racketcardlist = [
   RacketCard(
@@ -66,6 +89,9 @@ List<RacketCard> racketcardlist = [
     name: "YONEX",
     location: "ASTROX 5FX",
     image: 'assets/logo/yonex.png',
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -73,6 +99,9 @@ List<RacketCard> racketcardlist = [
     name: "VICTOR",
     location: "ARS-70FNA",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -80,6 +109,9 @@ List<RacketCard> racketcardlist = [
     name: "VICTOR",
     location: "TK-70F",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -87,6 +119,9 @@ List<RacketCard> racketcardlist = [
     name: "Earth",
     location: "VOLTRIC LD200",
     image: 'assets/logo/yonex.png',
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -94,6 +129,9 @@ List<RacketCard> racketcardlist = [
     name: "Mercury",
     location: "NANORAY 800",
     image: "assets/logo/yonex.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -101,6 +139,9 @@ List<RacketCard> racketcardlist = [
     name: "Mercury",
     location: "NANORAY 300",
     image: "assets/logo/yonex.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -108,6 +149,9 @@ List<RacketCard> racketcardlist = [
     name: "Mercury",
     location: "VARS-80X C",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
   ),
   RacketCard(
@@ -115,12 +159,19 @@ List<RacketCard> racketcardlist = [
     name: "Mercury",
     location: "ASTROX 100 ZX",
     image: "assets/logo/yonex.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: false,
-  ),RacketCard(
+  ),
+  RacketCard(
     id: "9",
     name: "Mercury",
     location: "AURASPEED 90S",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
   RacketCard(
@@ -128,7 +179,9 @@ List<RacketCard> racketcardlist = [
     name: "Mercury",
     location: "HYPERNANO 70",
     image: "assets/logo/victor.png",
+    balance: 'Head heavy',
+    type: 'Attack',
+    weight: 4,
     isavailable: true,
   ),
-
 ];

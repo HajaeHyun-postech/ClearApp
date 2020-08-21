@@ -81,6 +81,7 @@ class _RacketScrollView extends State<RacketScrollView> {
 
   @override
   Widget build(BuildContext context) {
+    //print(racketStore.rackets[0].name);
     return Expanded(
       child: Container(
         color: ClearAppTheme.buildLightTheme().backgroundColor,
@@ -101,7 +102,8 @@ class _RacketScrollView extends State<RacketScrollView> {
               padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => RacketCardList(racketcardlist[index]),
+                  (context, index) =>
+                      RacketCardList(racketStore.rackets[index]),
                   childCount: racketcardlist.length,
                 ),
               ),
