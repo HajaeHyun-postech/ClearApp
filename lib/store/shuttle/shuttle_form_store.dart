@@ -47,7 +47,7 @@ abstract class _ShuttleFormStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'remaining'};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           remaining = response['remaining'];
@@ -68,8 +68,7 @@ abstract class _ShuttleFormStore with Store {
     loading = true;
 
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
-    await HttpClient.send(
-            method: "POST", address: "/api/clear/shuttle", body: body)
+    HttpClient.send(method: "POST", address: "/api/clear/shuttle", body: body)
         .then((response) {
           updateOnSuccess("Order Successful");
         })

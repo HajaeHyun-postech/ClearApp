@@ -43,7 +43,7 @@ abstract class _ShuttleStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
@@ -61,7 +61,7 @@ abstract class _ShuttleStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = filterNotRecieved(ConvertUtil.jsonArrayToObjectList(
@@ -79,7 +79,7 @@ abstract class _ShuttleStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "GET", address: "/api/clear/shuttle", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
@@ -98,7 +98,7 @@ abstract class _ShuttleStore with Store {
     Map<String, dynamic> params = {'type': 'receive'};
     Map<String, dynamic> body = {'id': idList};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "PATCH",
             address: "/api/clear/shuttle",
             params: params,
@@ -119,7 +119,7 @@ abstract class _ShuttleStore with Store {
     Map<String, dynamic> params = {'type': 'confirm'};
     Map<String, dynamic> body = {'id': idList};
 
-    await HttpClient.send(
+    HttpClient.send(
             method: "PATCH",
             address: "/api/clear/shuttle",
             params: params,
