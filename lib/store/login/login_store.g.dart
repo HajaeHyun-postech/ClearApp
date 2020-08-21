@@ -46,6 +46,19 @@ mixin _$LoginStore on _LoginStore, Store {
     return _$loginAsyncAction.run(() => super.login());
   }
 
+  final _$_LoginStoreActionController = ActionController(name: '_LoginStore');
+
+  @override
+  dynamic dispose() {
+    final _$actionInfo =
+        _$_LoginStoreActionController.startAction(name: '_LoginStore.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

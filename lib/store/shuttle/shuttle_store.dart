@@ -16,7 +16,7 @@ abstract class _ShuttleStore with Store {
   final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
-  List<ReactionDisposer> disposers;
+  List<ReactionDisposer> disposers = [];
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
@@ -40,6 +40,7 @@ abstract class _ShuttleStore with Store {
   @action
   Future getUsersHistories() async {
     if (loading) return;
+
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
@@ -58,6 +59,7 @@ abstract class _ShuttleStore with Store {
   @action
   Future getNotReceivedUsersHistories() async {
     if (loading) return;
+
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
@@ -76,6 +78,7 @@ abstract class _ShuttleStore with Store {
   @action
   Future getWholeUnconfirmedHistorires() async {
     if (loading) return;
+
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
@@ -92,8 +95,13 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future receiveShuttle(List<int> idList) async {
+  Future receiveShuttle(List<int> idList, bool received) async {
+    if (received) {
+      updateOnError("Alreay Received");
+      return;
+    }
     if (loading) return;
+
     loading = true;
     Map<String, dynamic> params = {'type': 'receive'};
     Map<String, dynamic> body = {'id': idList};
@@ -113,8 +121,13 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future confirmDeposit(List<int> idList) async {
+  Future confirmDeposit(List<int> idList, bool confirmed) async {
+    if (confirmed) {
+      updateOnError("Already Confirmed");
+      return;
+    }
     if (loading) return;
+
     loading = true;
     Map<String, dynamic> params = {'type': 'confirm'};
     Map<String, dynamic> body = {'id': idList};

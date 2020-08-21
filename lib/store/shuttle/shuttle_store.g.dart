@@ -92,16 +92,18 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
       AsyncAction('_ShuttleStore.receiveShuttle');
 
   @override
-  Future<dynamic> receiveShuttle(List<int> idList) {
-    return _$receiveShuttleAsyncAction.run(() => super.receiveShuttle(idList));
+  Future<dynamic> receiveShuttle(List<int> idList, bool received) {
+    return _$receiveShuttleAsyncAction
+        .run(() => super.receiveShuttle(idList, received));
   }
 
   final _$confirmDepositAsyncAction =
       AsyncAction('_ShuttleStore.confirmDeposit');
 
   @override
-  Future<dynamic> confirmDeposit(List<int> idList) {
-    return _$confirmDepositAsyncAction.run(() => super.confirmDeposit(idList));
+  Future<dynamic> confirmDeposit(List<int> idList, bool comfirmed) {
+    return _$confirmDepositAsyncAction
+        .run(() => super.confirmDeposit(idList, comfirmed));
   }
 
   final _$_ShuttleStoreActionController =

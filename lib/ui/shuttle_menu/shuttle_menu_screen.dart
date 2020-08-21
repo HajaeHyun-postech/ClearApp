@@ -108,6 +108,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    shuttleStore.dispose();
     super.dispose();
   }
 
@@ -214,6 +215,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                           1.0,
                                                           curve: Curves
                                                               .fastOutSlowIn)));
+                                          animationController.forward();
 
                                           String title;
                                           String firstActionCaption;
@@ -225,39 +227,28 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                 '${list[index].user.name} : ${list[index].orderUsage}';
                                             firstActionCaption = 'Confirm';
                                             secondActionCaption = 'Delete';
-                                            firstTapAction = () {
-                                              if (list[index]
-                                                  .depositConfirmed) {
-                                                shuttleStore.updateOnError(
-                                                    "Alreay confirmed");
-                                              } else {
+                                            firstTapAction = () =>
                                                 shuttleStore.confirmDeposit(
-                                                    list[index].idList);
-                                              }
-                                            };
-                                            secondTapAction = () => shuttleStore
-                                                .receiveShuttle(
-                                                    list[index].idList)
-                                                .then((_) => tabChangeEvent());
+                                                    list[index].idList,
+                                                    list[index]
+                                                        .depositConfirmed);
+                                            secondTapAction = () =>
+                                                shuttleStore.receiveShuttle(
+                                                    list[index].idList,
+                                                    list[index].received);
                                           } else {
                                             title = '${list[index].orderUsage}';
                                             firstActionCaption = 'Receive';
                                             secondActionCaption = 'Delete';
-                                            firstTapAction = () {
-                                              if (list[index].received) {
-                                                shuttleStore.updateOnError(
-                                                    "Alreay Received");
-                                              } else {
+                                            firstTapAction = () =>
                                                 shuttleStore.receiveShuttle(
-                                                    list[index].idList);
-                                              }
-                                            };
-                                            secondTapAction = () {
-                                              shuttleStore.receiveShuttle(
-                                                  list[index].idList);
-                                            };
+                                                    list[index].idList,
+                                                    list[index].received);
+                                            secondTapAction = () =>
+                                                shuttleStore.receiveShuttle(
+                                                    list[index].idList,
+                                                    list[index].received);
                                           }
-                                          animationController.forward();
                                           return HistoryTile(
                                             animation: animation,
                                             animationController:

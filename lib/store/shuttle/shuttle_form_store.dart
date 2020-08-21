@@ -106,6 +106,8 @@ abstract class _ShuttleFormStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
+    usageString = '';
+    amount = 1;
     for (final d in disposers) {
       d();
     }
