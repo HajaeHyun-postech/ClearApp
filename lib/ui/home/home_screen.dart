@@ -1,5 +1,7 @@
+import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../widget/app_theme.dart';
 import 'model/homelist.dart';
@@ -36,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: ClearAppTheme.white,
       body: FutureBuilder<bool>(
@@ -82,8 +85,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   animationController: animationController,
                                   listData: homeList[index],
                                   callBack: () {
-                                    Navigator.pushNamed(context,
-                                        homeList[index].navigateScreen);
+                                    Navigator.pushNamed(
+                                        context, homeList[index].navigateScreen,
+                                        arguments: user);
                                   },
                                 );
                               },

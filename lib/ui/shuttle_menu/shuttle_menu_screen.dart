@@ -1,3 +1,4 @@
+import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -23,7 +24,7 @@ class ShuttleMenuScreenWithProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<ShuttleStore>(
       create: (_) => ShuttleStore(),
-      child: ShuttleMenuScreen(),
+      child: ShuttleMenuScreen(user: ModalRoute.of(context).settings.arguments),
     );
   }
 }
@@ -31,6 +32,10 @@ class ShuttleMenuScreenWithProvider extends StatelessWidget {
 enum TAB { Total, Not_Rcved, Admin }
 
 class ShuttleMenuScreen extends StatefulWidget {
+  final User user;
+
+  const ShuttleMenuScreen({Key key, this.user}) : super(key: key);
+
   @override
   ShuttleMenuScreenState createState() => ShuttleMenuScreenState();
 }
@@ -42,26 +47,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   TabController _tabController;
   ShuttleStore shuttleStore;
 
-  final List<Widget> _tabs = [
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('TOTAL'),
-      ),
-    ),
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('NOT RCVED'),
-      ),
-    ),
-    Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: Text('ADMIN'),
-      ),
-    ),
-  ];
+  List<Widget> _tabs;
 
   @override
   void initState() {
@@ -77,12 +63,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     super.didChangeDependencies();
     shuttleStore = Provider.of<ShuttleStore>(context);
 
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        tabChangeEvent();
-      }
-    });
-
     shuttleStore.disposers
       ..add(autorun((_) {
         if (shuttleStore.success) {
@@ -94,6 +74,34 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
               context, shuttleStore.errorStore.errorMessage);
         }
       }));
+
+    _tabs = [
+      Tab(
+        child: Align(
+          alignment: Alignment.center,
+          child: Text('TOTAL'),
+        ),
+      ),
+      Tab(
+        child: Align(
+          alignment: Alignment.center,
+          child: Text('NOT RCVED'),
+        ),
+      ),
+      if (widget.user.isAdmin)
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('ADMIN'),
+          ),
+        ),
+    ];
+
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        tabChangeEvent();
+      }
+    });
   }
 
   void tabChangeEvent() {
@@ -115,6 +123,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+    print(user.toJson());
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
         child: Container(

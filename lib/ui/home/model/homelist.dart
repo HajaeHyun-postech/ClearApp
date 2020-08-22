@@ -11,7 +11,6 @@ class HomeList {
   String imagePath;
   String title;
 
-  //TODO : fix nagigateScreen
   static List<HomeList> homeList = [
     HomeList(
       imagePath: 'assets/menu/shuttleCock.png',
