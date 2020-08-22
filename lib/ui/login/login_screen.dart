@@ -47,7 +47,8 @@ class _LoginScreenState extends State<LoginScreen>
       ..add(autorun((_) {
         if (loginStore.success) {
           AsyncNavigation.pushNamedAndRemoveUntilAsync(
-              context, Routes.homescreen, (Route<dynamic> route) => false);
+              context, Routes.homescreen, (Route<dynamic> route) => false,
+              arguments: loginStore.user);
           ToastGenerator.successToast(
               context, loginStore.successStore.successMessage);
         } else {

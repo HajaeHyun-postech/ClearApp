@@ -5,7 +5,7 @@ import 'ui/games_menu/games_home_screen.dart';
 import 'ui/hotel_booking/hotel_home_screen.dart';
 import 'ui/login/login_screen.dart';
 import 'ui/navigation_home_screen.dart';
-import 'ui/racket_menu/racket_menu_homepage.dart';
+import 'ui/racket_menu/racket_menu_home_screen.dart';
 import 'ui/shuttle_menu/shuttle_menu_screen.dart';
 
 class Routes {
@@ -22,10 +22,10 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     login: (BuildContext context) => LoginScreenWithProvider(),
-    homescreen: (BuildContext context) => NavigationHomeScreen(),
+    homescreen: (BuildContext context) => NavigationHomeScreenWithProvider(),
     shuttlecockMenu: (BuildContext context) => ShuttleMenuScreenWithProvider(),
     gamesMenu: (BuildContext context) => GamesHomeScreenWithProvider(),
-    racketMenu: (BuildContext context) => RacketmenuHomepageWithProvider(),
+    racketMenu: (BuildContext context) => RacketMenuHomeScreenWithProvider(),
     scoresMenu: (BuildContext context) => HotelHomeScreen(),
     gatchaMenu: (BuildContext context) => FitnessAppHomeScreen(),
   };

@@ -12,17 +12,17 @@ import 'custom_filter.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class RacketmenuHomepageWithProvider extends StatelessWidget {
+class RacketMenuHomeScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<RacketStore>(
       create: (_) => RacketStore(),
-      child: RacketmenuHomepage(),
+      child: RacketMenuHomeScreen(),
     );
   }
 }
 
-class RacketmenuHomepage extends StatelessWidget {
+class RacketMenuHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

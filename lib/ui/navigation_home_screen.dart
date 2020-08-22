@@ -1,5 +1,7 @@
+import 'package:clearApp/vo/user/user.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_drawer/drawer_user_controller.dart';
 import 'custom_drawer/home_drawer.dart';
@@ -7,6 +9,14 @@ import 'feedback_screen.dart';
 import 'help_screen.dart';
 import 'home_screen.dart';
 import 'invite_friend_screen.dart';
+
+class NavigationHomeScreenWithProvider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final User user = ModalRoute.of(context).settings.arguments;
+    return Provider<User>.value(value: user, child: NavigationHomeScreen());
+  }
+}
 
 class NavigationHomeScreen extends StatefulWidget {
   @override

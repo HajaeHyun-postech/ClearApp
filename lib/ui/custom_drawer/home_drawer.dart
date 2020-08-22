@@ -1,10 +1,11 @@
+import 'package:clearApp/vo/user/user.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../widget/app_theme.dart';
 import '../../widget/popup_generator.dart';
-import '../login/login_info.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -62,6 +63,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: ClearAppTheme.notWhite.withOpacity(0.5),
       body: Column(
@@ -116,7 +118,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 4),
                     child: Text(
-                      '${LoginInfo().studentId}  ${LoginInfo().name}',
+                      '${user.studentId}  ${user.name}',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontWeight: FontWeight.w500,

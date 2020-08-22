@@ -8,7 +8,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
 import 'rent_window.dart';
-import 'package:clearApp/store/racket/racket_store.dart';
 
 class RacketCardList extends StatelessWidget {
   final Racket racketCard;
@@ -103,6 +102,7 @@ class RacketCardList extends StatelessWidget {
     );
 
     return InkWell(
+        //TODO : error Toast 로직 store 로 옮겨!!!!
         onTap: racketCard.available
             ? () => showBarModalBottomSheet(
                   expand: false,

@@ -2,10 +2,12 @@ import 'package:clearApp/routes.dart';
 import 'package:flutter/cupertino.dart';
 
 class AsyncNavigation {
-  static pushNamedAndRemoveUntilAsync(BuildContext context, String route,
-      Function(Route<dynamic>) predicate) async {
+  static pushNamedAndRemoveUntilAsync(
+      BuildContext context, String route, Function(Route<dynamic>) predicate,
+      {Object arguments}) async {
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(route, predicate);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(route, predicate, arguments: arguments);
     });
   }
 

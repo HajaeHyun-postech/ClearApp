@@ -30,6 +30,7 @@ abstract class _LoginStore with Store {
 
   // other variables:-----------------------------------------------------------
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
+
   User user;
 
   // actions:-------------------------------------------------------------------
@@ -45,7 +46,6 @@ abstract class _LoginStore with Store {
 
       HttpClient.send(method: "POST", address: "/api/clear/login", body: body)
           .then((response) {
-            print(response);
             String token = response['token'];
             HttpClient.token = token;
             user = User.fromJson(JwtDecoder.decode(token));
