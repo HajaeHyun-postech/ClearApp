@@ -42,17 +42,6 @@ mixin _$ErrorStore on _ErrorStore, Store {
   final _$_ErrorStoreActionController = ActionController(name: '_ErrorStore');
 
   @override
-  void setErrorMessage(String message) {
-    final _$actionInfo = _$_ErrorStoreActionController.startAction(
-        name: '_ErrorStore.setErrorMessage');
-    try {
-      return super.setErrorMessage(message);
-    } finally {
-      _$_ErrorStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void reset(bool value) {
     final _$actionInfo =
         _$_ErrorStoreActionController.startAction(name: '_ErrorStore.reset');

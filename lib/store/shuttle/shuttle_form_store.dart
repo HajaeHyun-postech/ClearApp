@@ -98,6 +98,8 @@ abstract class _ShuttleFormStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
+    errorStore.dispose();
+    successStore.dispose();
     for (final d in disposers) {
       d();
     }

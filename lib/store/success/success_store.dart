@@ -24,14 +24,11 @@ abstract class _SuccessStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  void setSuccessMessage(String message) {
-    this.successMessage = message;
-  }
-
-  @action
   void reset(bool value) {
-    successMessage = '';
-    success = false;
+    if (value) {
+      successMessage = '';
+      success = false;
+    }
   }
 
   // dispose:-------------------------------------------------------------------

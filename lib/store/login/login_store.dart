@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../exception/auth_exception.dart';
 import '../../util/http_client.dart';
 import '../../vo/user/user.dart';
 import '../error/error_store.dart';
@@ -58,6 +57,8 @@ abstract class _LoginStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
+    errorStore.dispose();
+    successStore.dispose();
     for (final d in disposers) {
       d();
     }

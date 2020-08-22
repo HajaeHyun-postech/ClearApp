@@ -57,16 +57,20 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
       }))
       ..add(reaction((_) => shuttleFormStore.amount,
           (_) => shuttleFormStore.getRemaining()))
-      ..add(when((_) => shuttleFormStore.successStore.success, () {
-        widget.onSuccess();
-        ToastGenerator.successToast(
-            context, shuttleFormStore.successStore.successMessage);
-        Navigator.of(context).pop();
+      ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
+        if (success) {
+          widget.onSuccess();
+          ToastGenerator.successToast(
+              context, shuttleFormStore.successStore.successMessage);
+          Navigator.of(context).pop();
+        }
       }))
-      ..add(when(
-          (_) => shuttleFormStore.errorStore.error,
-          () => ToastGenerator.errorToast(
-              context, shuttleFormStore.errorStore.errorMessage)));
+      ..add(reaction((_) => shuttleFormStore.errorStore.error, (error) {
+        if (error) {
+          ToastGenerator.errorToast(
+              context, shuttleFormStore.errorStore.errorMessage);
+        }
+      }));
   }
 
   @override

@@ -43,17 +43,21 @@ class _LoginScreenState extends State<LoginScreen>
     loginStore = Provider.of<LoginStore>(context);
 
     loginStore.disposers
-      ..add(when((_) => loginStore.successStore.success, () {
-        ToastGenerator.successToast(
-            context, loginStore.successStore.successMessage);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.homescreen, (Route<dynamic> route) => false,
-            arguments: loginStore.user);
+      ..add(reaction((_) => loginStore.successStore.success, (success) {
+        if (success) {
+          ToastGenerator.successToast(
+              context, loginStore.successStore.successMessage);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homescreen, (Route<dynamic> route) => false,
+              arguments: loginStore.user);
+        }
       }))
-      ..add(when(
-          (_) => loginStore.errorStore.error,
-          () => ToastGenerator.errorToast(
-              context, loginStore.errorStore.errorMessage)));
+      ..add(reaction((_) => loginStore.errorStore.error, (error) {
+        if (error) {
+          ToastGenerator.errorToast(
+              context, loginStore.errorStore.errorMessage);
+        }
+      }));
   }
 
   void _radio() {

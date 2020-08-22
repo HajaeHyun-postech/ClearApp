@@ -88,6 +88,8 @@ abstract class _RacketStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
+    errorStore.dispose();
+    successStore.dispose();
     for (final d in disposers) {
       d();
     }

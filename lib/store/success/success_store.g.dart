@@ -43,17 +43,6 @@ mixin _$SuccessStore on _SuccessStore, Store {
       ActionController(name: '_SuccessStore');
 
   @override
-  void setSuccessMessage(String message) {
-    final _$actionInfo = _$_SuccessStoreActionController.startAction(
-        name: '_SuccessStore.setSuccessMessage');
-    try {
-      return super.setSuccessMessage(message);
-    } finally {
-      _$_SuccessStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void reset(bool value) {
     final _$actionInfo = _$_SuccessStoreActionController.startAction(
         name: '_SuccessStore.reset');

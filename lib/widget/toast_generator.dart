@@ -5,10 +5,10 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ToastGenerator {
-  static void errorToast(BuildContext context, String decs) {
-    if (decs != null && decs.isNotEmpty) {
+  static void errorToast(BuildContext context, String desc) {
+    if (desc != null && desc.isNotEmpty) {
       showToast(
-        decs,
+        desc,
         context: context,
         animation: StyledToastAnimation.slideFromBottom,
         reverseAnimation: StyledToastAnimation.fade,
@@ -28,10 +28,10 @@ class ToastGenerator {
     }
   }
 
-  static void successToast(BuildContext context, String decs) {
-    if (decs != null && decs.isNotEmpty) {
+  static void successToast(BuildContext context, String desc) {
+    if (desc != null && desc.isNotEmpty) {
       showToast(
-        decs,
+        desc,
         context: context,
         animation: StyledToastAnimation.slideFromBottom,
         reverseAnimation: StyledToastAnimation.fade,
@@ -51,10 +51,10 @@ class ToastGenerator {
     }
   }
 
-  static void infoToast(BuildContext context, String decs) {
-    if (decs != null && decs.isNotEmpty) {
+  static void infoToast(BuildContext context, String desc) {
+    if (desc != null && desc.isNotEmpty) {
       showToast(
-        decs,
+        desc,
         context: context,
         animation: StyledToastAnimation.slideFromBottom,
         reverseAnimation: StyledToastAnimation.fade,

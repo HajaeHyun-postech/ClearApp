@@ -11,7 +11,7 @@ abstract class _ErrorStore with Store {
   // constructor:---------------------------------------------------------------
   _ErrorStore() {
     _disposers = [
-      reaction((_) => error, reset, delay: 100),
+      reaction((_) => error, reset, delay: 200),
     ];
   }
 
@@ -23,15 +23,13 @@ abstract class _ErrorStore with Store {
   bool error = false;
 
   // actions:-------------------------------------------------------------------
-  @action
-  void setErrorMessage(String message) {
-    this.errorMessage = message;
-  }
 
   @action
   void reset(bool value) {
-    errorMessage = '';
-    error = false;
+    if (value) {
+      errorMessage = '';
+      error = false;
+    }
   }
 
   // dispose:-------------------------------------------------------------------
