@@ -24,21 +24,6 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_LoginStore.success');
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
   final _$loginAsyncAction = AsyncAction('_LoginStore.login');
 
   @override
@@ -62,8 +47,7 @@ mixin _$LoginStore on _LoginStore, Store {
   @override
   String toString() {
     return '''
-loading: ${loading},
-success: ${success}
+loading: ${loading}
     ''';
   }
 }

@@ -25,9 +25,6 @@ abstract class _LoginStore with Store {
   @observable
   bool loading = false;
 
-  @observable
-  bool success = false;
-
   // other variables:-----------------------------------------------------------
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
 
@@ -69,11 +66,11 @@ abstract class _LoginStore with Store {
   // functions:-----------------------------------------------------------------
   void updateOnError(String message) {
     errorStore.errorMessage = message;
-    success = false;
+    errorStore.error = true;
   }
 
   void updateOnSuccess(String message) {
     successStore.successMessage = message;
-    success = true;
+    successStore.success = true;
   }
 }

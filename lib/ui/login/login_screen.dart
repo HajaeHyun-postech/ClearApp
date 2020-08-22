@@ -1,5 +1,4 @@
 import 'package:clearApp/routes.dart';
-import 'package:clearApp/util/async_navigation.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -44,18 +43,16 @@ class _LoginScreenState extends State<LoginScreen>
     loginStore = Provider.of<LoginStore>(context);
 
     loginStore.disposers
-      ..add(autorun((_) {
-        if (loginStore.success) {
-          AsyncNavigation.pushNamedAndRemoveUntilAsync(
-              context, Routes.homescreen, (Route<dynamic> route) => false,
-              arguments: loginStore.user);
-          ToastGenerator.successToast(
-              context, loginStore.successStore.successMessage);
-        } else {
-          ToastGenerator.errorToast(
-              context, loginStore.errorStore.errorMessage);
-        }
-      }));
+      ..add(reaction((_) => loginStore.successStore.success, (_) {
+        ToastGenerator.successToast(
+            context, loginStore.successStore.successMessage);
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.homescreen, (Route<dynamic> route) => false);
+      }))
+      ..add(reaction(
+          (_) => loginStore.errorStore.error,
+          (_) => ToastGenerator.errorToast(
+              context, loginStore.errorStore.errorMessage)));
   }
 
   void _radio() {
