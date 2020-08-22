@@ -55,7 +55,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    _tabController = TabController(length: TAB.values.length, vsync: this);
   }
 
   @override
@@ -88,7 +87,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
           child: Text('NOT RCVED'),
         ),
       ),
-      if (widget.user.isAdmin)
+      if (!widget.user.isAdmin)
         Tab(
           child: Align(
             alignment: Alignment.center,
@@ -96,6 +95,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
           ),
         ),
     ];
+
+    _tabController = TabController(length: _tabs.length, vsync: this);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -123,8 +124,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    print(user.toJson());
     return Theme(
         data: ClearAppTheme.buildLightTheme(),
         child: Container(

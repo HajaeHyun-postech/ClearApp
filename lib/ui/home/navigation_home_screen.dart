@@ -13,8 +13,9 @@ import 'home_screen.dart';
 class NavigationHomeScreenWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final User user = ModalRoute.of(context).settings.arguments;
-    return Provider<User>.value(value: user, child: NavigationHomeScreen());
+    return Provider<User>.value(
+        value: ModalRoute.of(context).settings.arguments,
+        child: NavigationHomeScreen());
   }
 }
 
