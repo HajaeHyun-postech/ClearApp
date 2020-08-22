@@ -51,8 +51,6 @@ abstract class _LoginStore with Store {
             user = User.fromJson(JwtDecoder.decode(token));
             updateOnSuccess("Login Success");
           })
-          .catchError((e) => updateOnError("Login Failed"),
-              test: (e) => e is AuthException)
           .catchError((e) => updateOnError(e.cause))
           .whenComplete(() => loading = false);
     } else {

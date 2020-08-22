@@ -20,4 +20,8 @@ class AsyncNavigation {
   static popUntilAsync(BuildContext context, String route) {
     Navigator.popUntil(context, (route) => route.settings.name == route);
   }
+
+  static popAsync(BuildContext context) {
+    Navigator.pop(context);
+  }
 }

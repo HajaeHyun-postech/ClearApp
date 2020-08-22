@@ -1,4 +1,3 @@
-import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/http_client.dart';
@@ -52,8 +51,6 @@ abstract class _ShuttleFormStore with Store {
         .then((response) {
           remaining = response['remaining'];
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -72,8 +69,6 @@ abstract class _ShuttleFormStore with Store {
         .then((response) {
           updateOnSuccess("Order Successful");
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }

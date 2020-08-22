@@ -60,7 +60,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
           (_) => shuttleFormStore.getRemaining()))
       ..add(autorun((_) {
         if (shuttleFormStore.success) {
-          AsyncNavigation.popUntilAsync(context, Routes.shuttlecockMenu);
+          AsyncNavigation.popAsync(context);
           ToastGenerator.successToast(
               context, shuttleFormStore.successStore.successMessage);
         } else {

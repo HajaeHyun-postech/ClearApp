@@ -87,7 +87,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
           child: Text('NOT RCVED'),
         ),
       ),
-      if (!widget.user.isAdmin)
+      if (widget.user.isAdmin)
         Tab(
           child: Align(
             alignment: Alignment.center,
@@ -156,11 +156,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                     final bool isAdminTab =
                                         TAB.values[_tabController.index] ==
                                             TAB.Admin;
-                                    String title = isAdminTab
-                                        ? 'Unconfirmed'
-                                        : 'Amount due';
                                     return Topcard(
-                                        title,
+                                        isAdminTab
+                                            ? 'Unconfirmed'
+                                            : 'Amount due',
                                         shuttleStore.unconfirmedPrice
                                                 .toString() +
                                             ' \₩',
@@ -243,9 +242,11 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                     list[index]
                                                         .depositConfirmed);
                                             secondTapAction = () =>
-                                                shuttleStore.receiveShuttle(
+                                                shuttleStore.deleteOrder(
                                                     list[index].idList,
-                                                    list[index].received);
+                                                    list[index].received,
+                                                    list[index]
+                                                        .depositConfirmed);
                                           } else {
                                             title = '${list[index].orderUsage}';
                                             firstActionCaption = 'Receive';
@@ -255,9 +256,11 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                     list[index].idList,
                                                     list[index].received);
                                             secondTapAction = () =>
-                                                shuttleStore.receiveShuttle(
+                                                shuttleStore.deleteOrder(
                                                     list[index].idList,
-                                                    list[index].received);
+                                                    list[index].received,
+                                                    list[index]
+                                                        .depositConfirmed);
                                           }
                                           return HistoryTile(
                                             animation: animation,

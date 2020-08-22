@@ -50,8 +50,6 @@ abstract class _RacketStore with Store {
           rackets = ConvertUtil.jsonArrayToObjectList(
               response, (json) => Racket.fromJson(json));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -69,8 +67,6 @@ abstract class _RacketStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -88,8 +84,6 @@ abstract class _RacketStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }

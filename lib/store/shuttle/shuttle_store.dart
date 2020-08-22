@@ -1,4 +1,4 @@
-import 'package:clearApp/exception/auth_exception.dart';
+import 'package:clearApp/exception/unexpected_conflict_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
@@ -50,8 +50,6 @@ abstract class _ShuttleStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -69,8 +67,6 @@ abstract class _ShuttleStore with Store {
           histories = filterNotRecieved(ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json)));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -88,8 +84,6 @@ abstract class _ShuttleStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
   }
@@ -100,9 +94,7 @@ abstract class _ShuttleStore with Store {
       updateOnError("Alreay Received");
       return;
     }
-    if (loading) return;
 
-    loading = true;
     Map<String, dynamic> params = {'type': 'receive'};
     Map<String, dynamic> body = {'id': idList};
 
@@ -112,12 +104,8 @@ abstract class _ShuttleStore with Store {
             params: params,
             body: body)
         .then((response) {
-          updateOnSuccess("Received");
-        })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
+      updateOnSuccess("Received");
+    }).catchError((e) => updateOnError(e.cause));
   }
 
   @action
@@ -126,9 +114,7 @@ abstract class _ShuttleStore with Store {
       updateOnError("Already Confirmed");
       return;
     }
-    if (loading) return;
 
-    loading = true;
     Map<String, dynamic> params = {'type': 'confirm'};
     Map<String, dynamic> body = {'id': idList};
 
@@ -138,12 +124,25 @@ abstract class _ShuttleStore with Store {
             params: params,
             body: body)
         .then((response) {
-          updateOnSuccess("Confirmed");
+      updateOnSuccess("Confirmed");
+    }).catchError((e) => updateOnError(e.cause));
+  }
+
+  @action
+  Future deleteOrder(List<int> idList, bool received, bool confirmed) async {
+    if (received || confirmed) {
+      updateOnError("Delete Failed");
+      return;
+    }
+    Map<String, dynamic> body = {'id': idList};
+
+    HttpClient.send(method: "DELETE", address: "/api/clear/shuttle", body: body)
+        .then((response) {
+          updateOnSuccess("Deleted");
         })
-        .catchError((e) => updateOnError("Invalid User"),
-            test: (e) => e is AuthException)
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
+        .catchError((e) => updateOnError("Timeout (5min)"),
+            test: (e) => e is UnexpectedConflictException)
+        .catchError((e) => updateOnError(e.cause));
   }
 
   // dispose:-------------------------------------------------------------------
