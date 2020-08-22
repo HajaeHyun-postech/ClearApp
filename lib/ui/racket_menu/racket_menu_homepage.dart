@@ -80,6 +80,12 @@ class _RacketScrollView extends State<RacketScrollView> {
   }
 
   @override
+  void dispose() {
+    racketStore.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
