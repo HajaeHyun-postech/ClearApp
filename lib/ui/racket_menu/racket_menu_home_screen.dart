@@ -61,13 +61,13 @@ class _RacketScrollView extends State<RacketScrollView> {
     racketStore = Provider.of<RacketStore>(context);
 
     racketStore.disposers
-      ..add(reaction((_) => racketStore.successStore.success, (_) {
+      ..add(when((_) => racketStore.successStore.success, () {
         ToastGenerator.successToast(
             context, racketStore.successStore.successMessage);
       }))
-      ..add(reaction(
+      ..add(when(
           (_) => racketStore.errorStore.error,
-          (_) => ToastGenerator.errorToast(
+          () => ToastGenerator.errorToast(
               context, racketStore.errorStore.errorMessage)));
 
     ///racketStore.rackets 에 라켓 정보가 들어있음

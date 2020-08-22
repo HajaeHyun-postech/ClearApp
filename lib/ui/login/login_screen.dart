@@ -43,15 +43,16 @@ class _LoginScreenState extends State<LoginScreen>
     loginStore = Provider.of<LoginStore>(context);
 
     loginStore.disposers
-      ..add(reaction((_) => loginStore.successStore.success, (_) {
+      ..add(when((_) => loginStore.successStore.success, () {
         ToastGenerator.successToast(
             context, loginStore.successStore.successMessage);
         Navigator.pushNamedAndRemoveUntil(
-            context, Routes.homescreen, (Route<dynamic> route) => false);
+            context, Routes.homescreen, (Route<dynamic> route) => false,
+            arguments: loginStore.user);
       }))
-      ..add(reaction(
+      ..add(when(
           (_) => loginStore.errorStore.error,
-          (_) => ToastGenerator.errorToast(
+          () => ToastGenerator.errorToast(
               context, loginStore.errorStore.errorMessage)));
   }
 
