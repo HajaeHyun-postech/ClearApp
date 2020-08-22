@@ -63,16 +63,15 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     shuttleStore = Provider.of<ShuttleStore>(context);
 
     shuttleStore.disposers
-      ..add(autorun((_) {
-        if (shuttleStore.success) {
-          tabChangeEvent();
-          ToastGenerator.successToast(
-              context, shuttleStore.successStore.successMessage);
-        } else {
-          ToastGenerator.errorToast(
-              context, shuttleStore.errorStore.errorMessage);
-        }
-      }));
+      ..add(reaction((_) => shuttleStore.successStore.success, (_) {
+        tabChangeEvent();
+        ToastGenerator.successToast(
+            context, shuttleStore.successStore.successMessage);
+      }))
+      ..add(reaction(
+          (_) => shuttleStore.errorStore.error,
+          (_) => ToastGenerator.errorToast(
+              context, shuttleStore.errorStore.errorMessage)));
 
     _tabs = [
       Tab(

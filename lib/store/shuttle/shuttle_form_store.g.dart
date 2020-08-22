@@ -24,36 +24,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_ShuttleFormStore.success');
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
-  final _$failedAtom = Atom(name: '_ShuttleFormStore.failed');
-
-  @override
-  bool get failed {
-    _$failedAtom.reportRead();
-    return super.failed;
-  }
-
-  @override
-  set failed(bool value) {
-    _$failedAtom.reportWrite(value, super.failed, () {
-      super.failed = value;
-    });
-  }
-
   final _$invalidAmountAtom = Atom(name: '_ShuttleFormStore.invalidAmount');
 
   @override
@@ -180,8 +150,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
   String toString() {
     return '''
 loading: ${loading},
-success: ${success},
-failed: ${failed},
 invalidAmount: ${invalidAmount},
 remaining: ${remaining},
 amount: ${amount},

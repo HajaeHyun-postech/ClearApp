@@ -24,6 +24,21 @@ mixin _$ErrorStore on _ErrorStore, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_ErrorStore.error');
+
+  @override
+  bool get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(bool value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$_ErrorStoreActionController = ActionController(name: '_ErrorStore');
 
   @override
@@ -38,7 +53,7 @@ mixin _$ErrorStore on _ErrorStore, Store {
   }
 
   @override
-  void reset(String value) {
+  void reset(bool value) {
     final _$actionInfo =
         _$_ErrorStoreActionController.startAction(name: '_ErrorStore.reset');
     try {
@@ -62,7 +77,8 @@ mixin _$ErrorStore on _ErrorStore, Store {
   @override
   String toString() {
     return '''
-errorMessage: ${errorMessage}
+errorMessage: ${errorMessage},
+error: ${error}
     ''';
   }
 }

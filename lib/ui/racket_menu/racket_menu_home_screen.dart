@@ -61,16 +61,14 @@ class _RacketScrollView extends State<RacketScrollView> {
     racketStore = Provider.of<RacketStore>(context);
 
     racketStore.disposers
-      ..add(autorun((_) {
-        if (racketStore.success) {
-          racketStore.getRackets();
-          ToastGenerator.successToast(
-              context, racketStore.successStore.successMessage);
-        } else {
-          ToastGenerator.errorToast(
-              context, racketStore.errorStore.errorMessage);
-        }
-      }));
+      ..add(reaction((_) => racketStore.successStore.success, (_) {
+        ToastGenerator.successToast(
+            context, racketStore.successStore.successMessage);
+      }))
+      ..add(reaction(
+          (_) => racketStore.errorStore.error,
+          (_) => ToastGenerator.errorToast(
+              context, racketStore.errorStore.errorMessage)));
 
     ///racketStore.rackets 에 라켓 정보가 들어있음
     ///위 코드는 check out/ in 이 성공 / 실패 할때마다 토스트를 띄우고, refresh 하는 코드.

@@ -2,7 +2,6 @@ import 'package:clearApp/routes.dart';
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/order_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
-import 'package:clearApp/util/async_navigation.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
@@ -58,12 +57,16 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
       }))
       ..add(reaction((_) => shuttleFormStore.amount,
           (_) => shuttleFormStore.getRemaining()))
-      ..add(reaction((_) => shuttleFormStore.success, (_) {
+      ..add(reaction((_) => shuttleFormStore.successStore.success, (_) {
         widget.onSuccess();
         ToastGenerator.successToast(
             context, shuttleFormStore.successStore.successMessage);
         Navigator.of(context).pop();
-      }));
+      }))
+      ..add(reaction(
+          (_) => shuttleFormStore.errorStore.error,
+          (_) => ToastGenerator.errorToast(
+              context, shuttleFormStore.errorStore.errorMessage)));
   }
 
   @override

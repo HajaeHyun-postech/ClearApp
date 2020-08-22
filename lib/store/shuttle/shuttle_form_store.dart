@@ -25,12 +25,6 @@ abstract class _ShuttleFormStore with Store {
   bool loading = false;
 
   @observable
-  bool success = false;
-
-  @observable
-  bool failed = false;
-
-  @observable
   bool invalidAmount = false;
 
   @observable
@@ -104,8 +98,6 @@ abstract class _ShuttleFormStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    usageString = '';
-    amount = 1;
     for (final d in disposers) {
       d();
     }
@@ -114,11 +106,11 @@ abstract class _ShuttleFormStore with Store {
   // functions:-----------------------------------------------------------------
   void updateOnError(String message) {
     errorStore.errorMessage = message;
-    success = false;
+    errorStore.error = true;
   }
 
   void updateOnSuccess(String message) {
     successStore.successMessage = message;
-    success = true;
+    successStore.success = true;
   }
 }

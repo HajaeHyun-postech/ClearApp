@@ -34,9 +34,6 @@ abstract class _RacketStore with Store {
   @observable
   bool loading = false;
 
-  @observable
-  bool success = false;
-
   // actions:-------------------------------------------------------------------
   @action
   Future getRackets() async {
@@ -99,11 +96,11 @@ abstract class _RacketStore with Store {
   // functions:-----------------------------------------------------------------
   void updateOnError(String message) {
     errorStore.errorMessage = message;
-    success = false;
+    errorStore.error = true;
   }
 
   void updateOnSuccess(String message) {
     successStore.successMessage = message;
-    success = true;
+    successStore.success = true;
   }
 }

@@ -54,21 +54,6 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_RacketStore.success');
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');
 
   @override
@@ -112,8 +97,7 @@ mixin _$RacketStore on _RacketStore, Store {
     return '''
 rackets: ${rackets},
 histories: ${histories},
-loading: ${loading},
-success: ${success}
+loading: ${loading}
     ''';
   }
 }

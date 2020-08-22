@@ -11,13 +11,16 @@ abstract class _SuccessStore with Store {
   // constructor:---------------------------------------------------------------
   _SuccessStore() {
     _disposers = [
-      reaction((_) => successMessage, reset, delay: 200),
+      reaction((_) => success, reset, delay: 100),
     ];
   }
 
   // store variables:-----------------------------------------------------------
   @observable
   String successMessage = '';
+
+  @observable
+  bool success = false;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -26,8 +29,9 @@ abstract class _SuccessStore with Store {
   }
 
   @action
-  void reset(String value) {
+  void reset(bool value) {
     successMessage = '';
+    success = false;
   }
 
   // dispose:-------------------------------------------------------------------

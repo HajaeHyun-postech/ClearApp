@@ -11,13 +11,16 @@ abstract class _ErrorStore with Store {
   // constructor:---------------------------------------------------------------
   _ErrorStore() {
     _disposers = [
-      reaction((_) => errorMessage, reset, delay: 200),
+      reaction((_) => error, reset, delay: 100),
     ];
   }
 
   // store variables:-----------------------------------------------------------
   @observable
   String errorMessage = '';
+
+  @observable
+  bool error = false;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -26,8 +29,9 @@ abstract class _ErrorStore with Store {
   }
 
   @action
-  void reset(String value) {
+  void reset(bool value) {
     errorMessage = '';
+    error = false;
   }
 
   // dispose:-------------------------------------------------------------------

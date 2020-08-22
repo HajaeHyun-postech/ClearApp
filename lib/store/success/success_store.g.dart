@@ -24,6 +24,21 @@ mixin _$SuccessStore on _SuccessStore, Store {
     });
   }
 
+  final _$successAtom = Atom(name: '_SuccessStore.success');
+
+  @override
+  bool get success {
+    _$successAtom.reportRead();
+    return super.success;
+  }
+
+  @override
+  set success(bool value) {
+    _$successAtom.reportWrite(value, super.success, () {
+      super.success = value;
+    });
+  }
+
   final _$_SuccessStoreActionController =
       ActionController(name: '_SuccessStore');
 
@@ -39,7 +54,7 @@ mixin _$SuccessStore on _SuccessStore, Store {
   }
 
   @override
-  void reset(String value) {
+  void reset(bool value) {
     final _$actionInfo = _$_SuccessStoreActionController.startAction(
         name: '_SuccessStore.reset');
     try {
@@ -63,7 +78,8 @@ mixin _$SuccessStore on _SuccessStore, Store {
   @override
   String toString() {
     return '''
-successMessage: ${successMessage}
+successMessage: ${successMessage},
+success: ${success}
     ''';
   }
 }

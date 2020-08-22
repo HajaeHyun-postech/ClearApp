@@ -47,21 +47,6 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_ShuttleStore.success');
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
   final _$getUsersHistoriesAsyncAction =
       AsyncAction('_ShuttleStore.getUsersHistories');
 
@@ -133,7 +118,6 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     return '''
 histories: ${histories},
 loading: ${loading},
-success: ${success},
 unconfirmedPrice: ${unconfirmedPrice}
     ''';
   }
