@@ -21,9 +21,9 @@ enum UsageLists {
 }
 
 class OrderForm extends StatefulWidget {
-  final Function onTapCallback;
+  final Function onSuccess;
 
-  const OrderForm({Key key, this.onTapCallback}) : super(key: key);
+  const OrderForm({Key key, this.onSuccess}) : super(key: key);
 
   @override
   OrderFormState createState() => OrderFormState();
@@ -58,15 +58,11 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
       }))
       ..add(reaction((_) => shuttleFormStore.amount,
           (_) => shuttleFormStore.getRemaining()))
-      ..add(autorun((_) {
-        if (shuttleFormStore.success) {
-          AsyncNavigation.popAsync(context);
-          ToastGenerator.successToast(
-              context, shuttleFormStore.successStore.successMessage);
-        } else {
-          ToastGenerator.errorToast(
-              context, shuttleFormStore.errorStore.errorMessage);
-        }
+      ..add(reaction((_) => shuttleFormStore.success, (_) {
+        widget.onSuccess();
+        ToastGenerator.successToast(
+            context, shuttleFormStore.successStore.successMessage);
+        Navigator.of(context).pop();
       }));
   }
 

@@ -106,6 +106,14 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
         .run(() => super.confirmDeposit(idList, confirmed));
   }
 
+  final _$deleteOrderAsyncAction = AsyncAction('_ShuttleStore.deleteOrder');
+
+  @override
+  Future<dynamic> deleteOrder(List<int> idList, bool received, bool confirmed) {
+    return _$deleteOrderAsyncAction
+        .run(() => super.deleteOrder(idList, received, confirmed));
+  }
+
   final _$_ShuttleStoreActionController =
       ActionController(name: '_ShuttleStore');
 

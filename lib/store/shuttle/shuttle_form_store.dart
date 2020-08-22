@@ -28,6 +28,9 @@ abstract class _ShuttleFormStore with Store {
   bool success = false;
 
   @observable
+  bool failed = false;
+
+  @observable
   bool invalidAmount = false;
 
   @observable

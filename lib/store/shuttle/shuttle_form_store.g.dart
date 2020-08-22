@@ -39,6 +39,21 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
+  final _$failedAtom = Atom(name: '_ShuttleFormStore.failed');
+
+  @override
+  bool get failed {
+    _$failedAtom.reportRead();
+    return super.failed;
+  }
+
+  @override
+  set failed(bool value) {
+    _$failedAtom.reportWrite(value, super.failed, () {
+      super.failed = value;
+    });
+  }
+
   final _$invalidAmountAtom = Atom(name: '_ShuttleFormStore.invalidAmount');
 
   @override
@@ -166,6 +181,7 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     return '''
 loading: ${loading},
 success: ${success},
+failed: ${failed},
 invalidAmount: ${invalidAmount},
 remaining: ${remaining},
 amount: ${amount},

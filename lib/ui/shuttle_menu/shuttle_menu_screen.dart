@@ -78,7 +78,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
       Tab(
         child: Align(
           alignment: Alignment.center,
-          child: Text('TOTAL'),
+          child: Text('ALL'),
         ),
       ),
       Tab(
@@ -153,20 +153,16 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                     height: ScreenUtil().setHeight(40),
                                   ),
                                   Observer(builder: (_) {
-                                    final bool isAdminTab =
-                                        TAB.values[_tabController.index] ==
-                                            TAB.Admin;
                                     return Topcard(
-                                        isAdminTab
-                                            ? 'Unconfirmed'
-                                            : 'Amount due',
+                                        'Unconfirmed',
                                         shuttleStore.unconfirmedPrice
                                                 .toString() +
                                             ' \₩',
                                         [
                                           ClearAppTheme.orange.withAlpha(230),
                                           ClearAppTheme.pink.withAlpha(230)
-                                        ]);
+                                        ],
+                                        () => tabChangeEvent());
                                   }),
                                   SizedBox(height: ScreenUtil().setHeight(40)),
                                 ],
@@ -294,7 +290,8 @@ class Topcard extends StatelessWidget {
   final title;
   final value;
   final colors;
-  Topcard(this.title, this.value, this.colors);
+  final onSuccess;
+  Topcard(this.title, this.value, this.colors, this.onSuccess);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -304,8 +301,8 @@ class Topcard extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(
-                    left: ScreenUtil().setWidth(50),
-                    right: ScreenUtil().setWidth(50),
+                    left: ScreenUtil().setWidth(60),
+                    right: ScreenUtil().setWidth(60),
                     top: ScreenUtil().setHeight(50),
                     bottom: ScreenUtil().setHeight(50)),
                 decoration: BoxDecoration(
@@ -381,7 +378,7 @@ class Topcard extends StatelessWidget {
                         child: SafeArea(
                           child: Provider<ShuttleFormStore>(
                               create: (context) => ShuttleFormStore(),
-                              child: OrderForm()),
+                              child: OrderForm(onSuccess: onSuccess)),
                         ),
                       )),
                     );
