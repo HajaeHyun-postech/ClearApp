@@ -1,7 +1,7 @@
-import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../widget/app_theme.dart';
 import 'model/homelist.dart';
 
 class MyHomePage extends StatefulWidget {

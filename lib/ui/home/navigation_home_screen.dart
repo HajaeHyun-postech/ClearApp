@@ -1,14 +1,14 @@
-import 'package:clearApp/vo/user/user.dart';
-import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'custom_drawer/drawer_user_controller.dart';
-import 'custom_drawer/home_drawer.dart';
-import 'feedback_screen.dart';
-import 'help_screen.dart';
+import '../../vo/user/user.dart';
+import '../../widget/app_theme.dart';
+import '../feedback_screen.dart';
+import '../help_screen.dart';
+import '../invite_friend_screen.dart';
+import 'drawer/drawer_user_controller.dart';
+import 'drawer/home_drawer.dart';
 import 'home_screen.dart';
-import 'invite_friend_screen.dart';
 
 class NavigationHomeScreenWithProvider extends StatelessWidget {
   @override

@@ -1,11 +1,11 @@
-import 'package:clearApp/vo/user/user.dart';
-import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../widget/app_theme.dart';
-import '../../widget/popup_generator.dart';
+import '../../../vo/user/user.dart';
+import '../../../widget/app_theme.dart';
+import '../../../widget/popup_generator.dart';
+import '../../../widget/toast_generator.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
