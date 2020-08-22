@@ -91,7 +91,7 @@ class HttpClient {
         return () => http.patch(url, headers: headers, body: body);
         break;
       case 'DELETE':
-        return () => http.delete(url, headers: headers, body: body);
+        return () => http.delete(url, headers: headers);
         break;
       default:
         return null;

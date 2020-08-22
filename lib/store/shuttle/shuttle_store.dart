@@ -134,9 +134,10 @@ abstract class _ShuttleStore with Store {
       updateOnError("Delete Failed");
       return;
     }
-    Map<String, dynamic> body = {'id': idList};
+    Map<String, dynamic> params = {'id': idList};
 
-    HttpClient.send(method: "DELETE", address: "/api/clear/shuttle", body: body)
+    HttpClient.send(
+            method: "DELETE", address: "/api/clear/shuttle", params: params)
         .then((response) {
           updateOnSuccess("Deleted");
         })
