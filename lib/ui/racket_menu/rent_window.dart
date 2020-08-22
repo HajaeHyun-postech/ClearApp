@@ -28,25 +28,24 @@ class _RentWindowState extends State<RentWindow> {
             margin: EdgeInsets.fromLTRB(
                 ScreenUtil().setWidth(130),
                 ScreenUtil().setHeight(70),
-                ScreenUtil().setWidth(0),
+                ScreenUtil().setWidth(130),
                 ScreenUtil().setHeight(0)),
             child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
-                    racketCard.asset,
-                    width: ScreenUtil().setWidth(155),
-                    height: ScreenUtil().setHeight(155),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                SizedBox(width: ScreenUtil().setWidth(56)),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                        racketCard.asset,
+                        width: ScreenUtil().setWidth(155),
+                        height: ScreenUtil().setHeight(155),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    SizedBox(width: ScreenUtil().setWidth(30)),
                     Text('No.' + racketCard.id.toString(),
                         textAlign: TextAlign.end,
                         style: TextStyle(
@@ -57,6 +56,11 @@ class _RentWindowState extends State<RentWindow> {
                           fontSize: ScreenUtil().setSp(75),
                           //fontSize: 14,
                         )),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
                     SizedBox(width: ScreenUtil().setWidth(56)),
                     Text(racketCard.name,
                         textAlign: TextAlign.end,
@@ -87,7 +91,7 @@ class _RentWindowState extends State<RentWindow> {
                 Column(
                   children: <Widget>[
                     FaIcon(
-                      FontAwesomeIcons.weight,
+                      FontAwesomeIcons.weightHanging,
                       size: ScreenUtil().setWidth(80),
                       color: Color(0xFFCECEB8),
                     ),
@@ -105,7 +109,7 @@ class _RentWindowState extends State<RentWindow> {
                 Column(
                   children: <Widget>[
                     FaIcon(
-                      FontAwesomeIcons.list,
+                      FontAwesomeIcons.tags,
                       size: ScreenUtil().setWidth(80),
                       color: Color(0xFFCECEB8),
                     ),
