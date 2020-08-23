@@ -84,6 +84,21 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
+  final _$priceAtom = Atom(name: '_ShuttleFormStore.price');
+
+  @override
+  int get price {
+    _$priceAtom.reportRead();
+    return super.price;
+  }
+
+  @override
+  set price(int value) {
+    _$priceAtom.reportWrite(value, super.price, () {
+      super.price = value;
+    });
+  }
+
   final _$getRemainingAsyncAction =
       AsyncAction('_ShuttleFormStore.getRemaining');
 
@@ -92,11 +107,18 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     return _$getRemainingAsyncAction.run(() => super.getRemaining());
   }
 
-  final _$addOrderAsyncAction = AsyncAction('_ShuttleFormStore.addOrder');
+  final _$buyShuttleAsyncAction = AsyncAction('_ShuttleFormStore.buyShuttle');
 
   @override
-  Future<dynamic> addOrder() {
-    return _$addOrderAsyncAction.run(() => super.addOrder());
+  Future<dynamic> buyShuttle() {
+    return _$buyShuttleAsyncAction.run(() => super.buyShuttle());
+  }
+
+  final _$addShuttleAsyncAction = AsyncAction('_ShuttleFormStore.addShuttle');
+
+  @override
+  Future<dynamic> addShuttle() {
+    return _$addShuttleAsyncAction.run(() => super.addShuttle());
   }
 
   final _$_ShuttleFormStoreActionController =
@@ -153,7 +175,8 @@ loading: ${loading},
 invalidAmount: ${invalidAmount},
 remaining: ${remaining},
 amount: ${amount},
-usageString: ${usageString}
+usageString: ${usageString},
+price: ${price}
     ''';
   }
 }

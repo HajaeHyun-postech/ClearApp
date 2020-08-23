@@ -1,6 +1,5 @@
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/form_button.dart';
-import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,7 @@ import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
 class AddShuttleForm extends StatefulWidget {
-  final Function onSuccess;
-
-  const AddShuttleForm({Key key, this.onSuccess}) : super(key: key);
+  const AddShuttleForm({Key key}) : super(key: key);
 
   @override
   _AddShuttleFormState createState() => _AddShuttleFormState();
@@ -43,10 +40,9 @@ class _AddShuttleFormState extends State<AddShuttleForm>
     shuttleFormStore.disposers
       ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
         if (success) {
-          widget.onSuccess();
+          shuttleFormStore.getRemaining();
           ToastGenerator.successToast(
               context, shuttleFormStore.successStore.successMessage);
-          Navigator.of(context).pop();
         }
       }))
       ..add(reaction((_) => shuttleFormStore.errorStore.error, (error) {
@@ -189,11 +185,10 @@ class _AddShuttleFormState extends State<AddShuttleForm>
             padding: EdgeInsets.all(25.0),
             shrinkWrap: true,
             children: <Widget>[
-              SizedBox(height: ScreenUtil().setHeight(90)),
               _buildAmountSelection(offsetAnimation),
               SizedBox(height: ScreenUtil().setHeight(90)),
               FormButton(
-                onTap: () => shuttleFormStore.addOrder(),
+                onTap: () => shuttleFormStore.addShuttle(),
                 content: 'ADD',
               )
             ],

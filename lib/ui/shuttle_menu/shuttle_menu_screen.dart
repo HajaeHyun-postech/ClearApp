@@ -1,3 +1,4 @@
+import 'package:clearApp/ui/shuttle_menu/add_shuttle_form.dart';
 import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -149,9 +150,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                   ),
                                   Observer(
                                     builder: (_) {
+                                      final isAdminTab =
+                                          shuttleStore.currentTab == TAB.Admin;
                                       return Topcard(
-                                          title: shuttleStore.currentTab ==
-                                                  TAB.Admin
+                                          title: isAdminTab
                                               ? 'Unconfirmed'
                                               : 'Amound due',
                                           value:
@@ -160,9 +162,20 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                             ClearAppTheme.orange.withAlpha(230),
                                             ClearAppTheme.pink.withAlpha(230)
                                           ],
-                                          modalBuilder: () {
-                                            return;
-                                          });
+                                          modalBuilder: isAdminTab
+                                              ? Builder(
+                                                  builder: (_) {
+                                                    return AddShuttleForm();
+                                                  },
+                                                )
+                                              : Builder(
+                                                  builder: (_) {
+                                                    return OrderForm(
+                                                        onSuccess: () =>
+                                                            shuttleStore
+                                                                .refreshOnTabChange());
+                                                  },
+                                                ));
                                     },
                                   ),
                                   SizedBox(height: ScreenUtil().setHeight(40)),

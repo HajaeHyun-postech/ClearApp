@@ -47,6 +47,21 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     });
   }
 
+  final _$currentTabAtom = Atom(name: '_ShuttleStore.currentTab');
+
+  @override
+  TAB get currentTab {
+    _$currentTabAtom.reportRead();
+    return super.currentTab;
+  }
+
+  @override
+  set currentTab(TAB value) {
+    _$currentTabAtom.reportWrite(value, super.currentTab, () {
+      super.currentTab = value;
+    });
+  }
+
   final _$getUsersHistoriesAsyncAction =
       AsyncAction('_ShuttleStore.getUsersHistories');
 
@@ -103,6 +118,28 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
       ActionController(name: '_ShuttleStore');
 
   @override
+  void tabChanged(TAB currentTab) {
+    final _$actionInfo = _$_ShuttleStoreActionController.startAction(
+        name: '_ShuttleStore.tabChanged');
+    try {
+      return super.tabChanged(currentTab);
+    } finally {
+      _$_ShuttleStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void refreshOnTabChange() {
+    final _$actionInfo = _$_ShuttleStoreActionController.startAction(
+        name: '_ShuttleStore.refreshOnTabChange');
+    try {
+      return super.refreshOnTabChange();
+    } finally {
+      _$_ShuttleStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic dispose() {
     final _$actionInfo = _$_ShuttleStoreActionController.startAction(
         name: '_ShuttleStore.dispose');
@@ -118,6 +155,7 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     return '''
 histories: ${histories},
 loading: ${loading},
+currentTab: ${currentTab},
 unconfirmedPrice: ${unconfirmedPrice}
     ''';
   }
