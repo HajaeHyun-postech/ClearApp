@@ -165,70 +165,86 @@ class _AddShuttleFormState extends State<AddShuttleForm>
 
   Row _buildAmountPriceSelection() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Container(
-                child: Text('Remaining',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: ScreenUtil().setSp(50),
-                        color: ClearAppTheme.grey))),
-            SizedBox(height: ScreenUtil().setHeight(40)),
-            Container(child: Observer(
-              builder: (_) {
-                return shuttleFormStore.loading
-                    ? JumpingText('...',
-                        style: TextStyle(fontSize: ScreenUtil().setSp(100)))
-                    : Text('${shuttleFormStore.remaining}',
-                        style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: ScreenUtil().setSp(95),
-                            color: ClearAppTheme.grey));
-              },
-            )),
-          ],
-        ),
-        Column(
-          children: <Widget>[
-            Text('Price',
-                style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: ScreenUtil().setSp(50),
-                    color: ClearAppTheme.grey)),
-            SizedBox(height: ScreenUtil().setHeight(20)),
-            NumberPicker(
-              initialValue: shuttleFormStore.price,
-              maxValue: 20000,
-              minValue: 10000,
-              step: 500,
-              onValue: (value) => shuttleFormStore.price = value,
-              valueTextStyle: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: ScreenUtil().setSp(45),
-                  color: ClearAppTheme.grey),
-            ),
-            SizedBox(height: ScreenUtil().setHeight(70)),
-            Text('Amount',
-                style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: ScreenUtil().setSp(50),
-                    color: ClearAppTheme.grey)),
-            SizedBox(height: ScreenUtil().setHeight(20)),
-            NumberPicker(
-                initialValue: shuttleFormStore.amountAdd,
-                maxValue: 100,
-                minValue: 1,
-                step: 1,
-                onValue: (value) => shuttleFormStore.amountAdd = value,
+        Padding(
+          padding: EdgeInsets.only(right: ScreenUtil().setWidth(180)),
+          child: Column(
+            children: <Widget>[
+              Text('Price',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: ScreenUtil().setSp(65),
+                      color: ClearAppTheme.grey)),
+              SizedBox(height: ScreenUtil().setHeight(30)),
+              NumberPicker(
+                initialValue: shuttleFormStore.price,
+                maxValue: 20000,
+                minValue: 10000,
+                step: 500,
+                onValue: (value) => shuttleFormStore.price = value,
                 enablePicker: true,
                 valueTextStyle: TextStyle(
                     fontFamily: 'Roboto',
-                    fontSize: ScreenUtil().setSp(45),
-                    color: ClearAppTheme.grey))
-          ],
+                    fontSize: ScreenUtil().setSp(50),
+                    color: ClearAppTheme.grey),
+              ),
+            ],
+          ),
         ),
+        Padding(
+          padding: EdgeInsets.only(
+              left: ScreenUtil().setWidth(130),
+              right: ScreenUtil().setWidth(40)),
+          child: Column(
+            children: <Widget>[
+              Text('Amount',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: ScreenUtil().setSp(65),
+                      color: ClearAppTheme.grey)),
+              SizedBox(height: ScreenUtil().setHeight(30)),
+              NumberPicker(
+                  initialValue: shuttleFormStore.amountAdd,
+                  maxValue: 100,
+                  minValue: 1,
+                  step: 1,
+                  onValue: (value) => shuttleFormStore.amountAdd = value,
+                  enablePicker: true,
+                  valueTextStyle: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: ScreenUtil().setSp(50),
+                      color: ClearAppTheme.grey))
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildRemaining() {
+    return Column(
+      children: <Widget>[
+        Container(
+            child: Text('Remaining',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: ScreenUtil().setSp(50),
+                    color: ClearAppTheme.grey))),
+        SizedBox(height: ScreenUtil().setHeight(40)),
+        Container(child: Observer(
+          builder: (_) {
+            return shuttleFormStore.loading
+                ? JumpingText('...',
+                    style: TextStyle(fontSize: ScreenUtil().setSp(100)))
+                : Text('${shuttleFormStore.remaining}',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: ScreenUtil().setSp(95),
+                        color: ClearAppTheme.grey));
+          },
+        )),
       ],
     );
   }
@@ -245,6 +261,8 @@ class _AddShuttleFormState extends State<AddShuttleForm>
             padding: EdgeInsets.all(25.0),
             shrinkWrap: true,
             children: <Widget>[
+              _buildRemaining(),
+              SizedBox(height: ScreenUtil().setHeight(90)),
               _buildAmountPriceSelection(),
               SizedBox(height: ScreenUtil().setHeight(90)),
               FormButton(

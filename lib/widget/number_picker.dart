@@ -57,10 +57,6 @@ class NumberPickerState extends State<NumberPicker> {
       elevation: 0.0,
       semanticContainer: true,
       color: Colors.transparent,
-      shape: widget.shape ??
-          RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(0.0)),
-              side: BorderSide(width: 1.0, color: Color(0xffF0F0F0))),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -77,7 +73,7 @@ class NumberPickerState extends State<NumberPicker> {
             },
             child: Padding(
                 padding: EdgeInsets.only(left: 6, right: 6, bottom: 6, top: 6),
-                child: Icon(Icons.remove, size: 11)),
+                child: Icon(Icons.remove, size: 12)),
           ),
           SizedBox(
             width: ScreenUtil().setWidth(30),
@@ -110,7 +106,7 @@ class NumberPickerState extends State<NumberPicker> {
             },
             child: Padding(
                 padding: EdgeInsets.only(left: 6, right: 6, bottom: 6, top: 6),
-                child: Icon(Icons.add, size: 11)),
+                child: Icon(Icons.add, size: 12)),
           ),
         ],
       ),
