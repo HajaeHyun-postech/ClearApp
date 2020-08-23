@@ -84,31 +84,38 @@ class _RentWindowState extends State<RentWindow> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setWidth(180)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      FaIcon(
-                        FontAwesomeIcons.weightHanging,
-                        size: ScreenUtil().setWidth(100),
-                        color: Color(0xFFCECEB8),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          SizedBox(width: ScreenUtil().setWidth(20)),
-                          Image.asset(
-                            "assets/images/racket_head.png",
-                            height: ScreenUtil().setHeight(130),
-                            width: ScreenUtil().setWidth(100),
+                      Container(
+                        width: ScreenUtil().setWidth(460),
+                        child: Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.weightHanging,
+                            size: 29,
                             color: Color(0xFFCECEB8),
                           ),
-                        ],
+                        ),
                       ),
-                      FaIcon(
-                        FontAwesomeIcons.balanceScale,
-                        size: ScreenUtil().setWidth(100),
-                        color: Color(0xFFCECEB8),
+                      Container(
+                        child: Center(
+                          child: Image.asset(
+                            "assets/images/racket_head.png",
+                            height: 35,
+                            width: 29,
+                            color: Color(0xFFCECEB8),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: ScreenUtil().setWidth(460),
+                        child: Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.balanceScale,
+                            size: 29,
+                            color: Color(0xFFCECEB8),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -145,7 +152,7 @@ class _RentWindowState extends State<RentWindow> {
                         ),
                       ),
                       Container(
-                        width: ScreenUtil().setWidth(477),
+                        width: ScreenUtil().setWidth(460),
                         child: Center(
                           child: Text(
                             racketCard.balance.toString() + 'mm',
