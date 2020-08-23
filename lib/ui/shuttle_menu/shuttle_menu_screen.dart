@@ -105,8 +105,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        shuttleStore.tabChanged(TAB.values[_tabController.index]);
-        shuttleStore.refreshOnTabChange();
+        if (shuttleStore.currentTab != TAB.values[_tabController.index]) {
+          shuttleStore.tabChanged(TAB.values[_tabController.index]);
+          shuttleStore.refreshOnTabChange();
+        }
       }
     });
   }
