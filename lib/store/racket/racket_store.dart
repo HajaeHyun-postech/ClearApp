@@ -9,6 +9,12 @@ import 'package:mobx/mobx.dart';
 
 part 'racket_store.g.dart';
 
+enum RacketCurrentMenu {
+  AllRacketStatus,
+  MyHstr,
+  AllRacketHstr,
+}
+
 class RacketStore = _RacketStore with _$RacketStore;
 
 abstract class _RacketStore with Store {
@@ -21,7 +27,7 @@ abstract class _RacketStore with Store {
 
   // constructor:---------------------------------------------------------------
   _RacketStore() {
-    getRackets();
+    refreshOnTabChange();
   }
 
   // store variables:-----------------------------------------------------------
@@ -32,9 +38,41 @@ abstract class _RacketStore with Store {
   List<RacketCheckOutHistory> histories = new List<RacketCheckOutHistory>();
 
   @observable
+  RacketCurrentMenu currentMenu = RacketCurrentMenu.AllRacketStatus;
+
+  @observable
   bool loading = false;
 
   // actions:-------------------------------------------------------------------
+
+  @action
+  void tabChanged(RacketCurrentMenu currentMenu) {
+    this.currentMenu = currentMenu;
+  }
+
+  @action
+  void refreshOnTabChange() {
+    if (currentMenu == RacketCurrentMenu.AllRacketStatus) {
+      getRackets();
+    } else if (currentMenu == RacketCurrentMenu.AllRacketHstr) {
+      getWholeCheckOutHistories();
+    } else {
+      getUserCheckOutHistories();
+    }
+  }
+
+  @action
+  int getindex() {
+    switch (currentMenu) {
+      case RacketCurrentMenu.AllRacketStatus:
+        return 0;
+      case RacketCurrentMenu.AllRacketHstr:
+        return 1;
+      case RacketCurrentMenu.MyHstr:
+        return 2;
+    }
+  }
+
   @action
   Future getRackets() async {
     if (loading) return;

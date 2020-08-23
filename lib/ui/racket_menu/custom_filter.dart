@@ -1,23 +1,33 @@
+import 'package:clearApp/ui/racket_menu/racket_menu_home_screen.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
-import './racketdata_manage/events.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:clearApp/store/racket/racket_store.dart';
 
 class CustomFilter extends StatelessWidget {
-  final SelectionMenuController selectionMenuController =
-      SelectionMenuController();
+  final List<RacketMenu> menus;
+  RacketStore racketStore;
+  Function onItemSelected;
+  int initialindex;
+
+  CustomFilter({
+    @required this.menus,
+    @required this.racketStore,
+    @required this.onItemSelected,
+    @required this.initialindex,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SelectionMenu<RacketMenu>(
-      itemsList: RacketMenus.returnMenus(),
+      itemsList: menus,
       itemBuilder: this.itemBuilder,
-      onItemSelected: this.onItemSelected,
+      onItemSelected: onItemSelected,
       showSelectedItemAsTrigger: true,
-      initiallySelectedItemIndex: 0,
+      initiallySelectedItemIndex: initialindex,
       closeMenuInsteadOfPop: true,
       closeMenuOnEmptyMenuSpaceTap: false,
       closeMenuWhenTappedOutside: true,
@@ -121,9 +131,5 @@ class CustomFilter extends StatelessWidget {
             ),
           )
         ]));
-  }
-
-  void onItemSelected(RacketMenu menu) {
-    print(menu.menu);
   }
 }

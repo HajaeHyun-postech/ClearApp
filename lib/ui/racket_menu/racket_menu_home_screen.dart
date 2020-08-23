@@ -8,9 +8,16 @@ import 'package:provider/provider.dart';
 import 'racket_cardlist.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:clearApp/vo/user/user.dart';
 import 'custom_filter.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+class RacketMenu {
+  final RacketCurrentMenu eventType;
+  final String menu;
+  RacketMenu({this.eventType, this.menu});
+}
 
 class RacketMenuHomeScreenWithProvider extends StatelessWidget {
   @override
@@ -29,14 +36,15 @@ class RacketMenuHomeScreen extends StatelessWidget {
         body: Column(
       children: <Widget>[
         CustomAppBar(),
-        RacketScrollView(),
+        RacketScrollView(user: ModalRoute.of(context).settings.arguments),
       ],
     ));
   }
 }
 
 class RacketScrollView extends StatefulWidget {
-  RacketScrollView({Key key}) : super(key: key);
+  final User user;
+  RacketScrollView({Key key, this.user}) : super(key: key);
   @override
   _RacketScrollView createState() => _RacketScrollView();
 }
@@ -45,6 +53,12 @@ class _RacketScrollView extends State<RacketScrollView> {
   final ScrollController _scrollController = ScrollController();
   SelectionMenuController selectionMenuController;
   RacketStore racketStore;
+  List<RacketMenu> menus;
+
+  void onItemSelected(RacketMenu menu) {
+    racketStore.tabChanged(menu.eventType);
+    print(racketStore.currentMenu);
+  }
 
   @override
   void initState() {
@@ -74,6 +88,18 @@ class _RacketScrollView extends State<RacketScrollView> {
         }
       }));
 
+    menus = [
+      RacketMenu(eventType: RacketCurrentMenu.AllRacketStatus, menu: "Rent"),
+      RacketMenu(eventType: RacketCurrentMenu.MyHstr, menu: "MyHstr"),
+    ];
+
+    if (widget.user.isAdmin) {
+      RacketMenu adminTab = RacketMenu(
+          eventType: RacketCurrentMenu.AllRacketHstr, menu: "AllRacketHstr");
+
+      menus.add(adminTab);
+    }
+
     ///racketStore.rackets 에 라켓 정보가 들어있음
     ///위 코드는 check out/ in 이 성공 / 실패 할때마다 토스트를 띄우고, refresh 하는 코드.
     ///shuttle_menu/order_form 을 참고하면 됨.
@@ -101,7 +127,12 @@ class _RacketScrollView extends State<RacketScrollView> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Row(children: <Widget>[
                     SizedBox(width: ScreenUtil().setWidth(70)),
-                    CustomFilter(),
+                    CustomFilter(
+                      menus: menus,
+                      racketStore: racketStore,
+                      onItemSelected: onItemSelected,
+                      initialindex: racketStore.getindex(),
+                    ),
                   ]),
                   childCount: 1,
                 ),
@@ -110,8 +141,12 @@ class _RacketScrollView extends State<RacketScrollView> {
                 padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) =>
-                        RacketCardList(racketStore.rackets[index]),
+                    (context, index) => racketStore.currentMenu ==
+                            RacketCurrentMenu.AllRacketStatus
+                        ? RacketCardList(racketStore.rackets[index])
+                        : (racketStore.currentMenu == RacketCurrentMenu.MyHstr
+                            ? null
+                            : null),
                     childCount: racketStore.rackets.length,
                   ),
                 ),
