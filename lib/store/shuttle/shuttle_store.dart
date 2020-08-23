@@ -8,6 +8,8 @@ import 'package:mobx/mobx.dart';
 
 part 'shuttle_store.g.dart';
 
+enum TAB { Total, Not_Rcved, Admin }
+
 class ShuttleStore = _ShuttleStore with _$ShuttleStore;
 
 abstract class _ShuttleStore with Store {
@@ -20,7 +22,7 @@ abstract class _ShuttleStore with Store {
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
-    getUsersHistories();
+    refreshOnTabChange();
   }
 
   // store variables:-----------------------------------------------------------
@@ -30,10 +32,29 @@ abstract class _ShuttleStore with Store {
   @observable
   bool loading = false;
 
+  @observable
+  TAB currentTab = TAB.Total;
+
   @computed
   int get unconfirmedPrice => calUnconfirmedPrice(histories);
 
   // actions:-------------------------------------------------------------------
+  @action
+  void tabChanged(TAB currentTab) {
+    this.currentTab = currentTab;
+  }
+
+  @action
+  void refreshOnTabChange() {
+    if (currentTab == TAB.Admin) {
+      getWholeUnconfirmedHistorires();
+    } else if (currentTab == TAB.Not_Rcved) {
+      getNotReceivedUsersHistories();
+    } else {
+      getUsersHistories();
+    }
+  }
+
   @action
   Future getUsersHistories() async {
     if (loading) return;

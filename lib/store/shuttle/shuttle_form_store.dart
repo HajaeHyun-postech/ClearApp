@@ -36,6 +36,12 @@ abstract class _ShuttleFormStore with Store {
   @observable
   String usageString = '';
 
+  @observable
+  int price = 15000;
+
+  @observable
+  int amountAdd = 30;
+
   // actions:-------------------------------------------------------------------
   @action
   Future getRemaining() async {
@@ -53,7 +59,7 @@ abstract class _ShuttleFormStore with Store {
   }
 
   @action
-  Future addOrder() async {
+  Future buyShuttle() async {
     if (usageString == '') {
       updateOnError("Usage가 없습니다");
       return;
@@ -61,10 +67,34 @@ abstract class _ShuttleFormStore with Store {
     if (loading) return;
     loading = true;
 
+    Map<String, dynamic> params = {'type': 'buy'};
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
-    HttpClient.send(method: "POST", address: "/api/clear/shuttle", body: body)
+    HttpClient.send(
+            method: "POST",
+            address: "/api/clear/shuttle",
+            params: params,
+            body: body)
         .then((response) {
           updateOnSuccess("Order Successful");
+        })
+        .catchError((e) => updateOnError(e.cause))
+        .whenComplete(() => loading = false);
+  }
+
+  @action
+  Future addShuttle() async {
+    if (loading) return;
+    loading = true;
+
+    Map<String, dynamic> params = {'type': 'add'};
+    Map<String, dynamic> body = {'amount': amountAdd, 'price': price};
+    HttpClient.send(
+            method: "POST",
+            address: "/api/clear/shuttle",
+            params: params,
+            body: body)
+        .then((response) {
+          updateOnSuccess("Add Successful");
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);

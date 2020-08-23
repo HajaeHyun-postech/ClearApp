@@ -41,6 +41,8 @@ dependencies:
   flutter_mobx: ^1.0.0
   json_annotation: ^3.0.0
   data_connection_checker: ^0.3.4
+  auto_size_text: ^2.1.0
+  flutter_picker: ^1.1.5
 
 dev_dependencies:
   build_runner: ^1.10.0

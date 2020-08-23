@@ -1,3 +1,4 @@
+import 'package:clearApp/ui/shuttle_menu/add_shuttle_form.dart';
 import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,6 @@ class ShuttleMenuScreenWithProvider extends StatelessWidget {
     );
   }
 }
-
-enum TAB { Total, Not_Rcved, Admin }
 
 class ShuttleMenuScreen extends StatefulWidget {
   final User user;
@@ -65,7 +64,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     shuttleStore.disposers
       ..add(reaction((_) => shuttleStore.successStore.success, (success) {
         if (success) {
-          tabChangeEvent();
+          shuttleStore.refreshOnTabChange();
           ToastGenerator.successToast(
               context, shuttleStore.successStore.successMessage);
         }
@@ -99,23 +98,17 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
         ),
     ];
 
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(
+        length: _tabs.length,
+        vsync: this,
+        initialIndex: shuttleStore.currentTab.index);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        tabChangeEvent();
+        shuttleStore.tabChanged(TAB.values[_tabController.index]);
+        shuttleStore.refreshOnTabChange();
       }
     });
-  }
-
-  void tabChangeEvent() {
-    if (TAB.values[_tabController.index] == TAB.Admin) {
-      shuttleStore.getWholeUnconfirmedHistorires();
-    } else if (TAB.values[_tabController.index] == TAB.Not_Rcved) {
-      shuttleStore.getNotReceivedUsersHistories();
-    } else {
-      shuttleStore.getUsersHistories();
-    }
   }
 
   @override
@@ -155,18 +148,36 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                   SizedBox(
                                     height: ScreenUtil().setHeight(40),
                                   ),
-                                  Observer(builder: (_) {
-                                    return Topcard(
-                                        'Unconfirmed',
-                                        shuttleStore.unconfirmedPrice
-                                                .toString() +
-                                            ' \₩',
-                                        [
-                                          ClearAppTheme.orange.withAlpha(230),
-                                          ClearAppTheme.pink.withAlpha(230)
-                                        ],
-                                        () => tabChangeEvent());
-                                  }),
+                                  Observer(
+                                    builder: (_) {
+                                      final isAdminTab =
+                                          shuttleStore.currentTab == TAB.Admin;
+                                      return Topcard(
+                                          title: isAdminTab
+                                              ? 'Unconfirmed'
+                                              : 'Amound due',
+                                          value:
+                                              '${shuttleStore.unconfirmedPrice}  \₩',
+                                          colors: [
+                                            ClearAppTheme.orange.withAlpha(230),
+                                            ClearAppTheme.pink.withAlpha(230)
+                                          ],
+                                          modalBuilder: isAdminTab
+                                              ? Builder(
+                                                  builder: (_) {
+                                                    return AddShuttleForm();
+                                                  },
+                                                )
+                                              : Builder(
+                                                  builder: (_) {
+                                                    return OrderForm(
+                                                        onSuccess: () =>
+                                                            shuttleStore
+                                                                .refreshOnTabChange());
+                                                  },
+                                                ));
+                                    },
+                                  ),
                                   SizedBox(height: ScreenUtil().setHeight(40)),
                                 ],
                               );
@@ -293,8 +304,8 @@ class Topcard extends StatelessWidget {
   final title;
   final value;
   final colors;
-  final onSuccess;
-  Topcard(this.title, this.value, this.colors, this.onSuccess);
+  final modalBuilder;
+  Topcard({this.title, this.value, this.colors, this.modalBuilder});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -338,13 +349,11 @@ class Topcard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Text(
-                      value,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: ScreenUtil().setSp(57)),
-                    )
+                    Text(value,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: ScreenUtil().setSp(57))),
                   ],
                 ),
               ),
@@ -381,7 +390,7 @@ class Topcard extends StatelessWidget {
                         child: SafeArea(
                           child: Provider<ShuttleFormStore>(
                               create: (context) => ShuttleFormStore(),
-                              child: OrderForm(onSuccess: onSuccess)),
+                              child: modalBuilder),
                         ),
                       )),
                     );

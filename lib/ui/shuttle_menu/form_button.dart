@@ -5,20 +5,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
-class OrderButton extends StatefulWidget {
+class FormButton extends StatefulWidget {
   //screen size
   final Function onTap;
+  final String content;
 
-  const OrderButton({
+  const FormButton({
     Key key,
     this.onTap,
+    this.content,
   }) : super(key: key);
 
   @override
-  _OrderButtonState createState() => _OrderButtonState();
+  _FormButtonState createState() => _FormButtonState();
 }
 
-class _OrderButtonState extends State<OrderButton>
+class _FormButtonState extends State<FormButton>
     with SingleTickerProviderStateMixin {
   ButtonState buttonState = ButtonState.Small;
   AnimationController _controller;
@@ -73,13 +75,13 @@ class _OrderButtonState extends State<OrderButton>
                 child: Center(child: Observer(
                   builder: (_) {
                     return shuttleFormStore.loading
-                        ? JumpingText('BUY',
+                        ? JumpingText(widget.content,
                             style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontSize: ScreenUtil().setSp(50),
                                 color: Colors.white))
                         : Text(
-                            'BUY',
+                            widget.content,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Roboto',
