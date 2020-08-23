@@ -1,4 +1,3 @@
-import 'package:clearApp/routes.dart';
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/form_button.dart';
 import 'package:clearApp/ui/shuttle_menu/usage_select_button.dart';
@@ -184,8 +183,8 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                   TextStyle(fontSize: ScreenUtil().setSp(100)))
                           : Text(shuttleFormStore.remaining.toString(),
                               style: TextStyle(
-                                  fontFamily: ClearAppTheme.fontName,
-                                  fontSize: ScreenUtil().setSp(100),
+                                  fontFamily: 'Roboto',
+                                  fontSize: ScreenUtil().setSp(95),
                                   color: shuttleFormStore.invalidAmount
                                       ? ClearAppTheme.lightRed
                                       : ClearAppTheme.grey));

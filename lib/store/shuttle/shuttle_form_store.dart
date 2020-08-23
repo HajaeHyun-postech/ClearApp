@@ -37,7 +37,10 @@ abstract class _ShuttleFormStore with Store {
   String usageString = '';
 
   @observable
-  int price = 0;
+  int price = 15000;
+
+  @observable
+  int amountAdd = 30;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -80,15 +83,11 @@ abstract class _ShuttleFormStore with Store {
 
   @action
   Future addShuttle() async {
-    if (price == 0) {
-      updateOnError("Price가 없습니다");
-      return;
-    }
     if (loading) return;
     loading = true;
 
     Map<String, dynamic> params = {'type': 'add'};
-    Map<String, dynamic> body = {'amount': amount, 'price': price};
+    Map<String, dynamic> body = {'amount': amountAdd, 'price': price};
     HttpClient.send(
             method: "POST",
             address: "/api/clear/shuttle",

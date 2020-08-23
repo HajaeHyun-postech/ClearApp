@@ -1,6 +1,7 @@
 import 'package:clearApp/store/shuttle/shuttle_form_store.dart';
 import 'package:clearApp/ui/shuttle_menu/form_button.dart';
 import 'package:clearApp/widget/app_theme.dart';
+import 'package:clearApp/widget/number_picker.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -19,7 +20,6 @@ class AddShuttleForm extends StatefulWidget {
 class _AddShuttleFormState extends State<AddShuttleForm>
     with TickerProviderStateMixin {
   ScrollController _scrollController;
-  AnimationController _remainingController;
   ShuttleFormStore shuttleFormStore;
 
   @override
@@ -28,8 +28,6 @@ class _AddShuttleFormState extends State<AddShuttleForm>
 
     /*Animation Settings*/
     _scrollController = ScrollController();
-    _remainingController = AnimationController(
-        duration: const Duration(milliseconds: 100), vsync: this);
   }
 
   @override
@@ -165,16 +163,78 @@ class _AddShuttleFormState extends State<AddShuttleForm>
     ]);
   }
 
+  Row _buildAmountPriceSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Container(
+                child: Text('Remaining',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: ScreenUtil().setSp(50),
+                        color: ClearAppTheme.grey))),
+            SizedBox(height: ScreenUtil().setHeight(40)),
+            Container(child: Observer(
+              builder: (_) {
+                return shuttleFormStore.loading
+                    ? JumpingText('...',
+                        style: TextStyle(fontSize: ScreenUtil().setSp(100)))
+                    : Text('${shuttleFormStore.remaining}',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: ScreenUtil().setSp(95),
+                            color: ClearAppTheme.grey));
+              },
+            )),
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            Text('Price',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: ScreenUtil().setSp(50),
+                    color: ClearAppTheme.grey)),
+            SizedBox(height: ScreenUtil().setHeight(20)),
+            NumberPicker(
+              initialValue: shuttleFormStore.price,
+              maxValue: 20000,
+              minValue: 10000,
+              step: 500,
+              onValue: (value) => shuttleFormStore.price = value,
+              valueTextStyle: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: ScreenUtil().setSp(45),
+                  color: ClearAppTheme.grey),
+            ),
+            SizedBox(height: ScreenUtil().setHeight(70)),
+            Text('Amount',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: ScreenUtil().setSp(50),
+                    color: ClearAppTheme.grey)),
+            SizedBox(height: ScreenUtil().setHeight(20)),
+            NumberPicker(
+                initialValue: shuttleFormStore.amountAdd,
+                maxValue: 100,
+                minValue: 1,
+                step: 1,
+                onValue: (value) => shuttleFormStore.amountAdd = value,
+                enablePicker: true,
+                valueTextStyle: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: ScreenUtil().setSp(45),
+                    color: ClearAppTheme.grey))
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 24.0)
-        .chain(CurveTween(curve: Curves.elasticIn))
-        .animate(_remainingController)
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _remainingController.reverse();
-            }
-          });
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -185,7 +245,7 @@ class _AddShuttleFormState extends State<AddShuttleForm>
             padding: EdgeInsets.all(25.0),
             shrinkWrap: true,
             children: <Widget>[
-              _buildAmountSelection(offsetAnimation),
+              _buildAmountPriceSelection(),
               SizedBox(height: ScreenUtil().setHeight(90)),
               FormButton(
                 onTap: () => shuttleFormStore.addShuttle(),
