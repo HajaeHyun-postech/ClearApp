@@ -5,20 +5,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
 
-class OrderButton extends StatefulWidget {
+class FormButton extends StatefulWidget {
   //screen size
   final Function onTap;
 
-  const OrderButton({
+  const FormButton({
     Key key,
     this.onTap,
   }) : super(key: key);
 
   @override
-  _OrderButtonState createState() => _OrderButtonState();
+  _FormButtonState createState() => _FormButtonState();
 }
 
-class _OrderButtonState extends State<OrderButton>
+class _FormButtonState extends State<FormButton>
     with SingleTickerProviderStateMixin {
   ButtonState buttonState = ButtonState.Small;
   AnimationController _controller;
