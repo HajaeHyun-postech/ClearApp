@@ -21,6 +21,7 @@ class _RentWindowState extends State<RentWindow> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white, //Color(0xFF9DAFAF),
+      padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(70)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -41,7 +42,6 @@ class _RentWindowState extends State<RentWindow> {
                       child: Image.asset(
                         racketCard.asset,
                         width: ScreenUtil().setWidth(155),
-                        height: ScreenUtil().setHeight(155),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -69,7 +69,7 @@ class _RentWindowState extends State<RentWindow> {
                           fontFamily: 'RobotoCondensed',
                           color: Color(0xFF837F76),
                           fontWeight: FontWeight.w500,
-                          fontSize: ScreenUtil().setSp(90),
+                          fontSize: ScreenUtil().setSp(80),
                           //fontSize: 14,
                         )),
                   ],
@@ -80,73 +80,94 @@ class _RentWindowState extends State<RentWindow> {
           SizedBox(height: ScreenUtil().setHeight(100)),
           Container(
             color: Colors.transparent,
-            margin: EdgeInsets.fromLTRB(
-                ScreenUtil().setWidth(250),
-                ScreenUtil().setHeight(0),
-                ScreenUtil().setWidth(250),
-                ScreenUtil().setHeight(0)),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    FaIcon(
-                      FontAwesomeIcons.weightHanging,
-                      size: ScreenUtil().setWidth(80),
-                      color: Color(0xFFCECEB8),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(15)),
-                    Text(
-                      racketCard.weight.toString() + 'U',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: ScreenUtil().setSp(50),
-                        color: Color(0xFF837F76),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(180)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FaIcon(
+                        FontAwesomeIcons.weightHanging,
+                        size: ScreenUtil().setWidth(100),
+                        color: Color(0xFFCECEB8),
                       ),
-                    )
-                  ],
+                      Image.asset(
+                        "assets/images/racket_head.png",
+                        height: ScreenUtil().setHeight(130),
+                        //width: ScreenUtil().setWidth(200),
+                        color: Color(0xFFCECEB8),
+                      ),
+                      FaIcon(
+                        FontAwesomeIcons.balanceScale,
+                        size: ScreenUtil().setWidth(100),
+                        color: Color(0xFFCECEB8),
+                      ),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: <Widget>[
-                    FaIcon(
-                      FontAwesomeIcons.tags,
-                      size: ScreenUtil().setWidth(80),
-                      color: Color(0xFFCECEB8),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(15)),
-                    Text(
-                      racketCard.type,
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: ScreenUtil().setSp(50),
-                        color: Color(0xFF837F76),
+                SizedBox(height: ScreenUtil().setHeight(20)),
+                Container(
+                  padding: EdgeInsets.only(
+                      left: ScreenUtil().setWidth(200),
+                      right: ScreenUtil().setWidth(155)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        racketCard.weight.toString() + 'U',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: ScreenUtil().setSp(50),
+                          color: Color(0xFF837F76),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    FaIcon(
-                      FontAwesomeIcons.balanceScale,
-                      size: ScreenUtil().setWidth(80),
-                      color: Color(0xFFCECEB8),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(15)),
-                    Text(
-                      racketCard.balance.toString(),
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: ScreenUtil().setSp(50),
-                        color: Color(0xFF837F76),
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: ScreenUtil().setWidth(36),
+                          ),
+                          Text(
+                            racketCard.type,
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(50),
+                              color: Color(0xFF837F76),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  ],
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            racketCard.balance.toString(),
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(50),
+                              color: Color(0xFF837F76),
+                            ),
+                          ),
+                          Text(
+                            'mm',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: ScreenUtil().setSp(50),
+                              color: Color(0xFF837F76),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           SizedBox(
-            height: ScreenUtil().setHeight(100),
+            height: ScreenUtil().setHeight(80),
           ),
           InkWell(
             onTap: null,
