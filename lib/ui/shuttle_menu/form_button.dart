@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 class FormButton extends StatefulWidget {
   //screen size
   final Function onTap;
+  final String content;
 
   const FormButton({
     Key key,
     this.onTap,
+    this.content,
   }) : super(key: key);
 
   @override
@@ -73,13 +75,13 @@ class _FormButtonState extends State<FormButton>
                 child: Center(child: Observer(
                   builder: (_) {
                     return shuttleFormStore.loading
-                        ? JumpingText('BUY',
+                        ? JumpingText(widget.content,
                             style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontSize: ScreenUtil().setSp(50),
                                 color: Colors.white))
                         : Text(
-                            'BUY',
+                            widget.content,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Roboto',

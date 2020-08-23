@@ -194,6 +194,7 @@ class _AddShuttleFormState extends State<AddShuttleForm>
               SizedBox(height: ScreenUtil().setHeight(90)),
               FormButton(
                 onTap: () => shuttleFormStore.addOrder(),
+                content: 'ADD',
               )
             ],
           ),

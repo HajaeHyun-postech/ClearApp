@@ -283,6 +283,7 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
               SizedBox(height: ScreenUtil().setHeight(90)),
               FormButton(
                 onTap: () => shuttleFormStore.addOrder(),
+                content: 'BUY',
               )
             ],
           ),
