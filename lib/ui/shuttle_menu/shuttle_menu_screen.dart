@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:progress_indicators/progress_indicators.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../../store/shuttle/shuttle_form_store.dart';
@@ -213,24 +213,32 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                           return Column(children: <Widget>[
                                             SizedBox(
                                               height:
-                                                  ScreenUtil().setHeight(60),
+                                                  ScreenUtil().setHeight(50),
                                             ),
-                                            JumpingText('Loading...',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        ScreenUtil().setSp(45)))
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(90),
+                                              child: LoadingIndicator(
+                                                indicatorType:
+                                                    Indicator.circleStrokeSpin,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
                                           ]);
                                         }
                                       : (BuildContext context, int index) {
-                                          Animation<double> animation = Tween<
-                                                  double>(begin: 0.0, end: 1.0)
-                                              .animate(CurvedAnimation(
-                                                  parent: animationController,
-                                                  curve: Interval(
-                                                      (1 / itemCount) * index,
-                                                      1.0,
-                                                      curve: Curves
-                                                          .fastOutSlowIn)));
+                                          final Animation<double>
+                                              animation = Tween<double>(
+                                                      begin: 0.0, end: 1.0)
+                                                  .animate(CurvedAnimation(
+                                                      parent:
+                                                          animationController,
+                                                      curve: Interval(
+                                                          (1 / itemCount) *
+                                                              index,
+                                                          1.0,
+                                                          curve: Curves
+                                                              .fastOutSlowIn)));
                                           animationController.forward();
 
                                           String title;
