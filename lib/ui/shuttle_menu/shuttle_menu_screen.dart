@@ -29,8 +29,6 @@ class ShuttleMenuScreenWithProvider extends StatelessWidget {
   }
 }
 
-enum TAB { Total, Not_Rcved, Admin }
-
 class ShuttleMenuScreen extends StatefulWidget {
   final User user;
 
@@ -103,19 +101,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        tabChangeEvent();
+        shuttleStore.tabChanged(TAB.values[_tabController.index]);
+        shuttleStore.refreshOnTabChange();
       }
     });
-  }
-
-  void tabChangeEvent() {
-    if (TAB.values[_tabController.index] == TAB.Admin) {
-      shuttleStore.getWholeUnconfirmedHistorires();
-    } else if (TAB.values[_tabController.index] == TAB.Not_Rcved) {
-      shuttleStore.getNotReceivedUsersHistories();
-    } else {
-      shuttleStore.getUsersHistories();
-    }
   }
 
   @override
@@ -155,18 +144,18 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                   SizedBox(
                                     height: ScreenUtil().setHeight(40),
                                   ),
-                                  Observer(builder: (_) {
-                                    return Topcard(
-                                        'Unconfirmed',
-                                        shuttleStore.unconfirmedPrice
-                                                .toString() +
-                                            ' \₩',
-                                        [
-                                          ClearAppTheme.orange.withAlpha(230),
-                                          ClearAppTheme.pink.withAlpha(230)
-                                        ],
-                                        () => tabChangeEvent());
-                                  }),
+                                  Topcard(
+                                      title: TAB.values[_tabController.index] ==
+                                              TAB.Admin
+                                          ? 'Unconfirmed'
+                                          : 'Amound due',
+                                      colors: [
+                                        ClearAppTheme.orange.withAlpha(230),
+                                        ClearAppTheme.pink.withAlpha(230)
+                                      ],
+                                      modalBuilder: () {
+                                        return;
+                                      }),
                                   SizedBox(height: ScreenUtil().setHeight(40)),
                                 ],
                               );
@@ -291,10 +280,9 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
 class Topcard extends StatelessWidget {
   final title;
-  final value;
   final colors;
-  final onSuccess;
-  Topcard(this.title, this.value, this.colors, this.onSuccess);
+  final modalBuilder;
+  Topcard({this.title, this.colors, this.modalBuilder});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -338,13 +326,14 @@ class Topcard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Text(
-                      value,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: ScreenUtil().setSp(57)),
-                    )
+                    Observer(builder: (_) {
+                      final shuttleStore = Provider.of<ShuttleStore>(context);
+                      return Text('${shuttleStore.unconfirmedPrice}  \₩',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: ScreenUtil().setSp(57)));
+                    })
                   ],
                 ),
               ),
@@ -381,7 +370,7 @@ class Topcard extends StatelessWidget {
                         child: SafeArea(
                           child: Provider<ShuttleFormStore>(
                               create: (context) => ShuttleFormStore(),
-                              child: OrderForm(onSuccess: onSuccess)),
+                              child: modalBuilder),
                         ),
                       )),
                     );
