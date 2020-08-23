@@ -99,6 +99,21 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
     });
   }
 
+  final _$amountAddAtom = Atom(name: '_ShuttleFormStore.amountAdd');
+
+  @override
+  int get amountAdd {
+    _$amountAddAtom.reportRead();
+    return super.amountAdd;
+  }
+
+  @override
+  set amountAdd(int value) {
+    _$amountAddAtom.reportWrite(value, super.amountAdd, () {
+      super.amountAdd = value;
+    });
+  }
+
   final _$getRemainingAsyncAction =
       AsyncAction('_ShuttleFormStore.getRemaining');
 
@@ -176,7 +191,8 @@ invalidAmount: ${invalidAmount},
 remaining: ${remaining},
 amount: ${amount},
 usageString: ${usageString},
-price: ${price}
+price: ${price},
+amountAdd: ${amountAdd}
     ''';
   }
 }
