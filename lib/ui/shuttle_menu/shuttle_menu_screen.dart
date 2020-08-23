@@ -157,7 +157,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                       return Topcard(
                                           title: isAdminTab
                                               ? 'Unconfirmed'
-                                              : 'Amound due',
+                                              : 'Amount due',
                                           value:
                                               '${shuttleStore.unconfirmedPrice}  \₩',
                                           colors: [
@@ -197,10 +197,11 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                               ClearAppTheme.buildLightTheme().backgroundColor,
                           child: Observer(
                             builder: (_) {
-                              int itemCount;
+                              final bool isAdminTab =
+                                  TAB.values[_tabController.index] == TAB.Admin;
                               List<ShuttleOrderHistory> list =
                                   shuttleStore.histories;
-                              itemCount = list.length;
+                              int itemCount = list.length;
 
                               return ListView.builder(
                                   itemCount:
@@ -221,21 +222,15 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                           ]);
                                         }
                                       : (BuildContext context, int index) {
-                                          final bool isAdminTab = TAB.values[
-                                                  _tabController.index] ==
-                                              TAB.Admin;
-                                          final Animation<double>
-                                              animation = Tween<double>(
-                                                      begin: 0.0, end: 1.0)
-                                                  .animate(CurvedAnimation(
-                                                      parent:
-                                                          animationController,
-                                                      curve: Interval(
-                                                          (1 / itemCount) *
-                                                              index,
-                                                          1.0,
-                                                          curve: Curves
-                                                              .fastOutSlowIn)));
+                                          Animation<double> animation = Tween<
+                                                  double>(begin: 0.0, end: 1.0)
+                                              .animate(CurvedAnimation(
+                                                  parent: animationController,
+                                                  curve: Interval(
+                                                      (1 / itemCount) * index,
+                                                      1.0,
+                                                      curve: Curves
+                                                          .fastOutSlowIn)));
                                           animationController.forward();
 
                                           String title;
