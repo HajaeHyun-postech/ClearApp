@@ -63,7 +63,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     shuttleStore.disposers
       ..add(reaction((_) => shuttleStore.successStore.success, (success) {
         if (success) {
-          tabChangeEvent();
+          shuttleStore.refreshOnTabChange();
           ToastGenerator.successToast(
               context, shuttleStore.successStore.successMessage);
         }
@@ -97,7 +97,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
         ),
     ];
 
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(
+        length: _tabs.length,
+        vsync: this,
+        initialIndex: shuttleStore.currentTab.index);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -144,18 +147,24 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                   SizedBox(
                                     height: ScreenUtil().setHeight(40),
                                   ),
-                                  Topcard(
-                                      title: TAB.values[_tabController.index] ==
-                                              TAB.Admin
-                                          ? 'Unconfirmed'
-                                          : 'Amound due',
-                                      colors: [
-                                        ClearAppTheme.orange.withAlpha(230),
-                                        ClearAppTheme.pink.withAlpha(230)
-                                      ],
-                                      modalBuilder: () {
-                                        return;
-                                      }),
+                                  Observer(
+                                    builder: (_) {
+                                      return Topcard(
+                                          title: shuttleStore.currentTab ==
+                                                  TAB.Admin
+                                              ? 'Unconfirmed'
+                                              : 'Amound due',
+                                          value:
+                                              '${shuttleStore.unconfirmedPrice}  \₩',
+                                          colors: [
+                                            ClearAppTheme.orange.withAlpha(230),
+                                            ClearAppTheme.pink.withAlpha(230)
+                                          ],
+                                          modalBuilder: () {
+                                            return;
+                                          });
+                                    },
+                                  ),
                                   SizedBox(height: ScreenUtil().setHeight(40)),
                                 ],
                               );
@@ -280,9 +289,10 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
 
 class Topcard extends StatelessWidget {
   final title;
+  final value;
   final colors;
   final modalBuilder;
-  Topcard({this.title, this.colors, this.modalBuilder});
+  Topcard({this.title, this.value, this.colors, this.modalBuilder});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -326,14 +336,11 @@ class Topcard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Observer(builder: (_) {
-                      final shuttleStore = Provider.of<ShuttleStore>(context);
-                      return Text('${shuttleStore.unconfirmedPrice}  \₩',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: ScreenUtil().setSp(57)));
-                    })
+                    Text(value,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: ScreenUtil().setSp(57))),
                   ],
                 ),
               ),
