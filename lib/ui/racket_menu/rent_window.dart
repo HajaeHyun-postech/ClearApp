@@ -221,7 +221,10 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                 ),
                 child: InkWell(
                   onTap: () => racketFormStore.adaptiveTapEvent(
-                      widget.isUserUsing, widget.canCheckOut, widget.historyId),
+                      widget.isUserUsing,
+                      widget.canCheckOut,
+                      widget.historyId,
+                      widget.racketCard.id),
                   child: Container(
                     width: ScreenUtil().setWidth(1200),
                     height: ScreenUtil().setHeight(130),
@@ -229,7 +232,11 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                         child: Text(
                       widget.isUserUsing
                           ? "return now"
-                          : !widget.canCheckOut ? "1인 1 라켓 정책" : "rent now",
+                          : !widget.canCheckOut
+                              ? "1인 1 라켓 정책"
+                              : !widget.racketCard.available
+                                  ? "이미 빌림 ㅅㄱ"
+                                  : "rent now",
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontWeight: FontWeight.w600,

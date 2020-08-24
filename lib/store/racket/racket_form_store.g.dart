@@ -28,8 +28,9 @@ mixin _$RacketFormStore on _RacketFormStore, Store {
       AsyncAction('_RacketFormStore.checkOutRacket');
 
   @override
-  Future<dynamic> checkOutRacket(int id) {
-    return _$checkOutRacketAsyncAction.run(() => super.checkOutRacket(id));
+  Future<dynamic> checkOutRacket(int racketId) {
+    return _$checkOutRacketAsyncAction
+        .run(() => super.checkOutRacket(racketId));
   }
 
   final _$checkInRacketAsyncAction =
@@ -44,11 +45,13 @@ mixin _$RacketFormStore on _RacketFormStore, Store {
       ActionController(name: '_RacketFormStore');
 
   @override
-  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int id) {
+  void adaptiveTapEvent(
+      bool isUserUsing, bool canCheckOut, int historyId, int racketId) {
     final _$actionInfo = _$_RacketFormStoreActionController.startAction(
         name: '_RacketFormStore.adaptiveTapEvent');
     try {
-      return super.adaptiveTapEvent(isUserUsing, canCheckOut, id);
+      return super
+          .adaptiveTapEvent(isUserUsing, canCheckOut, historyId, racketId);
     } finally {
       _$_RacketFormStoreActionController.endAction(_$actionInfo);
     }

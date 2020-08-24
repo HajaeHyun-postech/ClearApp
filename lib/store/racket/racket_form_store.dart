@@ -23,12 +23,13 @@ abstract class _RacketFormStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int id) {
+  void adaptiveTapEvent(
+      bool isUserUsing, bool canCheckOut, int historyId, int racketId) {
     if (isUserUsing) {
-      checkInRacket(id);
+      checkInRacket(historyId);
     } else {
       if (canCheckOut) {
-        checkOutRacket(id);
+        checkOutRacket(racketId);
       } else {
         updateOnError("1인 1라켓");
       }
@@ -36,11 +37,11 @@ abstract class _RacketFormStore with Store {
   }
 
   @action
-  Future checkOutRacket(int id) async {
+  Future checkOutRacket(int racketId) async {
     if (loading) return;
     loading = true;
 
-    Map<String, dynamic> body = {'id': id};
+    Map<String, dynamic> body = {'id': racketId};
     HttpClient.send(method: "POST", address: "/api/clear/racket", body: body)
         .then((response) {
           updateOnSuccess("Check Out Successful");

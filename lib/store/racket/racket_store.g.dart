@@ -92,6 +92,22 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
+  final _$historyIdToCheckInAtom =
+      Atom(name: '_RacketStore.historyIdToCheckIn');
+
+  @override
+  int get historyIdToCheckIn {
+    _$historyIdToCheckInAtom.reportRead();
+    return super.historyIdToCheckIn;
+  }
+
+  @override
+  set historyIdToCheckIn(int value) {
+    _$historyIdToCheckInAtom.reportWrite(value, super.historyIdToCheckIn, () {
+      super.historyIdToCheckIn = value;
+    });
+  }
+
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');
 
   @override
@@ -171,6 +187,7 @@ histories: ${histories},
 currentMenu: ${currentMenu},
 loading: ${loading},
 userUsingRacketId: ${userUsingRacketId},
+historyIdToCheckIn: ${historyIdToCheckIn},
 canCheckOut: ${canCheckOut}
     ''';
   }

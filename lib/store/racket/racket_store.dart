@@ -59,8 +59,11 @@ abstract class _RacketStore with Store {
     historyIdToCheckIn = -1;
     bool result = true;
     rackets.where((racket) => !racket.available).forEach((racket) {
-      var history = histories.firstWhere((history) =>
-          history.racket.id == racket.id && history.returnDate == null);
+      var history = histories.firstWhere(
+          (history) =>
+              history.racket.id == racket.id && history.returnDate == null,
+          orElse: () => null);
+
       if (history != null) {
         result = false;
         userUsingRacketId = history.racket.id;
