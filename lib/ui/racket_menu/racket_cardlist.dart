@@ -7,21 +7,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
+import 'package:clearApp/store/racket/racket_form_store.dart';
 import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
 import 'rent_window.dart';
+import 'racket_historylist.dart';
+import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
 
 class RacketCardList extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
-  final Racket racketCard;
+  final dynamic racketCard;
+  final List<RacketCheckOutHistory> history;
   final bool horizontal;
 
   RacketCardList(
       {this.racketCard,
       this.horizontal = true,
       this.animationController,
-      this.animation});
+      this.animation,
+      this.history});
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +74,7 @@ class RacketCardList extends StatelessWidget {
                                   color: ClearAppTheme.green,
                                 ),
                           SizedBox(
-                            width: ScreenUtil().setWidth(12),
-                          ),
-                          SizedBox(
-                            width: ScreenUtil().setWidth(40),
+                            width: ScreenUtil().setWidth(56),
                           ),
                         ])
                       ]),
@@ -117,20 +119,27 @@ class RacketCardList extends StatelessWidget {
           return FadeTransition(
               opacity: animation,
               child: InkWell(
-                  onTap: racketCard.available
-                      ? () => showBarModalBottomSheet(
-                            expand: false,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context, scrollController) => Material(
-                                child: CupertinoPageScaffold(
-                              child: SafeArea(
-                                child: RentWindow(racketCard),
-                              ),
-                            )),
-                          )
-                      : () =>
-                          racketStore.updateOnError("It is already occupied"),
+                  onTap: () => showBarModalBottomSheet(
+                        expand: false,
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        builder: (context, scrollController) => Material(
+                            child: CupertinoPageScaffold(
+                          child: SafeArea(
+                            child: Provider<RacketFormStore>(
+                              create: (context) => RacketFormStore(),
+                              child: Builder(builder: (_) {
+                                return RentWindow(
+                                  racketCard,
+                                  onSuccess: () =>
+                                      racketStore.refreshOnTabChange(),
+                                  history: history,
+                                );
+                              }),
+                            ),
+                          ),
+                        )),
+                      ),
                   child: Container(
                       color: Colors.transparent,
                       child: Column(children: <Widget>[

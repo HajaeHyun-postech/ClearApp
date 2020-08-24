@@ -39,7 +39,7 @@ class CustomFilter extends StatelessWidget {
         menuPositionAndSizeComponent:
             MenuPositionAndSizeComponent(builder: _menuPositionBuilder),
         menuSizeConfiguration: MenuSizeConfiguration(
-          maxHeight: ScreenUtil().setHeight(400),
+          maxHeight: menus.length * ScreenUtil().setHeight(400 / 3),
           minHeightFraction: 0.0,
           maxWidth: ScreenUtil().setWidth(400),
           minWidthFraction: 0.0,
@@ -51,7 +51,8 @@ class CustomFilter extends StatelessWidget {
   static MenuPositionAndSize _menuPositionBuilder(
       MenuPositionAndSizeComponentData data) {
     return MenuPositionAndSize(
-      positionOffset: Offset(0, data.triggerPositionAndSize.size.height),
+      positionOffset: Offset(-ScreenUtil().setWidth(70),
+          data.triggerPositionAndSize.size.height - 10),
       constraints: data.constraints,
     );
   }
@@ -71,35 +72,24 @@ class CustomFilter extends StatelessWidget {
   }
 
   static Widget _triggerFromItemBuilder(TriggerFromItemComponentData data) {
-    return Material(
-        color: ClearAppTheme.white,
-        child: Row(children: <Widget>[
-          InkWell(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(2.0),
-              ),
-              onTap: data.triggerMenu,
-              child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setWidth(0),
-                      vertical: ScreenUtil().setHeight(5)),
-                  child: Row(children: <Widget>[
-                    Text(
-                      data.item.menu,
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.w600,
-                        fontSize: ScreenUtil().setSp(60),
-                      ),
-                    ),
-                    SizedBox(width: ScreenUtil().setWidth(30)),
-                    FaIcon(
-                      FontAwesomeIcons.caretDown,
-                      size: ScreenUtil().setWidth(45),
-                      color: ClearAppTheme.darkBlue,
-                    ),
-                  ])))
-        ]));
+    return Container(
+      alignment: Alignment.centerRight,
+      width: AppBar().preferredSize.height + 40,
+      height: AppBar().preferredSize.height,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(32.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.sort),
+          ),
+          onTap: data.triggerMenu,
+        ),
+      ),
+    );
   }
 
   Widget itemBuilder(

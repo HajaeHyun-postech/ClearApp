@@ -11,7 +11,7 @@ part 'racket_store.g.dart';
 enum RacketMenuEnum {
   AllRacketStatus,
   MyRacketHstr,
-  AllRacketHstr,
+  AllHstr,
 }
 
 class RacketStore = _RacketStore with _$RacketStore;
@@ -53,7 +53,7 @@ abstract class _RacketStore with Store {
   void refreshOnTabChange() {
     if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-    } else if (currentMenu == RacketMenuEnum.AllRacketHstr) {
+    } else if (currentMenu == RacketMenuEnum.AllHstr) {
       getWholeCheckOutHistories();
     } else {
       getUserCheckOutHistories();
