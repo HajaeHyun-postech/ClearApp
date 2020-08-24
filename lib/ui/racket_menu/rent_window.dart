@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../vo/racket/racket.dart';
-import '../../widget/app_theme.dart';
-import 'package:clearApp/store/racket/racket_store.dart';
-import '../../widget/toast_generator.dart';
-import 'package:clearApp/store/racket/racket_form_store.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'racket_historylist.dart';
-import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
+
+import '../../store/racket/racket_form_store.dart';
+import '../../vo/racket/racket.dart';
+import '../../widget/toast_generator.dart';
 
 class RentWindow extends StatefulWidget {
-  final Function onSuccess;
   final Racket racketCard;
-  final List<RacketCheckOutHistory> history;
-  RentWindow(this.racketCard, {this.onSuccess, this.history});
+  final Function onSuccess;
+  final bool canCheckOut;
+  final bool isUserUsing;
+  final int historyId;
+  RentWindow(this.racketCard,
+      {this.onSuccess, this.canCheckOut, this.isUserUsing, this.historyId});
   @override
-  _RentWindowState createState() =>
-      _RentWindowState(racketCard, history: history);
+  _RentWindowState createState() => _RentWindowState();
 }
 
 class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
-  final Racket racketCard;
-  final List<RacketCheckOutHistory> history;
-  _RentWindowState(this.racketCard, {this.history});
+  _RentWindowState();
   RacketFormStore racketFormStore;
 
   @override
@@ -57,122 +53,6 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _checkOutRacket(int racketid) {
-    setState(() {
-      racketFormStore.checkOutRacket(racketid);
-    });
-  }
-
-  void _checkInRacket(int racketid) {
-    setState(() {
-      racketFormStore.checkInRacket(racketid);
-    });
-  }
-
-  bool amIrentingAvailable() {
-    for (int i = 0; i < history.length; i++) {
-      if (history[i].returnDate == null) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool isitMine() {
-    for (int i = 0; i < history.length; i++) {
-      if (history[i].returnDate == null) {
-        if (history[i].racket.id == racketCard.id) return true;
-      }
-    }
-    return false;
-  }
-
-  void situationFitFunction() {
-    if (racketCard.available) {
-      if (amIrentingAvailable()) {
-        _checkOutRacket(racketCard.id);
-      } else {
-        return;
-      }
-    } else {
-      if (isitMine()) {
-        _checkInRacket(racketCard.id);
-      } else {
-        return;
-      }
-    }
-  }
-
-  Widget situationFitWidget() {
-    if (racketCard.available) {
-      if (amIrentingAvailable()) {
-        return Container(
-          width: ScreenUtil().setWidth(1200),
-          height: ScreenUtil().setHeight(130),
-          child: Center(
-            child: Text(
-              "Rent now",
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: ScreenUtil().setSp(60),
-                color: Color(0xFF837F76),
-              ),
-            ),
-          ),
-        );
-      } else
-        return Container(
-          width: ScreenUtil().setWidth(1200),
-          height: ScreenUtil().setHeight(130),
-          child: Center(
-            child: Text(
-              "You are renting now",
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: ScreenUtil().setSp(60),
-                color: Color(0xFF837F76),
-              ),
-            ),
-          ),
-        );
-    } else {
-      if (isitMine()) {
-        return Container(
-          width: ScreenUtil().setWidth(1200),
-          height: ScreenUtil().setHeight(130),
-          child: Center(
-            child: Text(
-              "return now",
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: ScreenUtil().setSp(60),
-                color: Color(0xFF837F76),
-              ),
-            ),
-          ),
-        );
-      } else
-        return Container(
-          width: ScreenUtil().setWidth(1200),
-          height: ScreenUtil().setHeight(130),
-          child: Center(
-            child: Text(
-              "It is already occupied",
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: ScreenUtil().setSp(60),
-                color: Color(0xFF837F76),
-              ),
-            ),
-          ),
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -196,13 +76,13 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        racketCard.asset,
+                        widget.racketCard.asset,
                         width: ScreenUtil().setWidth(155),
                         fit: BoxFit.fill,
                       ),
                     ),
                     SizedBox(width: ScreenUtil().setWidth(30)),
-                    Text('No.' + racketCard.id.toString(),
+                    Text('No.' + widget.racketCard.id.toString(),
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -218,7 +98,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     SizedBox(width: ScreenUtil().setWidth(56)),
-                    Text(racketCard.name,
+                    Text(widget.racketCard.name,
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -285,7 +165,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(460),
                         child: Center(
                           child: Text(
-                            racketCard.weight.toString() + 'U',
+                            widget.racketCard.weight.toString() + 'U',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -298,7 +178,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(330),
                         child: Center(
                           child: Text(
-                            racketCard.type,
+                            widget.racketCard.type,
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -311,7 +191,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(460),
                         child: Center(
                           child: Text(
-                            racketCard.balance.toString() + 'mm',
+                            widget.racketCard.balance.toString() + 'mm',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -329,23 +209,37 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
           SizedBox(
             height: ScreenUtil().setHeight(80),
           ),
-          Observer(builder: (_) {
-            return InkWell(
-              onTap: null,
-              child: DecoratedBox(
+          InkWell(
+            onTap: null,
+            child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color:
-                      racketCard.available ? Color(0xFFF7F2E7) : Colors.white,
+                  color: widget.racketCard.available
+                      ? Color(0xFFF7F2E7)
+                      : Colors.white,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: InkWell(
-                  onTap: () => situationFitFunction(),
-                  child: situationFitWidget(),
-                ),
-              ),
-            );
-          }),
+                  onTap: () => racketFormStore.adaptiveTapEvent(
+                      widget.isUserUsing, widget.canCheckOut, widget.historyId),
+                  child: Container(
+                    width: ScreenUtil().setWidth(1200),
+                    height: ScreenUtil().setHeight(130),
+                    child: Center(
+                        child: Text(
+                      widget.isUserUsing
+                          ? "return now"
+                          : !widget.canCheckOut ? "1인 1 라켓 정책" : "rent now",
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w600,
+                        fontSize: ScreenUtil().setSp(60),
+                        color: Color(0xFF837F76),
+                      ),
+                    )),
+                  ),
+                )),
+          )
         ],
       ),
     );

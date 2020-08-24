@@ -170,11 +170,10 @@ class _RacketScrollView extends State<RacketScrollView>
                               switch (racketStore.currentMenu) {
                                 case RacketMenuEnum.AllRacketStatus:
                                   return RacketCardList(
-                                    animation: animation,
-                                    animationController: animationController,
-                                    racketCard: racketStore.rackets[index],
-                                    history: racketStore.histories,
-                                  );
+                                      animation: animation,
+                                      animationController: animationController,
+                                      racketCard: racketStore.rackets[index],
+                                      history: racketStore.histories);
                                   break;
                                 case RacketMenuEnum.MyRacketHstr:
                                 case RacketMenuEnum.AllHstr:

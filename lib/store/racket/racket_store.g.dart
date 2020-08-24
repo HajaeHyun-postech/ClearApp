@@ -9,6 +9,14 @@ part of 'racket_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$RacketStore on _RacketStore, Store {
+  Computed<bool> _$canCheckOutComputed;
+
+  @override
+  bool get canCheckOut =>
+      (_$canCheckOutComputed ??= Computed<bool>(() => super.canCheckOut,
+              name: '_RacketStore.canCheckOut'))
+          .value;
+
   final _$racketsAtom = Atom(name: '_RacketStore.rackets');
 
   @override
@@ -69,6 +77,21 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
+  final _$userUsingRacketIdAtom = Atom(name: '_RacketStore.userUsingRacketId');
+
+  @override
+  int get userUsingRacketId {
+    _$userUsingRacketIdAtom.reportRead();
+    return super.userUsingRacketId;
+  }
+
+  @override
+  set userUsingRacketId(int value) {
+    _$userUsingRacketIdAtom.reportWrite(value, super.userUsingRacketId, () {
+      super.userUsingRacketId = value;
+    });
+  }
+
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');
 
   @override
@@ -95,6 +118,17 @@ mixin _$RacketStore on _RacketStore, Store {
   }
 
   final _$_RacketStoreActionController = ActionController(name: '_RacketStore');
+
+  @override
+  bool verifyDuplicateRent() {
+    final _$actionInfo = _$_RacketStoreActionController.startAction(
+        name: '_RacketStore.verifyDuplicateRent');
+    try {
+      return super.verifyDuplicateRent();
+    } finally {
+      _$_RacketStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void tabChanged(RacketMenuEnum currentMenu) {
@@ -135,7 +169,9 @@ mixin _$RacketStore on _RacketStore, Store {
 rackets: ${rackets},
 histories: ${histories},
 currentMenu: ${currentMenu},
-loading: ${loading}
+loading: ${loading},
+userUsingRacketId: ${userUsingRacketId},
+canCheckOut: ${canCheckOut}
     ''';
   }
 }

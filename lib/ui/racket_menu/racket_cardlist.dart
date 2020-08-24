@@ -1,18 +1,16 @@
-import 'package:clearApp/store/racket/racket_store.dart';
-import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
-import 'package:clearApp/store/racket/racket_form_store.dart';
-import '../../vo/racket/racket.dart';
+import '../../store/racket/racket_form_store.dart';
+import '../../store/racket/racket_store.dart';
+import '../../vo/racket_check_out_history/racket_check_out_history.dart';
 import '../../widget/app_theme.dart';
 import 'rent_window.dart';
-import 'racket_historylist.dart';
-import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
 
 class RacketCardList extends StatelessWidget {
   final AnimationController animationController;
@@ -128,12 +126,15 @@ class RacketCardList extends StatelessWidget {
                           child: SafeArea(
                             child: Provider<RacketFormStore>(
                               create: (context) => RacketFormStore(),
-                              child: Builder(builder: (_) {
+                              child: Observer(builder: (_) {
                                 return RentWindow(
                                   racketCard,
                                   onSuccess: () =>
                                       racketStore.refreshOnTabChange(),
-                                  history: history,
+                                  canCheckOut: racketStore.canCheckOut,
+                                  isUserUsing: racketStore.userUsingRacketId ==
+                                      racketCard.id,
+                                  historyId: racketStore.historyIdToCheckIn,
                                 );
                               }),
                             ),

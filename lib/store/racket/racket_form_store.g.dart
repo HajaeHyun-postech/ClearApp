@@ -44,6 +44,17 @@ mixin _$RacketFormStore on _RacketFormStore, Store {
       ActionController(name: '_RacketFormStore');
 
   @override
+  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int id) {
+    final _$actionInfo = _$_RacketFormStoreActionController.startAction(
+        name: '_RacketFormStore.adaptiveTapEvent');
+    try {
+      return super.adaptiveTapEvent(isUserUsing, canCheckOut, id);
+    } finally {
+      _$_RacketFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic dispose() {
     final _$actionInfo = _$_RacketFormStoreActionController.startAction(
         name: '_RacketFormStore.dispose');

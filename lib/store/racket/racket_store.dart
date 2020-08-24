@@ -42,7 +42,34 @@ abstract class _RacketStore with Store {
   @observable
   bool loading = false;
 
+  @computed
+  bool get canCheckOut => verifyDuplicateRent();
+
+  @observable
+  int userUsingRacketId = -1;
+
+  @observable
+  int historyIdToCheckIn = -1;
+
   // actions:-------------------------------------------------------------------
+  @action
+  bool verifyDuplicateRent() {
+    //user history 라 가정
+    userUsingRacketId = -1;
+    historyIdToCheckIn = -1;
+    bool result = true;
+    rackets.where((racket) => !racket.available).forEach((racket) {
+      var history = histories.firstWhere((history) =>
+          history.racket.id == racket.id && history.returnDate == null);
+      if (history != null) {
+        result = false;
+        userUsingRacketId = history.racket.id;
+        historyIdToCheckIn = history.id;
+        return;
+      }
+    });
+    return result;
+  }
 
   @action
   void tabChanged(RacketMenuEnum currentMenu) {
@@ -53,7 +80,8 @@ abstract class _RacketStore with Store {
   void refreshOnTabChange() {
     if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-    } else if (currentMenu == RacketMenuEnum.AllHstr) {
+    }
+    if (currentMenu == RacketMenuEnum.AllHstr) {
       getWholeCheckOutHistories();
     } else {
       getUserCheckOutHistories();
@@ -62,8 +90,6 @@ abstract class _RacketStore with Store {
 
   @action
   Future getRackets() async {
-    if (loading) return;
-
     loading = true;
     Map<String, dynamic> params = {'type': 'list'};
 
@@ -78,8 +104,6 @@ abstract class _RacketStore with Store {
 
   @action
   Future getUserCheckOutHistories() async {
-    if (loading) return;
-
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
@@ -94,8 +118,6 @@ abstract class _RacketStore with Store {
 
   @action
   Future getWholeCheckOutHistories() async {
-    if (loading) return;
-
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 

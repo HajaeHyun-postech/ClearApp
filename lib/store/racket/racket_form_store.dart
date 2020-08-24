@@ -23,6 +23,19 @@ abstract class _RacketFormStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
+  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int id) {
+    if (isUserUsing) {
+      checkInRacket(id);
+    } else {
+      if (canCheckOut) {
+        checkOutRacket(id);
+      } else {
+        updateOnError("1인 1라켓");
+      }
+    }
+  }
+
+  @action
   Future checkOutRacket(int id) async {
     if (loading) return;
     loading = true;

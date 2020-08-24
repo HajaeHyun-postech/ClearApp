@@ -1,17 +1,9 @@
-import 'package:clearApp/store/racket/racket_store.dart';
-import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
-import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-
-import '../../vo/racket/racket.dart';
-import '../../widget/app_theme.dart';
-import 'rent_window.dart';
+import '../../vo/racket_check_out_history/racket_check_out_history.dart';
 
 class RacketHistoryList extends StatelessWidget {
   final AnimationController animationController;
@@ -27,8 +19,6 @@ class RacketHistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final racketStore = Provider.of<RacketStore>(context);
-
     final racketCardContent = Container(
       margin: EdgeInsets.fromLTRB(
           ScreenUtil().setWidth(70),
