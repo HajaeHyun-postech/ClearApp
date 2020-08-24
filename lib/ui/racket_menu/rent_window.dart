@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
 import 'package:clearApp/store/racket/racket_store.dart';
+import '../../widget/toast_generator.dart';
 
 class RentWindow extends StatefulWidget {
   final Racket racketCard;
@@ -177,24 +178,45 @@ class _RentWindowState extends State<RentWindow> {
             onTap: null,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: Color(0xFFF7F2E7),
+                color: racketCard.available ? Color(0xFFF7F2E7) : Colors.white,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Container(
-                width: ScreenUtil().setWidth(1200),
-                height: ScreenUtil().setHeight(130),
-                child: Center(
-                  child: Text(
-                    "Rent now",
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w600,
-                      fontSize: ScreenUtil().setSp(60),
-                      color: Color(0xFF837F76),
-                    ),
-                  ),
-                ),
+              child: InkWell(
+                onTap: racketCard.available
+                    ? () => ToastGenerator.successToast(context, "success test")
+                    : null,
+                child: racketCard.available
+                    ? Container(
+                        width: ScreenUtil().setWidth(1200),
+                        height: ScreenUtil().setHeight(130),
+                        child: Center(
+                          child: Text(
+                            "Rent now",
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w600,
+                              fontSize: ScreenUtil().setSp(60),
+                              color: Color(0xFF837F76),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        width: ScreenUtil().setWidth(1200),
+                        height: ScreenUtil().setHeight(130),
+                        child: Center(
+                          child: Text(
+                            "It is already occupied",
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w600,
+                              fontSize: ScreenUtil().setSp(60),
+                              color: Color(0xFFFF6961),
+                            ),
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),

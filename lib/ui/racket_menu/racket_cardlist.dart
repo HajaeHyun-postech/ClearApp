@@ -114,20 +114,17 @@ class RacketCardList extends StatelessWidget {
           return FadeTransition(
               opacity: animation,
               child: InkWell(
-                  onTap: racketCard.available
-                      ? () => showBarModalBottomSheet(
-                            expand: false,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context, scrollController) => Material(
-                                child: CupertinoPageScaffold(
-                              child: SafeArea(
-                                child: RentWindow(racketCard),
-                              ),
-                            )),
-                          )
-                      : () =>
-                          racketStore.updateOnError("It is already occupied"),
+                  onTap: () => showBarModalBottomSheet(
+                        expand: false,
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        builder: (context, scrollController) => Material(
+                            child: CupertinoPageScaffold(
+                          child: SafeArea(
+                            child: RentWindow(racketCard),
+                          ),
+                        )),
+                      ),
                   child: Container(
                       color: Colors.transparent,
                       child: Column(children: <Widget>[
