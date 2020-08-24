@@ -9,13 +9,11 @@ import 'package:clearApp/store/racket/racket_store.dart';
 
 class CustomFilter extends StatelessWidget {
   final List<RacketMenu> menus;
-  RacketStore racketStore;
   Function onItemSelected;
   int initialindex;
 
   CustomFilter({
     @required this.menus,
-    @required this.racketStore,
     @required this.onItemSelected,
     @required this.initialindex,
   });

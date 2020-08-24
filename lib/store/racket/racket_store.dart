@@ -1,4 +1,3 @@
-import 'package:clearApp/exception/auth_exception.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/convert_util.dart';
@@ -9,9 +8,9 @@ import 'package:mobx/mobx.dart';
 
 part 'racket_store.g.dart';
 
-enum RacketCurrentMenu {
+enum RacketMenuEnum {
   AllRacketStatus,
-  MyHstr,
+  MyRacketHstr,
   AllRacketHstr,
 }
 
@@ -38,7 +37,7 @@ abstract class _RacketStore with Store {
   List<RacketCheckOutHistory> histories = new List<RacketCheckOutHistory>();
 
   @observable
-  RacketCurrentMenu currentMenu = RacketCurrentMenu.AllRacketStatus;
+  RacketMenuEnum currentMenu = RacketMenuEnum.AllRacketStatus;
 
   @observable
   bool loading = false;
@@ -46,30 +45,18 @@ abstract class _RacketStore with Store {
   // actions:-------------------------------------------------------------------
 
   @action
-  void tabChanged(RacketCurrentMenu currentMenu) {
+  void tabChanged(RacketMenuEnum currentMenu) {
     this.currentMenu = currentMenu;
   }
 
   @action
   void refreshOnTabChange() {
-    if (currentMenu == RacketCurrentMenu.AllRacketStatus) {
+    if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-    } else if (currentMenu == RacketCurrentMenu.AllRacketHstr) {
+    } else if (currentMenu == RacketMenuEnum.AllRacketHstr) {
       getWholeCheckOutHistories();
     } else {
       getUserCheckOutHistories();
-    }
-  }
-
-  @action
-  int getindex() {
-    switch (currentMenu) {
-      case RacketCurrentMenu.AllRacketStatus:
-        return 0;
-      case RacketCurrentMenu.AllRacketHstr:
-        return 1;
-      case RacketCurrentMenu.MyHstr:
-        return 2;
     }
   }
 
@@ -96,8 +83,7 @@ abstract class _RacketStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    HttpClient.send(
-            method: "GET", address: "/api/clear/shuttle", params: params)
+    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));
@@ -113,8 +99,7 @@ abstract class _RacketStore with Store {
     loading = true;
     Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
-    HttpClient.send(
-            method: "GET", address: "/api/clear/shuttle", params: params)
+    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));

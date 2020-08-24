@@ -14,7 +14,7 @@ import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class RacketMenu {
-  final RacketCurrentMenu eventType;
+  final RacketMenuEnum eventType;
   final String menu;
   RacketMenu({this.eventType, this.menu});
 }
@@ -24,19 +24,24 @@ class RacketMenuHomeScreenWithProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<RacketStore>(
       create: (_) => RacketStore(),
-      child: RacketMenuHomeScreen(),
+      child:
+          RacketMenuHomeScreen(user: ModalRoute.of(context).settings.arguments),
     );
   }
 }
 
 class RacketMenuHomeScreen extends StatelessWidget {
+  final User user;
+
+  const RacketMenuHomeScreen({Key key, this.user}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
       children: <Widget>[
         CustomAppBar(),
-        RacketScrollView(user: ModalRoute.of(context).settings.arguments),
+        RacketScrollView(user: user),
       ],
     ));
   }
@@ -44,29 +49,35 @@ class RacketMenuHomeScreen extends StatelessWidget {
 
 class RacketScrollView extends StatefulWidget {
   final User user;
+
   RacketScrollView({Key key, this.user}) : super(key: key);
   @override
   _RacketScrollView createState() => _RacketScrollView();
 }
 
-class _RacketScrollView extends State<RacketScrollView> {
+class _RacketScrollView extends State<RacketScrollView>
+    with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   SelectionMenuController selectionMenuController;
   RacketStore racketStore;
   List<RacketMenu> menus;
+  AnimationController animationController;
 
   void onItemSelected(RacketMenu menu) {
-    racketStore.tabChanged(menu.eventType);
-    print(racketStore.currentMenu);
+    if (racketStore.currentMenu != menu.eventType) {
+      animationController.reset();
+      racketStore.tabChanged(menu.eventType);
+      racketStore.refreshOnTabChange();
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      //print('offset = ${_scrollController.offset}');
-    });
     selectionMenuController = SelectionMenuController();
+
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
   }
 
   @override
@@ -77,6 +88,7 @@ class _RacketScrollView extends State<RacketScrollView> {
     racketStore.disposers
       ..add(reaction((_) => racketStore.successStore.success, (success) {
         if (success) {
+          racketStore.refreshOnTabChange();
           ToastGenerator.successToast(
               context, racketStore.successStore.successMessage);
         }
@@ -89,22 +101,12 @@ class _RacketScrollView extends State<RacketScrollView> {
       }));
 
     menus = [
-      RacketMenu(eventType: RacketCurrentMenu.AllRacketStatus, menu: "Rent"),
-      RacketMenu(eventType: RacketCurrentMenu.MyHstr, menu: "MyHstr"),
+      RacketMenu(eventType: RacketMenuEnum.AllRacketStatus, menu: "Rent"),
+      RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "MyHstr"),
+      if (widget.user.isAdmin)
+        RacketMenu(
+            eventType: RacketMenuEnum.AllRacketHstr, menu: "AllRacketHstr")
     ];
-
-    if (widget.user.isAdmin) {
-      RacketMenu adminTab = RacketMenu(
-          eventType: RacketCurrentMenu.AllRacketHstr, menu: "AllRacketHstr");
-
-      menus.add(adminTab);
-    }
-
-    ///racketStore.rackets 에 라켓 정보가 들어있음
-    ///위 코드는 check out/ in 이 성공 / 실패 할때마다 토스트를 띄우고, refresh 하는 코드.
-    ///shuttle_menu/order_form 을 참고하면 됨.
-    ///프로바이더 패턴으로 racketStore을 얻어서, store 의 action 함수를 실행하면 됨.
-    ///toast message는 위 코드에서 알아서 띄우므로, UI 쪽에서 코드를 집어넣을 필요 없음.
   }
 
   @override
@@ -117,9 +119,8 @@ class _RacketScrollView extends State<RacketScrollView> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        color: ClearAppTheme.buildLightTheme().backgroundColor,
-        child: Observer(builder: (_) {
-          return CustomScrollView(
+          color: ClearAppTheme.buildLightTheme().backgroundColor,
+          child: CustomScrollView(
             scrollDirection: Axis.vertical,
             controller: _scrollController,
             slivers: <Widget>[
@@ -129,32 +130,60 @@ class _RacketScrollView extends State<RacketScrollView> {
                     SizedBox(width: ScreenUtil().setWidth(70)),
                     CustomFilter(
                       menus: menus,
-                      racketStore: racketStore,
                       onItemSelected: onItemSelected,
-                      initialindex: racketStore.getindex(),
+                      initialindex: racketStore.currentMenu.index,
                     ),
                   ]),
                   childCount: 1,
                 ),
               ),
-              SliverPadding(
-                padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => racketStore.currentMenu ==
-                            RacketCurrentMenu.AllRacketStatus
-                        ? RacketCardList(racketStore.rackets[index])
-                        : (racketStore.currentMenu == RacketCurrentMenu.MyHstr
-                            ? null
-                            : null),
-                    childCount: racketStore.rackets.length,
-                  ),
-                ),
-              ),
+              Observer(
+                builder: (_) {
+                  return SliverPadding(
+                    padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          //TODO: Refactoring. 코드가 넘 더럽다.
+                          final count = racketStore.rackets.length;
+
+                          final Animation<double> animation =
+                              Tween<double>(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animationController,
+                                      curve: Interval((1 / count) * index, 1.0,
+                                          curve: Curves.fastOutSlowIn)));
+
+                          animationController.forward();
+                          switch (racketStore.currentMenu) {
+                            case RacketMenuEnum.AllRacketStatus:
+                              return RacketCardList(
+                                animation: animation,
+                                animationController: animationController,
+                                racketCard: racketStore.rackets[index],
+                              );
+                              break;
+                            case RacketMenuEnum.MyRacketHstr:
+                              return Container();
+                              break;
+                            case RacketMenuEnum.AllRacketHstr:
+                              return Container();
+                              break;
+                            default:
+                              return Container();
+                          }
+                        },
+                        childCount: racketStore.currentMenu ==
+                                RacketMenuEnum.AllRacketStatus
+                            ? racketStore.rackets.length
+                            : racketStore.histories.length,
+                      ),
+                    ),
+                  );
+                },
+              )
             ],
-          );
-        }),
-      ),
+          )),
     );
   }
 }

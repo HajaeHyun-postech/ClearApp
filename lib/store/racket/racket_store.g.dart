@@ -39,6 +39,21 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
+  final _$currentMenuAtom = Atom(name: '_RacketStore.currentMenu');
+
+  @override
+  RacketMenuEnum get currentMenu {
+    _$currentMenuAtom.reportRead();
+    return super.currentMenu;
+  }
+
+  @override
+  set currentMenu(RacketMenuEnum value) {
+    _$currentMenuAtom.reportWrite(value, super.currentMenu, () {
+      super.currentMenu = value;
+    });
+  }
+
   final _$loadingAtom = Atom(name: '_RacketStore.loading');
 
   @override
@@ -82,6 +97,28 @@ mixin _$RacketStore on _RacketStore, Store {
   final _$_RacketStoreActionController = ActionController(name: '_RacketStore');
 
   @override
+  void tabChanged(RacketMenuEnum currentMenu) {
+    final _$actionInfo = _$_RacketStoreActionController.startAction(
+        name: '_RacketStore.tabChanged');
+    try {
+      return super.tabChanged(currentMenu);
+    } finally {
+      _$_RacketStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void refreshOnTabChange() {
+    final _$actionInfo = _$_RacketStoreActionController.startAction(
+        name: '_RacketStore.refreshOnTabChange');
+    try {
+      return super.refreshOnTabChange();
+    } finally {
+      _$_RacketStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic dispose() {
     final _$actionInfo = _$_RacketStoreActionController.startAction(
         name: '_RacketStore.dispose');
@@ -97,6 +134,7 @@ mixin _$RacketStore on _RacketStore, Store {
     return '''
 rackets: ${rackets},
 histories: ${histories},
+currentMenu: ${currentMenu},
 loading: ${loading}
     ''';
   }
