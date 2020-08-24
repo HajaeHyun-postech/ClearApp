@@ -23,15 +23,18 @@ abstract class _RacketFormStore with Store {
 
   // actions:-------------------------------------------------------------------
   @action
-  void adaptiveTapEvent(
-      bool isUserUsing, bool canCheckOut, int historyId, int racketId) {
+  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int historyId,
+      int racketId, bool available) {
     if (isUserUsing) {
       checkInRacket(historyId);
     } else {
       if (canCheckOut) {
-        checkOutRacket(racketId);
+        if (available)
+          checkOutRacket(racketId);
+        else
+          updateOnError("Occupied");
       } else {
-        updateOnError("1인 1라켓");
+        updateOnError("One racket per one person");
       }
     }
   }

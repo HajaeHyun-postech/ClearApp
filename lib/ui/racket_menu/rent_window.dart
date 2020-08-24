@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/screenutil.dart';
@@ -121,7 +122,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
               children: <Widget>[
                 Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
                         width: ScreenUtil().setWidth(460),
@@ -134,6 +135,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                         ),
                       ),
                       Container(
+                        width: ScreenUtil().setWidth(330),
                         child: Center(
                           child: Image.asset(
                             "assets/images/racket_head.png",
@@ -159,7 +161,7 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                 SizedBox(height: ScreenUtil().setHeight(20)),
                 Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
                         width: ScreenUtil().setWidth(460),
@@ -213,9 +215,13 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
             onTap: null,
             child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: widget.racketCard.available
-                      ? Color(0xFFF7F2E7)
-                      : Colors.white,
+                  color: widget.isUserUsing
+                      ? Color(0xFFCFCFC4)
+                      : !widget.canCheckOut
+                          ? Colors.transparent
+                          : !widget.racketCard.available
+                              ? Colors.transparent
+                              : Color(0xFFCFCFC4),
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -224,26 +230,34 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
                       widget.isUserUsing,
                       widget.canCheckOut,
                       widget.historyId,
-                      widget.racketCard.id),
+                      widget.racketCard.id,
+                      widget.racketCard.available),
                   child: Container(
                     width: ScreenUtil().setWidth(1200),
                     height: ScreenUtil().setHeight(130),
                     child: Center(
-                        child: Text(
-                      widget.isUserUsing
-                          ? "return now"
-                          : !widget.canCheckOut
-                              ? "1인 1 라켓 정책"
-                              : !widget.racketCard.available
-                                  ? "이미 빌림 ㅅㄱ"
-                                  : "rent now",
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: ScreenUtil().setSp(60),
-                        color: Color(0xFF837F76),
+                      child: Text(
+                        widget.isUserUsing
+                            ? "Return"
+                            : !widget.canCheckOut
+                                ? " You can't rent more "
+                                : !widget.racketCard.available
+                                    ? "Occupied"
+                                    : "Rent now",
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          fontSize: ScreenUtil().setSp(60),
+                          color: widget.isUserUsing
+                              ? Colors.white
+                              : !widget.canCheckOut
+                                  ? Color(0xFF808080)
+                                  : !widget.racketCard.available
+                                      ? Color(0xFFCFCFC4)
+                                      : Colors.white,
+                        ),
                       ),
-                    )),
+                    ),
                   ),
                 )),
           )

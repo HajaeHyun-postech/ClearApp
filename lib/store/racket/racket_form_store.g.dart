@@ -45,13 +45,13 @@ mixin _$RacketFormStore on _RacketFormStore, Store {
       ActionController(name: '_RacketFormStore');
 
   @override
-  void adaptiveTapEvent(
-      bool isUserUsing, bool canCheckOut, int historyId, int racketId) {
+  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int historyId,
+      int racketId, bool available) {
     final _$actionInfo = _$_RacketFormStoreActionController.startAction(
         name: '_RacketFormStore.adaptiveTapEvent');
     try {
-      return super
-          .adaptiveTapEvent(isUserUsing, canCheckOut, historyId, racketId);
+      return super.adaptiveTapEvent(
+          isUserUsing, canCheckOut, historyId, racketId, available);
     } finally {
       _$_RacketFormStoreActionController.endAction(_$actionInfo);
     }
