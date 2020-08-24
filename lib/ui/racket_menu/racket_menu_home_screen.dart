@@ -5,13 +5,15 @@ import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'racket_cardlist.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:clearApp/vo/user/user.dart';
-import 'custom_filter.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+import 'custom_filter.dart';
+import 'racket_historylist.dart';
+import 'racket_cardlist.dart';
 
 class RacketMenu {
   final RacketMenuEnum eventType;
@@ -174,10 +176,12 @@ class _RacketScrollView extends State<RacketScrollView>
                                   );
                                   break;
                                 case RacketMenuEnum.MyRacketHstr:
-                                  return Container();
-                                  break;
                                 case RacketMenuEnum.AllHstr:
-                                  return Container();
+                                  return RacketHistoryList(
+                                    animation: animation,
+                                    animationController: animationController,
+                                    racketCard: racketStore.histories[index],
+                                  );
                                   break;
                                 default:
                                   return Container();

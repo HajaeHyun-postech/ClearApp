@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'racket_check_out_history.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable(nullable: true)
 class RacketCheckOutHistory {
   final int id;
   final User user;

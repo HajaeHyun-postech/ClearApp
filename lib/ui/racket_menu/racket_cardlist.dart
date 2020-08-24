@@ -14,7 +14,7 @@ import 'rent_window.dart';
 class RacketCardList extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
-  final Racket racketCard;
+  final dynamic racketCard;
   final bool horizontal;
 
   RacketCardList(
@@ -69,10 +69,7 @@ class RacketCardList extends StatelessWidget {
                                   color: ClearAppTheme.green,
                                 ),
                           SizedBox(
-                            width: ScreenUtil().setWidth(12),
-                          ),
-                          SizedBox(
-                            width: ScreenUtil().setWidth(40),
+                            width: ScreenUtil().setWidth(56),
                           ),
                         ])
                       ]),
