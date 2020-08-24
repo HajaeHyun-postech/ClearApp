@@ -173,6 +173,7 @@ class _RacketScrollView extends State<RacketScrollView>
                                     animation: animation,
                                     animationController: animationController,
                                     racketCard: racketStore.rackets[index],
+                                    history: racketStore.histories,
                                   );
                                   break;
                                 case RacketMenuEnum.MyRacketHstr:
