@@ -38,12 +38,8 @@ class RacketMenuHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: <Widget>[
-        CustomAppBar(),
-        RacketScrollView(user: user),
-      ],
-    ));
+      body: RacketScrollView(user: user),
+    );
   }
 }
 
@@ -101,11 +97,11 @@ class _RacketScrollView extends State<RacketScrollView>
       }));
 
     menus = [
-      RacketMenu(eventType: RacketMenuEnum.AllRacketStatus, menu: "Rent"),
-      RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "MyHstr"),
+      RacketMenu(
+          eventType: RacketMenuEnum.AllRacketStatus, menu: "Racket Rent"),
+      RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "My History"),
       if (widget.user.isAdmin)
-        RacketMenu(
-            eventType: RacketMenuEnum.AllRacketHstr, menu: "AllRacketHstr")
+        RacketMenu(eventType: RacketMenuEnum.AllHstr, menu: "All History")
     ];
   }
 
@@ -117,73 +113,89 @@ class _RacketScrollView extends State<RacketScrollView>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-          color: ClearAppTheme.buildLightTheme().backgroundColor,
-          child: CustomScrollView(
-            scrollDirection: Axis.vertical,
-            controller: _scrollController,
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Row(children: <Widget>[
-                    SizedBox(width: ScreenUtil().setWidth(70)),
+    return Column(
+      children: <Widget>[
+        Stack(
+          children: <Widget>[
+            CustomAppBar(),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+              child: Container(
+                height: AppBar().preferredSize.height,
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
                     CustomFilter(
                       menus: menus,
                       onItemSelected: onItemSelected,
                       initialindex: racketStore.currentMenu.index,
                     ),
-                  ]),
-                  childCount: 1,
+                  ],
                 ),
               ),
-              Observer(
-                builder: (_) {
-                  return SliverPadding(
-                    padding: EdgeInsets.only(top: ScreenUtil().setHeight(20)),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          //TODO: Refactoring. 코드가 넘 더럽다.
-                          final count = racketStore.rackets.length;
+            ),
+          ],
+        ),
+        Expanded(
+          child: Container(
+              color: ClearAppTheme.buildLightTheme().backgroundColor,
+              child: CustomScrollView(
+                scrollDirection: Axis.vertical,
+                controller: _scrollController,
+                slivers: <Widget>[
+                  Observer(
+                    builder: (_) {
+                      return SliverPadding(
+                        padding:
+                            EdgeInsets.only(top: ScreenUtil().setHeight(20)),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              //TODO: Refactoring. 코드가 넘 더럽다.
+                              final count = racketStore.rackets.length;
 
-                          final Animation<double> animation =
-                              Tween<double>(begin: 0.0, end: 1.0).animate(
-                                  CurvedAnimation(
-                                      parent: animationController,
-                                      curve: Interval((1 / count) * index, 1.0,
-                                          curve: Curves.fastOutSlowIn)));
+                              final Animation<double> animation =
+                                  Tween<double>(begin: 0.0, end: 1.0).animate(
+                                      CurvedAnimation(
+                                          parent: animationController,
+                                          curve: Interval(
+                                              (1 / count) * index, 1.0,
+                                              curve: Curves.fastOutSlowIn)));
 
-                          animationController.forward();
-                          switch (racketStore.currentMenu) {
-                            case RacketMenuEnum.AllRacketStatus:
-                              return RacketCardList(
-                                animation: animation,
-                                animationController: animationController,
-                                racketCard: racketStore.rackets[index],
-                              );
-                              break;
-                            case RacketMenuEnum.MyRacketHstr:
-                              return Container();
-                              break;
-                            case RacketMenuEnum.AllRacketHstr:
-                              return Container();
-                              break;
-                            default:
-                              return Container();
-                          }
-                        },
-                        childCount: racketStore.currentMenu ==
-                                RacketMenuEnum.AllRacketStatus
-                            ? racketStore.rackets.length
-                            : racketStore.histories.length,
-                      ),
-                    ),
-                  );
-                },
-              )
-            ],
-          )),
+                              animationController.forward();
+                              switch (racketStore.currentMenu) {
+                                case RacketMenuEnum.AllRacketStatus:
+                                  return RacketCardList(
+                                    animation: animation,
+                                    animationController: animationController,
+                                    racketCard: racketStore.rackets[index],
+                                  );
+                                  break;
+                                case RacketMenuEnum.MyRacketHstr:
+                                  return Container();
+                                  break;
+                                case RacketMenuEnum.AllHstr:
+                                  return Container();
+                                  break;
+                                default:
+                                  return Container();
+                              }
+                            },
+                            childCount: racketStore.currentMenu ==
+                                    RacketMenuEnum.AllRacketStatus
+                                ? racketStore.rackets.length
+                                : racketStore.histories.length,
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              )),
+        ),
+      ],
     );
   }
 }
