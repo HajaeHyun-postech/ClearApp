@@ -9,15 +9,15 @@ import 'package:provider/provider.dart';
 import '../../store/racket/racket_form_store.dart';
 import '../../store/racket/racket_store.dart';
 import '../../widget/app_theme.dart';
-import 'borrow_window.dart';
+import 'borrow_form.dart';
 
-class RacketCardList extends StatelessWidget {
+class RacketDataTile extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
   final dynamic racketCard;
   final bool horizontal;
 
-  RacketCardList(
+  RacketDataTile(
       {this.racketCard,
       this.horizontal = true,
       this.animationController,
@@ -122,7 +122,7 @@ class RacketCardList extends StatelessWidget {
                                       racketCard.id,
                                   isAvailable: racketCard.available),
                               child: Observer(builder: (_) {
-                                return BorrowWindow(
+                                return BorrowForm(
                                   racketCard,
                                   onSuccess: () =>
                                       racketStore.refreshOnTabChange(),

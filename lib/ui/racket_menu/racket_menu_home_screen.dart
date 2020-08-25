@@ -1,4 +1,6 @@
 import 'package:clearApp/store/racket/racket_store.dart';
+import 'package:clearApp/ui/racket_menu/racket_data_tile.dart';
+import 'package:clearApp/ui/racket_menu/racket_history_tile.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:clearApp/widget/appbar.dart';
 import 'package:clearApp/widget/toast_generator.dart';
@@ -12,8 +14,6 @@ import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'custom_filter.dart';
-import 'racket_historylist.dart';
-import 'racket_cardlist.dart';
 
 class RacketMenu {
   final RacketMenuEnum eventType;
@@ -169,14 +169,14 @@ class _RacketScrollView extends State<RacketScrollView>
                               animationController.forward();
                               switch (racketStore.currentMenu) {
                                 case RacketMenuEnum.AllRacketStatus:
-                                  return RacketCardList(
+                                  return RacketDataTile(
                                       animation: animation,
                                       animationController: animationController,
                                       racketCard: racketStore.rackets[index]);
                                   break;
                                 case RacketMenuEnum.MyRacketHstr:
                                 case RacketMenuEnum.AllHstr:
-                                  return RacketHistoryList(
+                                  return RacketHistoryTile(
                                     animation: animation,
                                     animationController: animationController,
                                     racketCard: racketStore.histories[index],

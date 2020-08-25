@@ -84,13 +84,13 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
-  final _$getOccupyingRacketIdAsyncAction =
-      AsyncAction('_RacketStore.getOccupyingRacketId');
+  final _$getBorrowingRacketIdAsyncAction =
+      AsyncAction('_RacketStore.getBorrowingRacketId');
 
   @override
-  Future<dynamic> getOccupyingRacketId() {
-    return _$getOccupyingRacketIdAsyncAction
-        .run(() => super.getOccupyingRacketId());
+  Future<dynamic> getBorrowingRacketId() {
+    return _$getBorrowingRacketIdAsyncAction
+        .run(() => super.getBorrowingRacketId());
   }
 
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');

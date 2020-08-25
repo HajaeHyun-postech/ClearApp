@@ -8,17 +8,16 @@ import '../../store/racket/racket_form_store.dart';
 import '../../vo/racket/racket.dart';
 import '../../widget/toast_generator.dart';
 
-class BorrowWindow extends StatefulWidget {
+class BorrowForm extends StatefulWidget {
   final Racket racketCard;
   final Function onSuccess;
 
-  BorrowWindow(this.racketCard, {this.onSuccess});
+  BorrowForm(this.racketCard, {this.onSuccess});
   @override
-  _BorrowWindowState createState() => _BorrowWindowState();
+  _BorrowFormState createState() => _BorrowFormState();
 }
 
-class _BorrowWindowState extends State<BorrowWindow>
-    with TickerProviderStateMixin {
+class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
   RacketFormStore racketFormStore;
 
   @override

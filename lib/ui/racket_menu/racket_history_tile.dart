@@ -5,13 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../vo/racket_check_out_history/racket_check_out_history.dart';
 
-class RacketHistoryList extends StatelessWidget {
+class RacketHistoryTile extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
   final RacketCheckOutHistory racketCard;
   final bool horizontal;
 
-  RacketHistoryList(
+  RacketHistoryTile(
       {this.racketCard,
       this.horizontal = true,
       this.animationController,

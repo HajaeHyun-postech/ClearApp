@@ -55,7 +55,7 @@ abstract class _RacketStore with Store {
   void refreshOnTabChange() {
     if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-      getOccupyingRacketId();
+      getBorrowingRacketId();
     } else if (currentMenu == RacketMenuEnum.AllHstr) {
       getWholeCheckOutHistories();
     } else {
@@ -64,9 +64,9 @@ abstract class _RacketStore with Store {
   }
 
   @action
-  Future getOccupyingRacketId() async {
+  Future getBorrowingRacketId() async {
     loading = true;
-    Map<String, dynamic> params = {'type': 'occupied'};
+    Map<String, dynamic> params = {'type': 'borrowing'};
 
     HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
         .then((response) {
