@@ -1,6 +1,4 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobx/mobx.dart';
@@ -10,20 +8,17 @@ import '../../store/racket/racket_form_store.dart';
 import '../../vo/racket/racket.dart';
 import '../../widget/toast_generator.dart';
 
-class RentWindow extends StatefulWidget {
+class BorrowWindow extends StatefulWidget {
   final Racket racketCard;
   final Function onSuccess;
-  final bool canCheckOut;
-  final bool isUserUsing;
-  final int historyId;
-  RentWindow(this.racketCard,
-      {this.onSuccess, this.canCheckOut, this.isUserUsing, this.historyId});
+
+  BorrowWindow(this.racketCard, {this.onSuccess});
   @override
-  _RentWindowState createState() => _RentWindowState();
+  _BorrowWindowState createState() => _BorrowWindowState();
 }
 
-class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
-  _RentWindowState();
+class _BorrowWindowState extends State<BorrowWindow>
+    with TickerProviderStateMixin {
   RacketFormStore racketFormStore;
 
   @override
@@ -215,46 +210,23 @@ class _RentWindowState extends State<RentWindow> with TickerProviderStateMixin {
             onTap: null,
             child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: widget.isUserUsing
-                      ? Color(0xFFCFCFC4)
-                      : !widget.canCheckOut
-                          ? Colors.transparent
-                          : !widget.racketCard.available
-                              ? Colors.transparent
-                              : Color(0xFFCFCFC4),
+                  color: racketFormStore.buttonColor,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: InkWell(
-                  onTap: () => racketFormStore.adaptiveTapEvent(
-                      widget.isUserUsing,
-                      widget.canCheckOut,
-                      widget.historyId,
-                      widget.racketCard.id,
-                      widget.racketCard.available),
+                  onTap: racketFormStore.buttonTapEvent(widget.racketCard.id),
                   child: Container(
                     width: ScreenUtil().setWidth(1200),
                     height: ScreenUtil().setHeight(130),
                     child: Center(
                       child: Text(
-                        widget.isUserUsing
-                            ? "Return"
-                            : !widget.canCheckOut
-                                ? " You can't rent more "
-                                : !widget.racketCard.available
-                                    ? "Occupied"
-                                    : "Rent now",
+                        racketFormStore.buttonText,
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w600,
                           fontSize: ScreenUtil().setSp(60),
-                          color: widget.isUserUsing
-                              ? Colors.white
-                              : !widget.canCheckOut
-                                  ? Color(0xFF808080)
-                                  : !widget.racketCard.available
-                                      ? Color(0xFFCFCFC4)
-                                      : Colors.white,
+                          color: Colors.white,
                         ),
                       ),
                     ),

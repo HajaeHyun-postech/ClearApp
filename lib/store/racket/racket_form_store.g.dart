@@ -24,38 +24,24 @@ mixin _$RacketFormStore on _RacketFormStore, Store {
     });
   }
 
-  final _$checkOutRacketAsyncAction =
-      AsyncAction('_RacketFormStore.checkOutRacket');
+  final _$borrowRacketAsyncAction =
+      AsyncAction('_RacketFormStore.borrowRacket');
 
   @override
-  Future<dynamic> checkOutRacket(int racketId) {
-    return _$checkOutRacketAsyncAction
-        .run(() => super.checkOutRacket(racketId));
+  Future<dynamic> borrowRacket(int racketId) {
+    return _$borrowRacketAsyncAction.run(() => super.borrowRacket(racketId));
   }
 
-  final _$checkInRacketAsyncAction =
-      AsyncAction('_RacketFormStore.checkInRacket');
+  final _$returnRacketAsyncAction =
+      AsyncAction('_RacketFormStore.returnRacket');
 
   @override
-  Future<dynamic> checkInRacket(int id) {
-    return _$checkInRacketAsyncAction.run(() => super.checkInRacket(id));
+  Future<dynamic> returnRacket(int racketId) {
+    return _$returnRacketAsyncAction.run(() => super.returnRacket(racketId));
   }
 
   final _$_RacketFormStoreActionController =
       ActionController(name: '_RacketFormStore');
-
-  @override
-  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int historyId,
-      int racketId, bool available) {
-    final _$actionInfo = _$_RacketFormStoreActionController.startAction(
-        name: '_RacketFormStore.adaptiveTapEvent');
-    try {
-      return super.adaptiveTapEvent(
-          isUserUsing, canCheckOut, historyId, racketId, available);
-    } finally {
-      _$_RacketFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   dynamic dispose() {

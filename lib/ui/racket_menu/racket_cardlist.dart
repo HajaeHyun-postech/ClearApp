@@ -8,29 +8,23 @@ import 'package:provider/provider.dart';
 
 import '../../store/racket/racket_form_store.dart';
 import '../../store/racket/racket_store.dart';
-import '../../vo/racket_check_out_history/racket_check_out_history.dart';
 import '../../widget/app_theme.dart';
-import 'rent_window.dart';
+import 'borrow_window.dart';
 
 class RacketCardList extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
   final dynamic racketCard;
-  final List<RacketCheckOutHistory> history;
   final bool horizontal;
 
   RacketCardList(
       {this.racketCard,
       this.horizontal = true,
       this.animationController,
-      this.animation,
-      this.history});
+      this.animation});
 
-  @override
-  Widget build(BuildContext context) {
-    final racketStore = Provider.of<RacketStore>(context);
-
-    final racketCardContent = Container(
+  Widget _buildCardContent() {
+    return Container(
       margin: EdgeInsets.fromLTRB(
           ScreenUtil().setWidth(70),
           ScreenUtil().setHeight(0),
@@ -101,15 +95,11 @@ class RacketCardList extends StatelessWidget {
         ],
       ),
     );
+  }
 
-    final racketCardf = Container(
-      child: racketCardContent,
-      height: ScreenUtil().setHeight(340),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        shape: BoxShape.rectangle,
-      ),
-    );
+  @override
+  Widget build(BuildContext context) {
+    final racketStore = Provider.of<RacketStore>(context);
 
     return AnimatedBuilder(
         animation: animationController,
@@ -125,16 +115,17 @@ class RacketCardList extends StatelessWidget {
                             child: CupertinoPageScaffold(
                           child: SafeArea(
                             child: Provider<RacketFormStore>(
-                              create: (context) => RacketFormStore(),
+                              create: (context) => RacketFormStore(
+                                  isBorrowLimit:
+                                      racketStore.borrowingRacketId != 0,
+                                  isReturn: racketStore.borrowingRacketId ==
+                                      racketCard.id,
+                                  isAvailable: racketCard.available),
                               child: Observer(builder: (_) {
-                                return RentWindow(
+                                return BorrowWindow(
                                   racketCard,
                                   onSuccess: () =>
                                       racketStore.refreshOnTabChange(),
-                                  canCheckOut: racketStore.canCheckOut,
-                                  isUserUsing: racketStore.userUsingRacketId ==
-                                      racketCard.id,
-                                  historyId: racketStore.historyIdToCheckIn,
                                 );
                               }),
                             ),
@@ -144,7 +135,14 @@ class RacketCardList extends StatelessWidget {
                   child: Container(
                       color: Colors.transparent,
                       child: Column(children: <Widget>[
-                        racketCardf,
+                        Container(
+                          child: _buildCardContent(),
+                          height: ScreenUtil().setHeight(340),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            shape: BoxShape.rectangle,
+                          ),
+                        ),
                         Divider(
                           indent: ScreenUtil().setWidth(70),
                           endIndent: ScreenUtil().setWidth(70),

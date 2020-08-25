@@ -42,38 +42,10 @@ abstract class _RacketStore with Store {
   @observable
   bool loading = false;
 
-  @computed
-  bool get canCheckOut => verifyDuplicateRent();
-
   @observable
-  int userUsingRacketId = -1;
-
-  @observable
-  int historyIdToCheckIn = -1;
+  int borrowingRacketId;
 
   // actions:-------------------------------------------------------------------
-  @action
-  bool verifyDuplicateRent() {
-    //user history 라 가정
-    userUsingRacketId = -1;
-    historyIdToCheckIn = -1;
-    bool result = true;
-    rackets.where((racket) => !racket.available).forEach((racket) {
-      var history = histories.firstWhere(
-          (history) =>
-              history.racket.id == racket.id && history.returnDate == null,
-          orElse: () => null);
-
-      if (history != null) {
-        result = false;
-        userUsingRacketId = history.racket.id;
-        historyIdToCheckIn = history.id;
-        return;
-      }
-    });
-    return result;
-  }
-
   @action
   void tabChanged(RacketMenuEnum currentMenu) {
     this.currentMenu = currentMenu;
@@ -83,12 +55,25 @@ abstract class _RacketStore with Store {
   void refreshOnTabChange() {
     if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-    }
-    if (currentMenu == RacketMenuEnum.AllHstr) {
+      getOccupyingRacketId();
+    } else if (currentMenu == RacketMenuEnum.AllHstr) {
       getWholeCheckOutHistories();
     } else {
       getUserCheckOutHistories();
     }
+  }
+
+  @action
+  Future getOccupyingRacketId() async {
+    loading = true;
+    Map<String, dynamic> params = {'type': 'occupied'};
+
+    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
+        .then((response) {
+          borrowingRacketId = response['racketId'];
+        })
+        .catchError((e) => updateOnError(e.cause))
+        .whenComplete(() => loading = false);
   }
 
   @action

@@ -1,6 +1,7 @@
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 import 'package:clearApp/util/http_client.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 part 'racket_form_store.g.dart';
@@ -16,31 +17,42 @@ abstract class _RacketFormStore with Store {
   List<ReactionDisposer> disposers = [];
 
   // constructor:---------------------------------------------------------------
+  _RacketFormStore({bool isBorrowLimit, bool isReturn, bool isAvailable}) {
+    if (isBorrowLimit) {
+      if (isReturn) {
+        buttonTapEvent = (id) => returnRacket(id);
+        buttonText = "Retun Now";
+        buttonColor = Color(0xFFCFCFC4);
+      } else {
+        buttonTapEvent = (id) => updateOnError("Borrow Limit");
+        buttonText = "Borrow Limit (1 per person)";
+        buttonColor = Colors.transparent;
+      }
+    } else {
+      if (isAvailable) {
+        buttonTapEvent = (id) => borrowRacket(id);
+        buttonText = "Borrow";
+        buttonColor = Color(0xFFCFCFC4);
+      } else {
+        buttonTapEvent = (id) => updateOnError("Not Available");
+        buttonText = "Not Available";
+        buttonColor = Colors.transparent;
+      }
+    }
+  }
 
   // store variables:-----------------------------------------------------------
   @observable
   bool loading = false;
 
+  // other variables:-----------------------------------------------------------
+  Function buttonTapEvent;
+  String buttonText;
+  Color buttonColor;
+
   // actions:-------------------------------------------------------------------
   @action
-  void adaptiveTapEvent(bool isUserUsing, bool canCheckOut, int historyId,
-      int racketId, bool available) {
-    if (isUserUsing) {
-      checkInRacket(historyId);
-    } else {
-      if (canCheckOut) {
-        if (available)
-          checkOutRacket(racketId);
-        else
-          updateOnError("Occupied");
-      } else {
-        updateOnError("One racket per one person");
-      }
-    }
-  }
-
-  @action
-  Future checkOutRacket(int racketId) async {
+  Future borrowRacket(int racketId) async {
     if (loading) return;
     loading = true;
 
@@ -54,11 +66,11 @@ abstract class _RacketFormStore with Store {
   }
 
   @action
-  Future checkInRacket(int id) async {
+  Future returnRacket(int racketId) async {
     if (loading) return;
     loading = true;
 
-    Map<String, dynamic> body = {'id': id};
+    Map<String, dynamic> body = {'id': racketId};
     HttpClient.send(method: "PATCH", address: "/api/clear/racket", body: body)
         .then((response) {
           updateOnSuccess("Check In Successful");

@@ -9,14 +9,6 @@ part of 'racket_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$RacketStore on _RacketStore, Store {
-  Computed<bool> _$canCheckOutComputed;
-
-  @override
-  bool get canCheckOut =>
-      (_$canCheckOutComputed ??= Computed<bool>(() => super.canCheckOut,
-              name: '_RacketStore.canCheckOut'))
-          .value;
-
   final _$racketsAtom = Atom(name: '_RacketStore.rackets');
 
   @override
@@ -77,35 +69,28 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
-  final _$userUsingRacketIdAtom = Atom(name: '_RacketStore.userUsingRacketId');
+  final _$borrowingRacketIdAtom = Atom(name: '_RacketStore.borrowingRacketId');
 
   @override
-  int get userUsingRacketId {
-    _$userUsingRacketIdAtom.reportRead();
-    return super.userUsingRacketId;
+  int get borrowingRacketId {
+    _$borrowingRacketIdAtom.reportRead();
+    return super.borrowingRacketId;
   }
 
   @override
-  set userUsingRacketId(int value) {
-    _$userUsingRacketIdAtom.reportWrite(value, super.userUsingRacketId, () {
-      super.userUsingRacketId = value;
+  set borrowingRacketId(int value) {
+    _$borrowingRacketIdAtom.reportWrite(value, super.borrowingRacketId, () {
+      super.borrowingRacketId = value;
     });
   }
 
-  final _$historyIdToCheckInAtom =
-      Atom(name: '_RacketStore.historyIdToCheckIn');
+  final _$getOccupyingRacketIdAsyncAction =
+      AsyncAction('_RacketStore.getOccupyingRacketId');
 
   @override
-  int get historyIdToCheckIn {
-    _$historyIdToCheckInAtom.reportRead();
-    return super.historyIdToCheckIn;
-  }
-
-  @override
-  set historyIdToCheckIn(int value) {
-    _$historyIdToCheckInAtom.reportWrite(value, super.historyIdToCheckIn, () {
-      super.historyIdToCheckIn = value;
-    });
+  Future<dynamic> getOccupyingRacketId() {
+    return _$getOccupyingRacketIdAsyncAction
+        .run(() => super.getOccupyingRacketId());
   }
 
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');
@@ -134,17 +119,6 @@ mixin _$RacketStore on _RacketStore, Store {
   }
 
   final _$_RacketStoreActionController = ActionController(name: '_RacketStore');
-
-  @override
-  bool verifyDuplicateRent() {
-    final _$actionInfo = _$_RacketStoreActionController.startAction(
-        name: '_RacketStore.verifyDuplicateRent');
-    try {
-      return super.verifyDuplicateRent();
-    } finally {
-      _$_RacketStoreActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void tabChanged(RacketMenuEnum currentMenu) {
@@ -186,9 +160,7 @@ rackets: ${rackets},
 histories: ${histories},
 currentMenu: ${currentMenu},
 loading: ${loading},
-userUsingRacketId: ${userUsingRacketId},
-historyIdToCheckIn: ${historyIdToCheckIn},
-canCheckOut: ${canCheckOut}
+borrowingRacketId: ${borrowingRacketId}
     ''';
   }
 }
