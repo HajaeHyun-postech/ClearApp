@@ -59,7 +59,7 @@ abstract class _RacketFormStore with Store {
     Map<String, dynamic> body = {'id': racketId};
     HttpClient.send(method: "POST", address: "/api/clear/racket", body: body)
         .then((response) {
-          updateOnSuccess("Check Out Successful");
+          updateOnSuccess("Borrow Successful");
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
@@ -73,7 +73,7 @@ abstract class _RacketFormStore with Store {
     Map<String, dynamic> body = {'id': racketId};
     HttpClient.send(method: "PATCH", address: "/api/clear/racket", body: body)
         .then((response) {
-          updateOnSuccess("Check In Successful");
+          updateOnSuccess("Return Successful");
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);

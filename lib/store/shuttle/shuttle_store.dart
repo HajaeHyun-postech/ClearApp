@@ -107,8 +107,8 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future receiveShuttle(List<int> idList, bool received) async {
-    if (received) {
+  Future receiveShuttle(List<int> idList, bool isReceived) async {
+    if (isReceived) {
       updateOnError("Alreay Received");
       return;
     }
@@ -127,8 +127,8 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future confirmDeposit(List<int> idList, bool confirmed) async {
-    if (confirmed) {
+  Future confirmDeposit(List<int> idList, bool isConfirmed) async {
+    if (isConfirmed) {
       updateOnError("Already Confirmed");
       return;
     }
@@ -147,8 +147,9 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future deleteOrder(List<int> idList, bool received, bool confirmed) async {
-    if (received || confirmed) {
+  Future deleteOrder(
+      List<int> idList, bool isReceived, bool isConfirmed) async {
+    if (isReceived || isConfirmed) {
       updateOnError("Delete Failed");
       return;
     }
@@ -178,13 +179,13 @@ abstract class _ShuttleStore with Store {
   int calUnconfirmedPrice(List<ShuttleOrderHistory> list) {
     int moneyToPay = 0;
     list.forEach((element) {
-      element.depositConfirmed ? moneyToPay += 0 : moneyToPay += element.price;
+      element.isConfirmed ? moneyToPay += 0 : moneyToPay += element.price;
     });
     return moneyToPay;
   }
 
   List<ShuttleOrderHistory> filterNotRecieved(List<ShuttleOrderHistory> list) {
-    return list.where((element) => element.received == false).toList();
+    return list.where((element) => element.isReceived == false).toList();
   }
 
   void updateOnError(String message) {

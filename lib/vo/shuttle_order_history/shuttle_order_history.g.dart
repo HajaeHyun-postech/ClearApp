@@ -10,15 +10,15 @@ ShuttleOrderHistory _$ShuttleOrderHistoryFromJson(Map<String, dynamic> json) {
   return ShuttleOrderHistory(
     (json['idList'] as List)?.map((e) => e as int)?.toList(),
     json['price'] as int,
-    json['available'] as bool,
+    json['isAvailable'] as bool,
     json['user'] == null
         ? null
         : User.fromJson(json['user'] as Map<String, dynamic>),
     json['orderDate'] == null
         ? null
         : DateTime.parse(json['orderDate'] as String),
-    json['received'] as bool,
-    json['depositConfirmed'] as bool,
+    json['isReceived'] as bool,
+    json['isConfirmed'] as bool,
     json['orderUsage'] as String,
   );
 }
@@ -28,10 +28,10 @@ Map<String, dynamic> _$ShuttleOrderHistoryToJson(
     <String, dynamic>{
       'idList': instance.idList,
       'price': instance.price,
-      'available': instance.available,
+      'isAvailable': instance.isAvailable,
       'user': instance.user,
       'orderUsage': instance.orderUsage,
       'orderDate': instance.orderDate?.toIso8601String(),
-      'received': instance.received,
-      'depositConfirmed': instance.depositConfirmed,
+      'isReceived': instance.isReceived,
+      'isConfirmed': instance.isConfirmed,
     };

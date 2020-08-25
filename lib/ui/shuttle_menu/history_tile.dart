@@ -13,8 +13,8 @@ class HistoryTile extends StatefulWidget {
   final String name;
   final int price;
   final DateTime orderDate;
-  final bool depositConfirmed;
-  final bool received;
+  final bool isConfirmed;
+  final bool isReceived;
   final String firstActionCaption;
   final String secondActionCaption;
   final Function firstTapAction;
@@ -29,8 +29,8 @@ class HistoryTile extends StatefulWidget {
       this.name,
       this.price,
       this.orderDate,
-      this.depositConfirmed,
-      this.received,
+      this.isConfirmed,
+      this.isReceived,
       this.firstActionCaption,
       this.secondActionCaption,
       this.firstTapAction,
@@ -67,8 +67,8 @@ class HistoryTileState extends State<HistoryTile> {
                             widget.price,
                             widget.orderDate,
                             widget.idList,
-                            widget.depositConfirmed,
-                            widget.received)),
+                            widget.isConfirmed,
+                            widget.isReceived)),
                     SizedBox(width: ScreenUtil().setWidth(60)),
                   ],
                 ),
@@ -97,16 +97,16 @@ class ValueCard extends StatelessWidget {
   final int price;
   final DateTime date;
   final List<int> idList;
-  final bool depositConfirmed;
-  final bool received;
+  final bool isConfirmed;
+  final bool isReceived;
   ValueCard(
     this.title,
     this.name,
     this.price,
     this.date,
     this.idList,
-    this.depositConfirmed,
-    this.received,
+    this.isConfirmed,
+    this.isReceived,
   );
   @override
   Widget build(BuildContext context) {
@@ -129,12 +129,12 @@ class ValueCard extends StatelessWidget {
                 Text(
                   price.toString() + ' \‎₩',
                   style: TextStyle(
-                      color: depositConfirmed
+                      color: isConfirmed
                           ? ClearAppTheme.darkBlue
                           : ClearAppTheme.pink,
                       fontSize: ScreenUtil().setSp(52),
                       fontWeight: FontWeight.bold,
-                      decoration: depositConfirmed
+                      decoration: isConfirmed
                           ? TextDecoration.lineThrough
                           : TextDecoration.none),
                 )
@@ -158,10 +158,10 @@ class ValueCard extends StatelessWidget {
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: ScreenUtil().setSp(44),
-                      color: received
+                      color: isReceived
                           ? Colors.grey
                           : ClearAppTheme.orange.withAlpha(230),
-                      decoration: received
+                      decoration: isReceived
                           ? TextDecoration.lineThrough
                           : TextDecoration.none),
                 )

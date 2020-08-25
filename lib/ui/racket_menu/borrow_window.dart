@@ -52,7 +52,7 @@ class _BorrowWindowState extends State<BorrowWindow>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white, //Color(0xFF9DAFAF),
+      color: Colors.white,
       padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(70)),
       child: Column(
         mainAxisSize: MainAxisSize.min,

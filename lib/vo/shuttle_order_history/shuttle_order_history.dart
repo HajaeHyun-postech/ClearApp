@@ -7,21 +7,21 @@ part 'shuttle_order_history.g.dart';
 class ShuttleOrderHistory {
   final List<int> idList;
   final int price;
-  final bool available;
+  final bool isAvailable;
   final User user;
   final String orderUsage;
   final DateTime orderDate;
-  final bool received;
-  final bool depositConfirmed;
+  final bool isReceived;
+  final bool isConfirmed;
 
   ShuttleOrderHistory(
     this.idList,
     this.price,
-    this.available,
+    this.isAvailable,
     this.user,
     this.orderDate,
-    this.received,
-    this.depositConfirmed,
+    this.isReceived,
+    this.isConfirmed,
     this.orderUsage,
   );
 

@@ -12,7 +12,7 @@ Racket _$RacketFromJson(Map<String, dynamic> json) {
     json['name'] as String,
     json['brand'] as String,
     json['info'] as String,
-    json['available'] as bool,
+    json['isAvailable'] as bool,
     json['asset'] as String,
     json['type'] as String,
     json['balance'] as int,
@@ -29,7 +29,7 @@ Map<String, dynamic> _$RacketToJson(Racket instance) => <String, dynamic>{
       'balance': instance.balance,
       'weight': instance.weight,
       'info': instance.info,
-      'available': instance.available,
+      'isAvailable': instance.isAvailable,
       'disabledInfo': instance.disabledInfo,
       'asset': instance.asset,
     };

@@ -255,14 +255,12 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                             firstTapAction = () =>
                                                 shuttleStore.confirmDeposit(
                                                     list[index].idList,
-                                                    list[index]
-                                                        .depositConfirmed);
+                                                    list[index].isConfirmed);
                                             secondTapAction = () =>
                                                 shuttleStore.deleteOrder(
                                                     list[index].idList,
-                                                    list[index].received,
-                                                    list[index]
-                                                        .depositConfirmed);
+                                                    list[index].isReceived,
+                                                    list[index].isConfirmed);
                                           } else {
                                             title = '${list[index].orderUsage}';
                                             firstActionCaption = 'Receive';
@@ -270,13 +268,12 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                             firstTapAction = () =>
                                                 shuttleStore.receiveShuttle(
                                                     list[index].idList,
-                                                    list[index].received);
+                                                    list[index].isReceived);
                                             secondTapAction = () =>
                                                 shuttleStore.deleteOrder(
                                                     list[index].idList,
-                                                    list[index].received,
-                                                    list[index]
-                                                        .depositConfirmed);
+                                                    list[index].isReceived,
+                                                    list[index].isConfirmed);
                                           }
                                           return HistoryTile(
                                             animation: animation,
@@ -287,9 +284,9 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                             name: list[index].user.name,
                                             price: list[index].price,
                                             orderDate: list[index].orderDate,
-                                            depositConfirmed:
-                                                list[index].depositConfirmed,
-                                            received: list[index].received,
+                                            isConfirmed:
+                                                list[index].isConfirmed,
+                                            isReceived: list[index].isReceived,
                                             firstActionCaption:
                                                 firstActionCaption,
                                             secondActionCaption:
