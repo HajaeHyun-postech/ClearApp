@@ -1,3 +1,4 @@
+import 'package:clearApp/vo/racket/racket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,11 +15,11 @@ import 'borrow_form.dart';
 class RacketDataTile extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
-  final dynamic racketCard;
+  final Racket racket;
   final bool horizontal;
 
   RacketDataTile(
-      {this.racketCard,
+      {this.racket,
       this.horizontal = true,
       this.animationController,
       this.animation});
@@ -33,7 +34,7 @@ class RacketDataTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.asset(racketCard.asset,
+          Image.asset(racket.asset,
               width: ScreenUtil().setWidth(250),
               height: ScreenUtil().setHeight(460)),
           SizedBox(width: ScreenUtil().setWidth(70)),
@@ -45,7 +46,7 @@ class RacketDataTile extends StatelessWidget {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(racketCard.name,
+                        Text(racket.name,
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               letterSpacing: 0,
@@ -56,7 +57,7 @@ class RacketDataTile extends StatelessWidget {
                               //fontSize: 14,
                             )),
                         Row(children: <Widget>[
-                          !racketCard.available
+                          !racket.isAvailable
                               ? FaIcon(FontAwesomeIcons.ban,
                                   size: ScreenUtil().setWidth(60),
                                   color: Color(0xFFFF84B1))
@@ -79,7 +80,7 @@ class RacketDataTile extends StatelessWidget {
                           size: ScreenUtil().setWidth(45),
                           color: Color(0xFFCCCED1)),
                       SizedBox(width: ScreenUtil().setWidth(20)),
-                      Text('No.' + racketCard.id.toString(),
+                      Text('No.' + racket.id.toString(),
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             letterSpacing: 0,
@@ -115,20 +116,16 @@ class RacketDataTile extends StatelessWidget {
                             child: CupertinoPageScaffold(
                           child: SafeArea(
                             child: Provider<RacketFormStore>(
-                              create: (context) => RacketFormStore(
-                                  isBorrowLimit:
-                                      racketStore.borrowingRacketId != 0,
-                                  isReturn: racketStore.borrowingRacketId ==
-                                      racketCard.id,
-                                  isAvailable: racketCard.available),
-                              child: Observer(builder: (_) {
-                                return BorrowForm(
-                                  racketCard,
-                                  onSuccess: () =>
-                                      racketStore.refreshOnTabChange(),
-                                );
-                              }),
-                            ),
+                                create: (context) => RacketFormStore(
+                                    isBorrowLimit:
+                                        racketStore.borrowingRacketId != 0,
+                                    isReturn: racketStore.borrowingRacketId ==
+                                        racket.id,
+                                    isAvailable: racket.isAvailable),
+                                child: BorrowForm(
+                                  racket,
+                                  onSuccess: racketStore.refreshOnTabChange,
+                                )),
                           ),
                         )),
                       ),

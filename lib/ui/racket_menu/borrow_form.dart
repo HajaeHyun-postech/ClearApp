@@ -9,10 +9,10 @@ import '../../vo/racket/racket.dart';
 import '../../widget/toast_generator.dart';
 
 class BorrowForm extends StatefulWidget {
-  final Racket racketCard;
+  final Racket racket;
   final Function onSuccess;
 
-  BorrowForm(this.racketCard, {this.onSuccess});
+  BorrowForm(this.racket, {this.onSuccess});
   @override
   _BorrowFormState createState() => _BorrowFormState();
 }
@@ -71,13 +71,13 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        widget.racketCard.asset,
+                        widget.racket.asset,
                         width: ScreenUtil().setWidth(155),
                         fit: BoxFit.fill,
                       ),
                     ),
                     SizedBox(width: ScreenUtil().setWidth(30)),
-                    Text('No.' + widget.racketCard.id.toString(),
+                    Text('No.' + widget.racket.id.toString(),
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -93,7 +93,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     SizedBox(width: ScreenUtil().setWidth(56)),
-                    Text(widget.racketCard.name,
+                    Text(widget.racket.name,
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -161,7 +161,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(460),
                         child: Center(
                           child: Text(
-                            widget.racketCard.weight.toString() + 'U',
+                            widget.racket.weight.toString() + 'U',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -174,7 +174,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(330),
                         child: Center(
                           child: Text(
-                            widget.racketCard.type,
+                            widget.racket.type,
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -187,7 +187,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                         width: ScreenUtil().setWidth(460),
                         child: Center(
                           child: Text(
-                            widget.racketCard.balance.toString() + 'mm',
+                            widget.racket.balance.toString() + 'mm',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: ScreenUtil().setSp(50),
@@ -214,7 +214,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: InkWell(
-                  onTap: racketFormStore.buttonTapEvent(widget.racketCard.id),
+                  onTap: () => racketFormStore.buttonTapEvent(widget.racket.id),
                   child: Container(
                     width: ScreenUtil().setWidth(1200),
                     height: ScreenUtil().setHeight(130),

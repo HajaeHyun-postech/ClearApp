@@ -26,7 +26,7 @@ abstract class _RacketFormStore with Store {
       } else {
         buttonTapEvent = (id) => updateOnError("Borrow Limit");
         buttonText = "Borrow Limit (1 per person)";
-        buttonColor = Colors.transparent;
+        buttonColor = Colors.black;
       }
     } else {
       if (isAvailable) {
@@ -36,7 +36,7 @@ abstract class _RacketFormStore with Store {
       } else {
         buttonTapEvent = (id) => updateOnError("Not Available");
         buttonText = "Not Available";
-        buttonColor = Colors.transparent;
+        buttonColor = Colors.green;
       }
     }
   }

@@ -172,7 +172,7 @@ class _RacketScrollView extends State<RacketScrollView>
                                   return RacketDataTile(
                                       animation: animation,
                                       animationController: animationController,
-                                      racketCard: racketStore.rackets[index]);
+                                      racket: racketStore.rackets[index]);
                                   break;
                                 case RacketMenuEnum.MyRacketHstr:
                                 case RacketMenuEnum.AllHstr:
