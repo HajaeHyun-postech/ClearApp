@@ -1,14 +1,15 @@
-import 'dart:io';
 import 'package:clearApp/routes.dart';
-import 'package:clearApp/store/login_store.dart';
-import 'package:clearApp/widget/popup_generator.dart';
 import 'package:clearApp/widget/toast_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobx/mobx.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:provider/provider.dart';
-import 'FormCard.dart';
+
+import '../../store/login/login_store.dart';
+import '../../widget/popup_generator.dart';
+import 'form_card.dart';
 
 class LoginScreenWithProvider extends StatelessWidget {
   @override
@@ -29,10 +30,34 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   bool _isSelected = false;
+  LoginStore loginStore;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loginStore = Provider.of<LoginStore>(context);
+
+    loginStore.disposers
+      ..add(reaction((_) => loginStore.successStore.success, (success) {
+        if (success) {
+          ToastGenerator.successToast(
+              context, loginStore.successStore.successMessage);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homescreen, (Route<dynamic> route) => false,
+              arguments: loginStore.user);
+        }
+      }))
+      ..add(reaction((_) => loginStore.errorStore.error, (error) {
+        if (error) {
+          ToastGenerator.errorToast(
+              context, loginStore.errorStore.errorMessage);
+        }
+      }));
   }
 
   void _radio() {
@@ -62,56 +87,55 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     final loginStore = Provider.of<LoginStore>(context);
 
-    return Stack(children: <Widget>[
-      WillPopScope(
-        child: new Scaffold(
-          backgroundColor: Colors.white,
-          resizeToAvoidBottomPadding: true,
-          body: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 80.0, left: 90),
-                    child: Image.asset("assets/images/badminton_play.png"),
-                  ),
-                ],
-              ),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 90.0),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: ScreenUtil().setHeight(550),
-                      ),
-                      FormCard(),
-                      SizedBox(height: ScreenUtil().setHeight(50)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              SizedBox(
-                                width: ScreenUtil().setWidth(25),
-                              ),
-                              GestureDetector(
-                                onTap: _radio,
-                                child: radioButton(_isSelected),
-                              ),
-                              SizedBox(
-                                width: ScreenUtil().setWidth(20),
-                              ),
-                              Text("Remember me",
-                                  style: TextStyle(
-                                      fontSize: ScreenUtil().setSp(45),
-                                      fontFamily: "Poppins-Medium"))
-                            ],
-                          ),
-                          InkWell(
-                            child: Container(
+    return WillPopScope(
+      child: new Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomPadding: true,
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 80.0, left: 90),
+                  child: Image.asset("assets/images/badminton_play.png"),
+                ),
+              ],
+            ),
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 90.0),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: ScreenUtil().setHeight(550),
+                    ),
+                    FormCard(),
+                    SizedBox(height: ScreenUtil().setHeight(50)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: ScreenUtil().setWidth(25),
+                            ),
+                            GestureDetector(
+                              onTap: _radio,
+                              child: radioButton(_isSelected),
+                            ),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(20),
+                            ),
+                            Text("Remember me",
+                                style: TextStyle(
+                                    fontSize: ScreenUtil().setSp(45),
+                                    fontFamily: "Poppins-Medium"))
+                          ],
+                        ),
+                        InkWell(
+                          child: Container(
                               width: ScreenUtil().setWidth(400),
                               height: ScreenUtil().setHeight(150),
                               decoration: BoxDecoration(
@@ -127,13 +151,13 @@ class _LoginScreenState extends State<LoginScreen>
                                         offset: Offset(0.0, 8.0),
                                         blurRadius: 8.0)
                                   ]),
-                              child: Observer(builder: (_) {
-                                return Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: loginStore.login,
-                                    child: Center(
-                                      child: !loginStore.loading
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: loginStore.login,
+                                  child: Center(child: Observer(
+                                    builder: (_) {
+                                      return !loginStore.loading
                                           ? new Text("SIGNIN",
                                               style: TextStyle(
                                                 color: Colors.white,
@@ -151,40 +175,22 @@ class _LoginScreenState extends State<LoginScreen>
                                                 fontSize:
                                                     ScreenUtil().setSp(55),
                                                 letterSpacing: 1.0,
-                                              )),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                                              ));
+                                    },
+                                  )),
+                                ),
+                              )),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-        onWillPop: () {
-          PopupGenerator.closingPopup(context).show();
-        },
       ),
-      Observer(
-        builder: (_) {
-          if (loginStore.success) {
-            Future.delayed(Duration(milliseconds: 0), () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.homescreen, (Route<dynamic> route) => false);
-            });
-
-            return Toast_generator.showSuccessToast(context, "Login Success");
-          } else {
-            return Toast_generator.showErroToast(context, loginStore.errorMsg);
-          }
-        },
-      )
-    ]);
+      onWillPop: () => PopupGenerator.closingPopup(context).show(),
+    );
   }
 }

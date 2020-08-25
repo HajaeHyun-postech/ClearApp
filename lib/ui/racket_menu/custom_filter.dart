@@ -1,23 +1,31 @@
+import 'package:clearApp/ui/racket_menu/racket_menu_home_screen.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
-import './racketdata_manage/events.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:clearApp/store/racket/racket_store.dart';
 
 class CustomFilter extends StatelessWidget {
-  final SelectionMenuController selectionMenuController =
-      SelectionMenuController();
+  final List<RacketMenu> menus;
+  Function onItemSelected;
+  int initialindex;
+
+  CustomFilter({
+    @required this.menus,
+    @required this.onItemSelected,
+    @required this.initialindex,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SelectionMenu<RacketMenu>(
-      itemsList: RacketMenus.returnMenus(),
+      itemsList: menus,
       itemBuilder: this.itemBuilder,
-      onItemSelected: this.onItemSelected,
+      onItemSelected: onItemSelected,
       showSelectedItemAsTrigger: true,
-      initiallySelectedItemIndex: 0,
+      initiallySelectedItemIndex: initialindex,
       closeMenuInsteadOfPop: true,
       closeMenuOnEmptyMenuSpaceTap: false,
       closeMenuWhenTappedOutside: true,
@@ -31,7 +39,7 @@ class CustomFilter extends StatelessWidget {
         menuPositionAndSizeComponent:
             MenuPositionAndSizeComponent(builder: _menuPositionBuilder),
         menuSizeConfiguration: MenuSizeConfiguration(
-          maxHeight: ScreenUtil().setHeight(400),
+          maxHeight: menus.length * ScreenUtil().setHeight(400 / 3),
           minHeightFraction: 0.0,
           maxWidth: ScreenUtil().setWidth(400),
           minWidthFraction: 0.0,
@@ -43,7 +51,8 @@ class CustomFilter extends StatelessWidget {
   static MenuPositionAndSize _menuPositionBuilder(
       MenuPositionAndSizeComponentData data) {
     return MenuPositionAndSize(
-      positionOffset: Offset(0, data.triggerPositionAndSize.size.height),
+      positionOffset: Offset(-ScreenUtil().setWidth(70),
+          data.triggerPositionAndSize.size.height - 10),
       constraints: data.constraints,
     );
   }
@@ -63,35 +72,24 @@ class CustomFilter extends StatelessWidget {
   }
 
   static Widget _triggerFromItemBuilder(TriggerFromItemComponentData data) {
-    return Material(
-        color: ClearAppTheme.white,
-        child: Row(children: <Widget>[
-          InkWell(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(2.0),
-              ),
-              onTap: data.triggerMenu,
-              child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setWidth(0),
-                      vertical: ScreenUtil().setHeight(5)),
-                  child: Row(children: <Widget>[
-                    Text(
-                      data.item.menu,
-                      style: TextStyle(
-                        fontFamily: 'RobotoCondensed',
-                        fontWeight: FontWeight.w600,
-                        fontSize: ScreenUtil().setSp(60),
-                      ),
-                    ),
-                    SizedBox(width: ScreenUtil().setWidth(30)),
-                    FaIcon(
-                      FontAwesomeIcons.caretDown,
-                      size: ScreenUtil().setWidth(45),
-                      color: ClearAppTheme.darkBlue,
-                    ),
-                  ])))
-        ]));
+    return Container(
+      alignment: Alignment.centerRight,
+      width: AppBar().preferredSize.height + 40,
+      height: AppBar().preferredSize.height,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(32.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.sort),
+          ),
+          onTap: data.triggerMenu,
+        ),
+      ),
+    );
   }
 
   Widget itemBuilder(
@@ -121,9 +119,5 @@ class CustomFilter extends StatelessWidget {
             ),
           )
         ]));
-  }
-
-  void onItemSelected(RacketMenu menu) {
-    print(menu.menu);
   }
 }
