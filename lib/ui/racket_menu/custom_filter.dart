@@ -37,22 +37,22 @@ class CustomFilter extends StatelessWidget {
           builder: _triggerFromItemBuilder,
         ),
         menuPositionAndSizeComponent:
-            MenuPositionAndSizeComponent(builder: _menuPositionBuilder),
+            MenuPositionAndSizeComponent(builder: _menuSizeAndPositionBuilder),
         menuSizeConfiguration: MenuSizeConfiguration(
-          maxHeight: menus.length * ScreenUtil().setHeight(400 / 3),
+          maxHeight: menus.length * ScreenUtil().setHeight(430 / 3),
           minHeightFraction: 0.0,
-          maxWidth: ScreenUtil().setWidth(400),
+          maxWidth: ScreenUtil().setWidth(170),
           minWidthFraction: 0.0,
         ),
       ),
     );
   }
 
-  static MenuPositionAndSize _menuPositionBuilder(
+  static MenuPositionAndSize _menuSizeAndPositionBuilder(
       MenuPositionAndSizeComponentData data) {
     return MenuPositionAndSize(
-      positionOffset: Offset(-ScreenUtil().setWidth(70),
-          data.triggerPositionAndSize.size.height - 10),
+      positionOffset: Offset(-ScreenUtil().setWidth(17),
+          data.triggerPositionAndSize.size.height - 14),
       constraints: data.constraints,
     );
   }
@@ -72,24 +72,28 @@ class CustomFilter extends StatelessWidget {
   }
 
   static Widget _triggerFromItemBuilder(TriggerFromItemComponentData data) {
-    return Container(
-      alignment: Alignment.centerRight,
-      width: AppBar().preferredSize.height + 40,
-      height: AppBar().preferredSize.height,
-      child: Material(
-        color: Colors.transparent,
+    return Center(
         child: InkWell(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(32.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.sort),
-          ),
-          onTap: data.triggerMenu,
-        ),
-      ),
-    );
+            borderRadius: const BorderRadius.all(
+              Radius.circular(2.0),
+            ),
+            onTap: data.triggerMenu,
+            child: Padding(
+              padding:
+                  EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8, right: 8),
+              child: data.item.menu == 'Borrow'
+                  ? FaIcon(FontAwesomeIcons.image, size: 20)
+                  : data.item.menu == 'My'
+                      ? FaIcon(FontAwesomeIcons.history, size: 20)
+                      : Text(
+                          data.item.menu,
+                          style: TextStyle(
+                            fontFamily: 'RobotoCondensed',
+                            fontSize: ScreenUtil().setSp(60),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+            )));
   }
 
   Widget itemBuilder(
@@ -97,27 +101,25 @@ class CustomFilter extends StatelessWidget {
     RacketMenu menu,
     OnItemTapped onItemTapped,
   ) {
-    return Material(
-        color: ClearAppTheme.white,
-        child: Row(children: <Widget>[
-          InkWell(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(2.0),
-            ),
-            onTap: onItemTapped,
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(20)),
-              child: Text(
-                menu.menu,
-                style: TextStyle(
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.w600,
-                  fontSize: ScreenUtil().setSp(60),
-                ),
-              ),
-            ),
-          )
-        ]));
+    return Center(
+        child: InkWell(
+      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+      onTap: onItemTapped,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: menu.menu == 'Borrow'
+            ? FaIcon(FontAwesomeIcons.image, size: 20)
+            : menu.menu == 'My'
+                ? FaIcon(FontAwesomeIcons.history, size: 20)
+                : Text(
+                    menu.menu,
+                    style: TextStyle(
+                      fontFamily: 'RobotoCondensed',
+                      fontSize: ScreenUtil().setSp(60),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+      ),
+    ));
   }
 }

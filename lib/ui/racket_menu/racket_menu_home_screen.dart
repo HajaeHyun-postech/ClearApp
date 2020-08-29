@@ -99,11 +99,10 @@ class _RacketScrollView extends State<RacketScrollView>
       }));
 
     menus = [
-      RacketMenu(
-          eventType: RacketMenuEnum.AllRacketStatus, menu: "Racket Rent"),
-      RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "My History"),
+      RacketMenu(eventType: RacketMenuEnum.AllRacketStatus, menu: "Borrow"),
+      RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "My"),
       if (widget.user.isAdmin)
-        RacketMenu(eventType: RacketMenuEnum.AllHstr, menu: "All History")
+        RacketMenu(eventType: RacketMenuEnum.AllHstr, menu: "All")
     ];
   }
 

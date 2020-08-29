@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class PopupGenerator {
+  
   static Alert closingPopup(BuildContext context) {
     return new Alert(
       context: context,
@@ -33,7 +34,6 @@ class PopupGenerator {
       ],
     );
   }
-
   static Alert errorPopupWidget(BuildContext context, String title,
       String description, Function clickHandler) {
     var alertStyle = AlertStyle(
