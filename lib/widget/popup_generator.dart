@@ -1,102 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter/cupertino.dart';
 
 class PopupGenerator {
-  
-  static Alert closingPopup(BuildContext context) {
-    return new Alert(
-      context: context,
-      type: AlertType.warning,
-      title: "ALERT",
-      desc: "Program will be closed",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Cancel",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          color: Color.fromRGBO(0, 179, 134, 1.0),
-        ),
-        DialogButton(
-          child: Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => SystemNavigator.pop(),
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0)
-          ]),
-        )
-      ],
-    );
+  static Future<bool> closingPopup(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new CupertinoAlertDialog(
+            title: Text("App Close"),
+            content: new Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                "Do you want to close the App?",
+                style: TextStyle(color: Colors.black, fontSize: 14),
+              ),
+            ),
+            actions: <Widget>[
+              new CupertinoButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: new Text('Cancel'),
+              ),
+              new CupertinoButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: new Text('OK')),
+            ],
+          );
+        });
   }
-  static Alert errorPopupWidget(BuildContext context, String title,
+
+  static Future<bool> errorPopupWidget(BuildContext context, String title,
       String description, Function clickHandler) {
-    var alertStyle = AlertStyle(
-      titleStyle: TextStyle(
-        color: Colors.red,
-        fontFamily: "Roboto-Bold",
-        fontSize: 20,
-      ),
-      descStyle: TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 15,
-        fontFamily: "Roboto-Regular",
-      ),
-    );
-
-    return new Alert(
-      style: alertStyle,
-      context: context,
-      type: AlertType.error,
-      title: title,
-      desc: description,
-      buttons: [
-        DialogButton(
-          child: Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: clickHandler,
-          gradient:
-              LinearGradient(colors: [Color(0xFFe53935), Color(0xFFe35d5b)]),
-        )
-      ],
-    );
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new CupertinoAlertDialog(
+            title: Row(children: <Widget>[
+              FaIcon(FontAwesomeIcons.timesCircle, color: Colors.red, size: 15),
+              SizedBox(width: 5),
+              Text(title, style: TextStyle(color: Colors.red))
+            ]),
+            content: new Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                description,
+                style: TextStyle(color: Colors.black, fontSize: 14),
+              ),
+            ),
+            actions: <Widget>[
+              new CupertinoButton(
+                  onPressed: () => clickHandler, child: new Text('OK')),
+            ],
+          );
+        });
   }
 
-  static Alert remindPopupWidget(BuildContext context, String title,
+  static Future<bool> remindPopupWidget(BuildContext context, String title,
       String description, Function cancelCallback, Function okCallback) {
-    return new Alert(
-      context: context,
-      type: AlertType.warning,
-      title: title,
-      desc: description,
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Cancel",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: cancelCallback,
-          color: Color.fromRGBO(0, 179, 134, 1.0),
-        ),
-        DialogButton(
-          child: Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: okCallback,
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0)
-          ]),
-        )
-      ],
-    );
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new CupertinoAlertDialog(
+            title: Row(children: <Widget>[
+              Text(title, style: TextStyle(color: Colors.black))
+            ]),
+            content: new Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                description,
+                style: TextStyle(color: Colors.black, fontSize: 14),
+              ),
+            ),
+            actions: <Widget>[
+              new CupertinoButton(
+                  onPressed: () => cancelCallback, child: new Text('Cacncel')),
+              new CupertinoButton(
+                  onPressed: () => okCallback, child: new Text('OK')),
+            ],
+          );
+        });
   }
 }

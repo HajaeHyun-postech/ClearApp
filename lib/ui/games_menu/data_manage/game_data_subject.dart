@@ -60,7 +60,7 @@ class GameDataSubject extends ChangeNotifier {
           _context,
           'ERROR!',
           'Please check internet connection : $error',
-          () => Navigator.pushNamed(_context, '/homescreen')).show();
+          () => Navigator.pushNamed(_context, '/homescreen'));
     }
     Logger().i('Event handling finished');
   }

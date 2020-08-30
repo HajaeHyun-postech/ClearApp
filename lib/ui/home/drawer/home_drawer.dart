@@ -185,7 +185,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   icon: Icon(Icons.power_settings_new),
                   color: Colors.red,
                   onPressed: () {
-                    PopupGenerator.closingPopup(context).show();
+                    PopupGenerator.closingPopup(context);
                   },
                 ),
               ],

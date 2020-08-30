@@ -190,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen>
           ],
         ),
       ),
-      onWillPop: () => PopupGenerator.closingPopup(context).show(),
+      onWillPop: () => PopupGenerator.closingPopup(context),
     );
   }
 }
