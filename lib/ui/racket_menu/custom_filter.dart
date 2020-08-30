@@ -82,17 +82,12 @@ class CustomFilter extends StatelessWidget {
               padding:
                   EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8, right: 8),
               child: data.item.menu == 'Borrow'
-                  ? FaIcon(FontAwesomeIcons.image, size: 20)
+                  ? Image.asset('assets/images/rent3.png',
+                      width: 20, height: 20)
                   : data.item.menu == 'My'
                       ? FaIcon(FontAwesomeIcons.history, size: 20)
-                      : Text(
-                          data.item.menu,
-                          style: TextStyle(
-                            fontFamily: 'RobotoCondensed',
-                            fontSize: ScreenUtil().setSp(60),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                      : Image.asset('assets/images/Allhistory.png',
+                          width: 20, height: 20),
             )));
   }
 
@@ -108,17 +103,11 @@ class CustomFilter extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: menu.menu == 'Borrow'
-            ? FaIcon(FontAwesomeIcons.image, size: 20)
+            ? Image.asset('assets/images/rent3.png', width: 40, height: 40)
             : menu.menu == 'My'
                 ? FaIcon(FontAwesomeIcons.history, size: 20)
-                : Text(
-                    menu.menu,
-                    style: TextStyle(
-                      fontFamily: 'RobotoCondensed',
-                      fontSize: ScreenUtil().setSp(60),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                : Image.asset('assets/images/Allhistory.png',
+                    width: 40, height: 40),
       ),
     ));
   }

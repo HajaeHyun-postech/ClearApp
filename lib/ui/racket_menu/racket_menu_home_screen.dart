@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:clearApp/vo/user/user.dart';
 import 'package:selection_menu/selection_menu.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 import 'custom_filter.dart';
 
@@ -152,44 +153,67 @@ class _RacketScrollView extends State<RacketScrollView>
                         padding:
                             EdgeInsets.only(top: ScreenUtil().setHeight(20)),
                         sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              //TODO: Refactoring. 코드가 넘 더럽다.
-                              final count = racketStore.rackets.length;
+                          delegate: racketStore.loading
+                              ? SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    return Column(children: <Widget>[
+                                      SizedBox(
+                                        height: ScreenUtil().setHeight(50),
+                                      ),
+                                      SizedBox(
+                                        height: ScreenUtil().setHeight(90),
+                                        child: LoadingIndicator(
+                                          indicatorType:
+                                              Indicator.circleStrokeSpin,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ]);
+                                  },
+                                  childCount: 1,
+                                )
+                              : SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    //TODO: Refactoring. 코드가 넘 더럽다.
+                                    final count = racketStore.rackets.length;
 
-                              final Animation<double> animation =
-                                  Tween<double>(begin: 0.0, end: 1.0).animate(
-                                      CurvedAnimation(
-                                          parent: animationController,
-                                          curve: Interval(
-                                              (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn)));
+                                    final Animation<double> animation =
+                                        Tween<double>(begin: 0.0, end: 1.0)
+                                            .animate(CurvedAnimation(
+                                                parent: animationController,
+                                                curve: Interval(
+                                                    (1 / count) * index, 1.0,
+                                                    curve:
+                                                        Curves.fastOutSlowIn)));
 
-                              animationController.forward();
-                              switch (racketStore.currentMenu) {
-                                case RacketMenuEnum.AllRacketStatus:
-                                  return RacketDataTile(
-                                      animation: animation,
-                                      animationController: animationController,
-                                      racket: racketStore.rackets[index]);
-                                  break;
-                                case RacketMenuEnum.MyRacketHstr:
-                                case RacketMenuEnum.AllHstr:
-                                  return RacketHistoryTile(
-                                    animation: animation,
-                                    animationController: animationController,
-                                    racketCard: racketStore.histories[index],
-                                  );
-                                  break;
-                                default:
-                                  return Container();
-                              }
-                            },
-                            childCount: racketStore.currentMenu ==
-                                    RacketMenuEnum.AllRacketStatus
-                                ? racketStore.rackets.length
-                                : racketStore.histories.length,
-                          ),
+                                    animationController.forward();
+                                    switch (racketStore.currentMenu) {
+                                      case RacketMenuEnum.AllRacketStatus:
+                                        return RacketDataTile(
+                                            animation: animation,
+                                            animationController:
+                                                animationController,
+                                            racket: racketStore.rackets[index]);
+                                        break;
+                                      case RacketMenuEnum.MyRacketHstr:
+                                      case RacketMenuEnum.AllHstr:
+                                        return RacketHistoryTile(
+                                          animation: animation,
+                                          animationController:
+                                              animationController,
+                                          racketCard:
+                                              racketStore.histories[index],
+                                        );
+                                        break;
+                                      default:
+                                        return Container();
+                                    }
+                                  },
+                                  childCount: racketStore.currentMenu ==
+                                          RacketMenuEnum.AllRacketStatus
+                                      ? racketStore.rackets.length
+                                      : racketStore.histories.length,
+                                ),
                         ),
                       );
                     },
