@@ -47,62 +47,33 @@ abstract class _ShuttleStore with Store {
   @action
   void refreshOnTabChange() {
     if (currentTab == TAB.Admin) {
-      getWholeUnconfirmedHistorires();
+      getHistories(range: "all");
     } else if (currentTab == TAB.Not_Rcved) {
-      getUsersNotRcvedHistories();
+      getHistories(received: false);
     } else {
-      getUsersHistories();
+      getHistories();
     }
   }
 
   @action
-  Future getUsersHistories() async {
-    if (loading) return;
-
-    loading = true;
-
-    List<String> pathParams = ["me"];
-    HttpClient.send(
-            method: "GET",
-            address: "/v1/shuttle/orders",
-            pathParams: pathParams)
-        .then((response) {
-          histories = ConvertUtil.jsonArrayToObjectList(
-              response, (json) => ShuttleOrderHistory.fromJson(json));
-        })
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
-  }
-
-  @action
-  Future getUsersNotRcvedHistories() async {
+  Future getHistories(
+      {bool received, bool confirmed, String range = "me"}) async {
     if (loading) return;
     loading = true;
 
-    Map<String, dynamic> params = {'received': false};
-    List<String> pathParams = ["me"];
+    Map<String, dynamic> params = {};
+    if (received != null) {
+      params.putIfAbsent('received', () => received);
+    }
+    if (confirmed != null) {
+      params.putIfAbsent('confirmed', () => confirmed);
+    }
+
+    List<String> pathParams = [range];
     HttpClient.send(
             method: "GET",
             address: "/v1/shuttle/orders",
-            pathParams: pathParams,
-            params: params)
-        .then((response) {
-          histories = filterNotRecieved(ConvertUtil.jsonArrayToObjectList(
-              response, (json) => ShuttleOrderHistory.fromJson(json)));
-        })
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
-  }
-
-  @action
-  Future getWholeUnconfirmedHistorires() async {
-    if (loading) return;
-    loading = true;
-
-    List<String> pathParams = ["all"];
-    HttpClient.send(
-            method: "GET",
-            address: "/v1/shuttle/orders",
+            params: params,
             pathParams: pathParams)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
@@ -114,11 +85,6 @@ abstract class _ShuttleStore with Store {
 
   @action
   Future receiveShuttle(List<int> idList, bool isReceived) async {
-    if (isReceived) {
-      updateOnError("Alreay Received");
-      return;
-    }
-
     Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
@@ -130,10 +96,6 @@ abstract class _ShuttleStore with Store {
 
   @action
   Future confirmDeposit(List<int> idList, bool isConfirmed) async {
-    if (isConfirmed) {
-      updateOnError("Already Confirmed");
-      return;
-    }
     Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
@@ -146,11 +108,6 @@ abstract class _ShuttleStore with Store {
   @action
   Future deleteOrder(
       List<int> idList, bool isReceived, bool isConfirmed) async {
-    if (isReceived || isConfirmed) {
-      updateOnError("Delete Failed");
-      return;
-    }
-
     Map<String, dynamic> params = {'id': idList};
 
     HttpClient.send(

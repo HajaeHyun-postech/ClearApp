@@ -62,30 +62,13 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     });
   }
 
-  final _$getUsersHistoriesAsyncAction =
-      AsyncAction('_ShuttleStore.getUsersHistories');
+  final _$getHistoriesAsyncAction = AsyncAction('_ShuttleStore.getHistories');
 
   @override
-  Future<dynamic> getUsersHistories() {
-    return _$getUsersHistoriesAsyncAction.run(() => super.getUsersHistories());
-  }
-
-  final _$getUsersNotRcvedHistoriesAsyncAction =
-      AsyncAction('_ShuttleStore.getUsersNotRcvedHistories');
-
-  @override
-  Future<dynamic> getUsersNotRcvedHistories() {
-    return _$getUsersNotRcvedHistoriesAsyncAction
-        .run(() => super.getUsersNotRcvedHistories());
-  }
-
-  final _$getWholeUnconfirmedHistoriresAsyncAction =
-      AsyncAction('_ShuttleStore.getWholeUnconfirmedHistorires');
-
-  @override
-  Future<dynamic> getWholeUnconfirmedHistorires() {
-    return _$getWholeUnconfirmedHistoriresAsyncAction
-        .run(() => super.getWholeUnconfirmedHistorires());
+  Future<dynamic> getHistories(
+      {bool received, bool confirmed, String range = "me"}) {
+    return _$getHistoriesAsyncAction.run(() => super
+        .getHistories(received: received, confirmed: confirmed, range: range));
   }
 
   final _$receiveShuttleAsyncAction =
