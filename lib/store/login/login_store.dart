@@ -40,7 +40,7 @@ abstract class _LoginStore with Store {
       int studentId = fbKey.currentState.value['studentId'];
       Map<String, dynamic> body = {'studentId': studentId, 'povisId': povisId};
 
-      HttpClient.send(method: "POST", address: "/api/clear/login", body: body)
+      HttpClient.send(method: "POST", address: "/jwt/token", body: body)
           .then((response) {
             String token = response['token'];
             HttpClient.token = token;

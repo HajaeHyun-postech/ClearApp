@@ -57,7 +57,7 @@ abstract class _RacketFormStore with Store {
     loading = true;
 
     Map<String, dynamic> body = {'id': racketId};
-    HttpClient.send(method: "POST", address: "/api/clear/racket", body: body)
+    HttpClient.send(method: "POST", address: "/v1/racket/histories", body: body)
         .then((response) {
           updateOnSuccess("Borrow Successful");
         })
@@ -70,8 +70,11 @@ abstract class _RacketFormStore with Store {
     if (loading) return;
     loading = true;
 
-    Map<String, dynamic> body = {'id': racketId};
-    HttpClient.send(method: "PATCH", address: "/api/clear/racket", body: body)
+    List<int> pathParams = [racketId];
+    HttpClient.send(
+            method: "PATCH",
+            address: "/v1/racket/histories",
+            pathParams: pathParams)
         .then((response) {
           updateOnSuccess("Return Successful");
         })

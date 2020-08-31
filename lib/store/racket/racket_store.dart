@@ -57,9 +57,9 @@ abstract class _RacketStore with Store {
       getRackets();
       getBorrowingRacketId();
     } else if (currentMenu == RacketMenuEnum.AllHstr) {
-      getWholeCheckOutHistories();
+      getWholeBorrowHistories();
     } else {
-      getUserCheckOutHistories();
+      getUserBorrowHistories();
     }
   }
 
@@ -79,9 +79,8 @@ abstract class _RacketStore with Store {
   @action
   Future getRackets() async {
     loading = true;
-    Map<String, dynamic> params = {'type': 'list'};
 
-    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
+    HttpClient.send(method: "GET", address: "/v1/racket/rackets")
         .then((response) {
           rackets = ConvertUtil.jsonArrayToObjectList(
               response, (json) => Racket.fromJson(json));
@@ -91,11 +90,14 @@ abstract class _RacketStore with Store {
   }
 
   @action
-  Future getUserCheckOutHistories() async {
+  Future getUserBorrowHistories() async {
     loading = true;
-    Map<String, dynamic> params = {'type': 'histories', 'range': 'user'};
 
-    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
+    List<String> pathParams = ["me"];
+    HttpClient.send(
+            method: "GET",
+            address: "/v1/racket/histories",
+            pathParams: pathParams)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));
@@ -105,11 +107,15 @@ abstract class _RacketStore with Store {
   }
 
   @action
-  Future getWholeCheckOutHistories() async {
+  Future getWholeBorrowHistories() async {
     loading = true;
-    Map<String, dynamic> params = {'type': 'histories', 'range': 'whole'};
 
-    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
+    List<String> pathParams = ["me"];
+
+    HttpClient.send(
+            method: "GET",
+            address: "/v1/racket/histories",
+            pathParams: pathParams)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));

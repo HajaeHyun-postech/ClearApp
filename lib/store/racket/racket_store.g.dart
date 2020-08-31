@@ -100,22 +100,22 @@ mixin _$RacketStore on _RacketStore, Store {
     return _$getRacketsAsyncAction.run(() => super.getRackets());
   }
 
-  final _$getUserCheckOutHistoriesAsyncAction =
-      AsyncAction('_RacketStore.getUserCheckOutHistories');
+  final _$getUserBorrowHistoriesAsyncAction =
+      AsyncAction('_RacketStore.getUserBorrowHistories');
 
   @override
-  Future<dynamic> getUserCheckOutHistories() {
-    return _$getUserCheckOutHistoriesAsyncAction
-        .run(() => super.getUserCheckOutHistories());
+  Future<dynamic> getUserBorrowHistories() {
+    return _$getUserBorrowHistoriesAsyncAction
+        .run(() => super.getUserBorrowHistories());
   }
 
-  final _$getWholeCheckOutHistoriesAsyncAction =
-      AsyncAction('_RacketStore.getWholeCheckOutHistories');
+  final _$getWholeBorrowHistoriesAsyncAction =
+      AsyncAction('_RacketStore.getWholeBorrowHistories');
 
   @override
-  Future<dynamic> getWholeCheckOutHistories() {
-    return _$getWholeCheckOutHistoriesAsyncAction
-        .run(() => super.getWholeCheckOutHistories());
+  Future<dynamic> getWholeBorrowHistories() {
+    return _$getWholeBorrowHistoriesAsyncAction
+        .run(() => super.getWholeBorrowHistories());
   }
 
   final _$_RacketStoreActionController = ActionController(name: '_RacketStore');

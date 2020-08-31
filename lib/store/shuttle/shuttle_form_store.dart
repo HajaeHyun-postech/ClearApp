@@ -67,13 +67,8 @@ abstract class _ShuttleFormStore with Store {
     if (loading) return;
     loading = true;
 
-    Map<String, dynamic> params = {'type': 'buy'};
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
-    HttpClient.send(
-            method: "POST",
-            address: "/api/clear/shuttle",
-            params: params,
-            body: body)
+    HttpClient.send(method: "POST", address: "/v1/shuttle/orders", body: body)
         .then((response) {
           updateOnSuccess("Order Successful");
         })

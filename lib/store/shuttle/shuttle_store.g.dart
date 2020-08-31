@@ -70,13 +70,13 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
     return _$getUsersHistoriesAsyncAction.run(() => super.getUsersHistories());
   }
 
-  final _$getNotReceivedUsersHistoriesAsyncAction =
-      AsyncAction('_ShuttleStore.getNotReceivedUsersHistories');
+  final _$getUsersNotRcvedHistoriesAsyncAction =
+      AsyncAction('_ShuttleStore.getUsersNotRcvedHistories');
 
   @override
-  Future<dynamic> getNotReceivedUsersHistories() {
-    return _$getNotReceivedUsersHistoriesAsyncAction
-        .run(() => super.getNotReceivedUsersHistories());
+  Future<dynamic> getUsersNotRcvedHistories() {
+    return _$getUsersNotRcvedHistoriesAsyncAction
+        .run(() => super.getUsersNotRcvedHistories());
   }
 
   final _$getWholeUnconfirmedHistoriresAsyncAction =

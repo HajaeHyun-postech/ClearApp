@@ -21,9 +21,14 @@ class HttpClient {
   static Future<dynamic> send(
       {@required String method,
       @required String address,
+      List<dynamic> pathParams = const [],
       Map<String, dynamic> params = const {},
       Map<String, dynamic> body = const {}}) async {
-    String url = 'http://$APIHost:$APIPort$address?';
+    String url = 'http://$APIHost:$APIPort$address';
+    pathParams.forEach((value) {
+      url += '/$value';
+    });
+    url += '?';
     params.forEach((key, value) {
       url += '$key=$value&';
     });
