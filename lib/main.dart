@@ -20,8 +20,8 @@ void main() async {
 }
 
 void setupLocator() {
-  locator.registerSingleton(() => HttpClient());
-  locator.registerLazySingleton(() => NavigationService());
+  locator.registerSingleton<HttpClient>(HttpClient());
+  locator.registerLazySingleton<NavigationService>(() => NavigationService());
 }
 
 class MyApp extends StatelessWidget {
