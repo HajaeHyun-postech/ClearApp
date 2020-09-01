@@ -1,7 +1,5 @@
-import 'package:clearApp/vo/racket/racket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -9,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../store/racket/racket_form_store.dart';
 import '../../store/racket/racket_store.dart';
+import '../../vo/racket/racket.dart';
 import '../../widget/app_theme.dart';
 import 'borrow_form.dart';
 
@@ -17,12 +16,18 @@ class RacketDataTile extends StatelessWidget {
   final Animation<dynamic> animation;
   final Racket racket;
   final bool horizontal;
+  final bool isBorrowLimit;
+  final bool isReturn;
+  final bool isAvailable;
 
   RacketDataTile(
       {this.racket,
       this.horizontal = true,
       this.animationController,
-      this.animation});
+      this.animation,
+      this.isBorrowLimit,
+      this.isReturn,
+      this.isAvailable});
 
   Widget _buildCardContent() {
     return Container(
@@ -117,11 +122,9 @@ class RacketDataTile extends StatelessWidget {
                           child: SafeArea(
                             child: Provider<RacketFormStore>(
                                 create: (context) => RacketFormStore(
-                                    isBorrowLimit:
-                                        racketStore.borrowingRacketId != 0,
-                                    isReturn: racketStore.borrowingRacketId ==
-                                        racket.id,
-                                    isAvailable: racket.isAvailable),
+                                    isBorrowLimit: isBorrowLimit,
+                                    isReturn: isReturn,
+                                    isAvailable: isAvailable),
                                 child: BorrowForm(
                                   racket,
                                   onSuccess: racketStore.refreshOnTabChange,

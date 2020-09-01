@@ -82,8 +82,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
   }
 
   @action
-  Future receiveShuttle(List<int> idList) async {
-    Map<String, dynamic> body = {'id': idList};
+  Future receiveShuttle(List<int> id) async {
+    Map<String, dynamic> body = {'id': id};
 
     HttpClient.send(
             method: "PATCH", address: "/v1/shuttle/orders/receive", body: body)
@@ -93,8 +93,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
   }
 
   @action
-  Future confirmDeposit(List<int> idList) async {
-    Map<String, dynamic> body = {'id': idList};
+  Future confirmDeposit(List<int> id) async {
+    Map<String, dynamic> body = {'id': id};
 
     HttpClient.send(
             method: "PATCH", address: "/v1/shuttle/orders/confirm", body: body)
@@ -104,11 +104,10 @@ abstract class _ShuttleStore extends BaseStore with Store {
   }
 
   @action
-  Future deleteOrder(List<int> idList) async {
-    Map<String, dynamic> params = {'id': idList};
+  Future deleteOrder(List<int> id) async {
+    Map<String, dynamic> body = {'id': id};
 
-    HttpClient.send(
-            method: "PUT", address: "/v1/shuttle/orders", params: params)
+    HttpClient.send(method: "PUT", address: "/v1/shuttle/orders", body: body)
         .then((response) {
       updateOnSuccess("Deleted");
     }).catchError((e) => updateOnError(e.cause));

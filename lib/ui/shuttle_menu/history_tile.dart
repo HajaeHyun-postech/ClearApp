@@ -8,9 +8,8 @@ import '../../widget/app_theme.dart';
 class HistoryTile extends StatefulWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
-  final List<int> idList;
+  final List<int> id;
   final String title;
-  final String name;
   final int price;
   final DateTime orderDate;
   final bool isConfirmed;
@@ -24,9 +23,8 @@ class HistoryTile extends StatefulWidget {
       {Key key,
       this.animationController,
       this.animation,
-      this.idList,
+      this.id,
       this.title,
-      this.name,
       this.price,
       this.orderDate,
       this.isConfirmed,
@@ -63,10 +61,9 @@ class HistoryTileState extends State<HistoryTile> {
                     Expanded(
                         child: ValueCard(
                             widget.title,
-                            widget.name,
                             widget.price,
                             widget.orderDate,
-                            widget.idList,
+                            widget.id,
                             widget.isConfirmed,
                             widget.isReceived)),
                     SizedBox(width: ScreenUtil().setWidth(60)),
@@ -93,23 +90,23 @@ class HistoryTileState extends State<HistoryTile> {
 
 class ValueCard extends StatelessWidget {
   final String title;
-  final String name;
   final int price;
   final DateTime date;
-  final List<int> idList;
+  final List<int> id;
   final bool isConfirmed;
   final bool isReceived;
   ValueCard(
     this.title,
-    this.name,
     this.price,
     this.date,
-    this.idList,
+    this.id,
     this.isConfirmed,
     this.isReceived,
   );
   @override
   Widget build(BuildContext context) {
+    id.sort((a, b) => a.compareTo(b)); //desc sorting
+
     return Container(
         padding: EdgeInsets.symmetric(
             horizontal: ScreenUtil().setWidth(35), vertical: 4.0),
@@ -154,7 +151,7 @@ class ValueCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  idList.toString(),
+                  id.toString(),
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: ScreenUtil().setSp(44),

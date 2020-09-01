@@ -8,7 +8,7 @@ part of 'shuttle_order_history.dart';
 
 ShuttleOrderHistory _$ShuttleOrderHistoryFromJson(Map<String, dynamic> json) {
   return ShuttleOrderHistory(
-    (json['idList'] as List)?.map((e) => e as int)?.toList(),
+    (json['id'] as List)?.map((e) => e as int)?.toList(),
     json['price'] as int,
     json['isAvailable'] as bool,
     json['user'] == null
@@ -26,7 +26,7 @@ ShuttleOrderHistory _$ShuttleOrderHistoryFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ShuttleOrderHistoryToJson(
         ShuttleOrderHistory instance) =>
     <String, dynamic>{
-      'idList': instance.idList,
+      'id': instance.id,
       'price': instance.price,
       'isAvailable': instance.isAvailable,
       'user': instance.user,

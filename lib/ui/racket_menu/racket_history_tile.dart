@@ -8,18 +8,18 @@ import '../../vo/racket_check_out_history/racket_check_out_history.dart';
 class RacketHistoryTile extends StatelessWidget {
   final AnimationController animationController;
   final Animation<dynamic> animation;
-  final RacketCheckOutHistory racketCard;
+  final RacketCheckOutHistory history;
   final bool horizontal;
 
   RacketHistoryTile(
-      {this.racketCard,
+      {this.history,
       this.horizontal = true,
       this.animationController,
       this.animation});
 
   @override
   Widget build(BuildContext context) {
-    final racketCardContent = Container(
+    final historyContent = Container(
       margin: EdgeInsets.fromLTRB(
           ScreenUtil().setWidth(70),
           ScreenUtil().setHeight(0),
@@ -28,7 +28,7 @@ class RacketHistoryTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.asset(racketCard.racket.asset,
+          Image.asset(history.racket.asset,
               width: ScreenUtil().setWidth(250),
               height: ScreenUtil().setHeight(460)),
           SizedBox(width: ScreenUtil().setWidth(70)),
@@ -44,7 +44,7 @@ class RacketHistoryTile extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(racketCard.racket.name,
+                            Text(history.racket.name,
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
                                   letterSpacing: 0,
@@ -64,7 +64,7 @@ class RacketHistoryTile extends StatelessWidget {
                               size: ScreenUtil().setWidth(45),
                               color: Color(0xFFCCCED1)),
                           SizedBox(width: ScreenUtil().setWidth(20)),
-                          Text('No.' + racketCard.id.toString(),
+                          Text('No.' + history.id.toString(),
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 letterSpacing: 0,
@@ -81,8 +81,7 @@ class RacketHistoryTile extends StatelessWidget {
                   children: <Widget>[
                     Text(
                         'From ' +
-                            DateFormat('M/dd  kk:mm')
-                                .format(racketCard.rentDate),
+                            DateFormat('M/dd  kk:mm').format(history.rentDate),
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -94,18 +93,18 @@ class RacketHistoryTile extends StatelessWidget {
                         )),
                     SizedBox(height: ScreenUtil().setHeight(20)),
                     Text(
-                        racketCard.returnDate == null
+                        history.returnDate == null
                             ? 'Until ' +
                                 DateFormat('M/dd  kk:mm')
-                                    .format(racketCard.dueDate)
+                                    .format(history.dueDate)
                             : 'To ' +
                                 DateFormat('M/dd  kk:mm')
-                                    .format(racketCard.returnDate),
+                                    .format(history.returnDate),
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           letterSpacing: 0,
                           fontFamily: 'RobotoCondensed',
-                          color: racketCard.returnDate == null
+                          color: history.returnDate == null
                               ? Color(0xFFFF6961)
                               : Color(0xFF424242),
                           fontWeight: FontWeight.w600,
@@ -122,7 +121,7 @@ class RacketHistoryTile extends StatelessWidget {
     );
 
     final racketCardf = Container(
-      child: racketCardContent,
+      child: historyContent,
       height: ScreenUtil().setHeight(340),
       decoration: BoxDecoration(
         color: Colors.transparent,

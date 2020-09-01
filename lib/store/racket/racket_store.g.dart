@@ -69,18 +69,18 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
-  final _$borrowingRacketIdAtom = Atom(name: '_RacketStore.borrowingRacketId');
+  final _$isBorrowLimitAtom = Atom(name: '_RacketStore.isBorrowLimit');
 
   @override
-  int get borrowingRacketId {
-    _$borrowingRacketIdAtom.reportRead();
-    return super.borrowingRacketId;
+  bool get isBorrowLimit {
+    _$isBorrowLimitAtom.reportRead();
+    return super.isBorrowLimit;
   }
 
   @override
-  set borrowingRacketId(int value) {
-    _$borrowingRacketIdAtom.reportWrite(value, super.borrowingRacketId, () {
-      super.borrowingRacketId = value;
+  set isBorrowLimit(bool value) {
+    _$isBorrowLimitAtom.reportWrite(value, super.isBorrowLimit, () {
+      super.isBorrowLimit = value;
     });
   }
 
@@ -142,7 +142,7 @@ rackets: ${rackets},
 histories: ${histories},
 currentMenu: ${currentMenu},
 loading: ${loading},
-borrowingRacketId: ${borrowingRacketId}
+isBorrowLimit: ${isBorrowLimit}
     ''';
   }
 }

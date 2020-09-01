@@ -5,7 +5,7 @@ part 'shuttle_order_history.g.dart';
 
 @JsonSerializable(nullable: true)
 class ShuttleOrderHistory {
-  final List<int> idList;
+  final List<int> id;
   final int price;
   final bool isAvailable;
   final User user;
@@ -15,7 +15,7 @@ class ShuttleOrderHistory {
   final bool isConfirmed;
 
   ShuttleOrderHistory(
-    this.idList,
+    this.id,
     this.price,
     this.isAvailable,
     this.user,

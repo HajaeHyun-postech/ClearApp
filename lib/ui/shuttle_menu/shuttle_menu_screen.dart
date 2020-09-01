@@ -252,30 +252,25 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                 '${list[index].user.name} : ${list[index].orderUsage}';
                                             firstActionCaption = 'Confirm';
                                             secondActionCaption = 'Delete';
-                                            firstTapAction = () =>
-                                                shuttleStore.confirmDeposit(
-                                                    list[index].idList);
-                                            secondTapAction = () =>
-                                                shuttleStore.deleteOrder(
-                                                    list[index].idList);
+                                            firstTapAction = () => shuttleStore
+                                                .confirmDeposit(list[index].id);
+                                            secondTapAction = () => shuttleStore
+                                                .deleteOrder(list[index].id);
                                           } else {
                                             title = '${list[index].orderUsage}';
                                             firstActionCaption = 'Receive';
                                             secondActionCaption = 'Delete';
-                                            firstTapAction = () =>
-                                                shuttleStore.receiveShuttle(
-                                                    list[index].idList);
-                                            secondTapAction = () =>
-                                                shuttleStore.deleteOrder(
-                                                    list[index].idList);
+                                            firstTapAction = () => shuttleStore
+                                                .receiveShuttle(list[index].id);
+                                            secondTapAction = () => shuttleStore
+                                                .deleteOrder(list[index].id);
                                           }
                                           return HistoryTile(
                                             animation: animation,
                                             animationController:
                                                 animationController,
-                                            idList: list[index].idList,
+                                            id: list[index].id,
                                             title: title,
-                                            name: list[index].user.name,
                                             price: list[index].price,
                                             orderDate: list[index].orderDate,
                                             isConfirmed:

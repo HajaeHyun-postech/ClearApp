@@ -40,7 +40,7 @@ abstract class _RacketStore extends BaseStore with Store {
   bool loading = false;
 
   @observable
-  int borrowingRacketId;
+  bool isBorrowLimit = false;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -67,7 +67,8 @@ abstract class _RacketStore extends BaseStore with Store {
     HttpClient.send(method: "GET", address: "/v1/racket/rackets")
         .then((response) {
           rackets = ConvertUtil.jsonArrayToObjectList(
-              response, (json) => Racket.fromJson(json));
+              response['rackets'], (json) => Racket.fromJson(json));
+          isBorrowLimit = response['isBorrowLimit'];
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);

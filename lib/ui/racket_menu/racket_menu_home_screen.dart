@@ -149,6 +149,11 @@ class _RacketScrollView extends State<RacketScrollView>
                 slivers: <Widget>[
                   Observer(
                     builder: (_) {
+                      final count = racketStore.currentMenu ==
+                              RacketMenuEnum.AllRacketStatus
+                          ? racketStore.rackets.length
+                          : racketStore.histories.length;
+
                       return SliverPadding(
                         padding:
                             EdgeInsets.only(top: ScreenUtil().setHeight(20)),
@@ -174,9 +179,6 @@ class _RacketScrollView extends State<RacketScrollView>
                                 )
                               : SliverChildBuilderDelegate(
                                   (context, index) {
-                                    //TODO: Refactoring. 코드가 넘 더럽다.
-                                    final count = racketStore.rackets.length;
-
                                     final Animation<double> animation =
                                         Tween<double>(begin: 0.0, end: 1.0)
                                             .animate(CurvedAnimation(
@@ -187,13 +189,29 @@ class _RacketScrollView extends State<RacketScrollView>
                                                         Curves.fastOutSlowIn)));
 
                                     animationController.forward();
+
                                     switch (racketStore.currentMenu) {
                                       case RacketMenuEnum.AllRacketStatus:
+                                        final racket =
+                                            racketStore.rackets[index];
+
+                                        final isReturn = racket.user == null
+                                            ? false
+                                            : racket.user.studentId ==
+                                                widget.user.studentId;
+
+                                        final isAvailable = racket.isAvailable;
+
                                         return RacketDataTile(
-                                            animation: animation,
-                                            animationController:
-                                                animationController,
-                                            racket: racketStore.rackets[index]);
+                                          animation: animation,
+                                          animationController:
+                                              animationController,
+                                          racket: racket,
+                                          isBorrowLimit:
+                                              racketStore.isBorrowLimit,
+                                          isReturn: isReturn,
+                                          isAvailable: isAvailable,
+                                        );
                                         break;
                                       case RacketMenuEnum.MyRacketHstr:
                                       case RacketMenuEnum.AllHstr:
@@ -201,18 +219,14 @@ class _RacketScrollView extends State<RacketScrollView>
                                           animation: animation,
                                           animationController:
                                               animationController,
-                                          racketCard:
-                                              racketStore.histories[index],
+                                          history: racketStore.histories[index],
                                         );
                                         break;
                                       default:
                                         return Container();
                                     }
                                   },
-                                  childCount: racketStore.currentMenu ==
-                                          RacketMenuEnum.AllRacketStatus
-                                      ? racketStore.rackets.length
-                                      : racketStore.histories.length,
+                                  childCount: count,
                                 ),
                         ),
                       );
