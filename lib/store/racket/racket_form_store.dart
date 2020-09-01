@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../util/http_client.dart';
 import '../base_store.dart';
 
 part 'racket_form_store.g.dart';
@@ -55,7 +54,8 @@ abstract class _RacketFormStore extends BaseStore with Store {
     loading = true;
 
     Map<String, dynamic> body = {'id': racketId};
-    HttpClient.send(method: "POST", address: "/v1/racket/histories", body: body)
+    httpClient
+        .send(method: "POST", address: "/v1/racket/histories", body: body)
         .then((response) {
           updateOnSuccess("Borrow Successful");
         })
@@ -69,7 +69,8 @@ abstract class _RacketFormStore extends BaseStore with Store {
     loading = true;
 
     List<int> pathParams = [racketId];
-    HttpClient.send(
+    httpClient
+        .send(
             method: "PATCH",
             address: "/v1/racket/histories",
             pathParams: pathParams)

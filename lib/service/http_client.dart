@@ -1,30 +1,36 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:clearApp/exception/internet_connection_exception.dart';
+import 'package:clearApp/routes.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:clearApp/exception/auth_exception.dart';
-import 'package:clearApp/exception/invalid_req_exception.dart';
-import 'package:clearApp/exception/method_not_allowed_exception.dart';
-import 'package:clearApp/exception/not_found_exception.dart';
-import 'package:clearApp/exception/server_error_exception.dart';
-import 'package:clearApp/exception/unexpected_conflict_exception.dart';
-import 'package:clearApp/exception/unknown_status_code_exception.dart';
+
+import '../contants/globals.dart';
+import '../exception/auth_exception.dart';
+import '../exception/internet_connection_exception.dart';
+import '../exception/invalid_req_exception.dart';
+import '../exception/method_not_allowed_exception.dart';
+import '../exception/not_found_exception.dart';
+import '../exception/server_error_exception.dart';
+import '../exception/unexpected_conflict_exception.dart';
+import '../exception/unknown_status_code_exception.dart';
+import 'navigation_service.dart';
 
 class HttpClient {
-  static const String APIHost = "49.50.165.208";
-  static const String APIPort = "8096";
-  static String token = "";
+  String _accessToken = "";
 
-  static Future<dynamic> send(
+  set accessToken(token) => _accessToken = token;
+
+  Future<dynamic> send(
       {@required String method,
       @required String address,
+      String host = "49.50.165.208",
+      String port = "8096",
       List<dynamic> pathParams = const [],
       Map<String, dynamic> params = const {},
       Map<String, dynamic> body = const {}}) async {
-    String url = 'http://$APIHost:$APIPort$address';
+    String url = 'http://$host:$port$address';
     pathParams.forEach((value) {
       url += '/$value';
     });
@@ -35,7 +41,7 @@ class HttpClient {
 
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-      HttpHeaders.authorizationHeader: 'Bearer $token'
+      HttpHeaders.authorizationHeader: 'Bearer $_accessToken'
     };
 
     bool hasConnection = await DataConnectionChecker().hasConnection;
@@ -44,7 +50,7 @@ class HttpClient {
           InternetConnectionException("No Internet Connection"));
 
     var response =
-        await getHttpFunction(method, url, headers, jsonEncode(body)).call();
+        await _getHttpFunction(method, url, headers, jsonEncode(body)).call();
     dynamic responseBody = jsonDecode(response.body);
     var statusCode = response.statusCode;
 
@@ -58,6 +64,7 @@ class HttpClient {
           return Future.error(InvalidReqException(errMsg));
           break;
         case 401:
+          locator<NavigationService>().pushNamedAndRemoveAll(Routes.login);
           return Future.error(AuthException(errMsg));
           break;
         case 403:
@@ -79,7 +86,7 @@ class HttpClient {
     }
   }
 
-  static Function getHttpFunction(
+  Function _getHttpFunction(
       String method, String url, Map<String, String> headers, String body) {
     method = method.toUpperCase();
     switch (method) {

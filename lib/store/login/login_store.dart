@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../util/http_client.dart';
 import '../../vo/user/user.dart';
 
 part 'login_store.g.dart';
@@ -37,10 +36,11 @@ abstract class _LoginStore extends BaseStore with Store {
       int studentId = fbKey.currentState.value['studentId'];
       Map<String, dynamic> body = {'studentId': studentId, 'povisId': povisId};
 
-      HttpClient.send(method: "POST", address: "/jwt/token", body: body)
+      httpClient
+          .send(method: "POST", address: "/jwt/token", body: body)
           .then((response) {
             String token = response['token'];
-            HttpClient.token = token;
+            httpClient.accessToken = token;
             user = User.fromJson(JwtDecoder.decode(token));
             updateOnSuccess("Login Success");
           })

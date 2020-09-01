@@ -44,6 +44,8 @@ dependencies:
   auto_size_text: ^2.1.0
   flutter_picker: ^1.1.5
   loading_indicator: ^1.2.0
+  get_it: ^4.0.4
+
 dev_dependencies:
   build_runner: ^1.10.0
   json_serializable: ^3.2.0

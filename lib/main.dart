@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:clearApp/contants/globals.dart';
+import 'package:clearApp/service/http_client.dart';
+import 'package:clearApp/service/navigation_service.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +11,17 @@ import 'package:flutter/services.dart';
 import 'routes.dart';
 
 void main() async {
+  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]).then((_) => runApp(MyApp()));
+}
+
+void setupLocator() {
+  locator.registerSingleton(() => HttpClient());
+  locator.registerLazySingleton(() => NavigationService());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Clear Application',
       debugShowCheckedModeBanner: false,
+      navigatorKey: locator<NavigationService>().navigatorKey,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: ClearAppTheme.textTheme,

@@ -1,6 +1,5 @@
 import 'package:mobx/mobx.dart';
 
-import '../../util/http_client.dart';
 import '../base_store.dart';
 
 part 'shuttle_form_store.g.dart';
@@ -46,7 +45,8 @@ abstract class _ShuttleFormStore extends BaseStore with Store {
     if (loading) return;
     loading = true;
 
-    HttpClient.send(method: "GET", address: "/v1/shuttle/shuttles")
+    httpClient
+        .send(method: "GET", address: "/v1/shuttle/shuttles")
         .then((response) {
           remaining = response['remaining'];
         })
@@ -64,7 +64,8 @@ abstract class _ShuttleFormStore extends BaseStore with Store {
     loading = true;
 
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
-    HttpClient.send(method: "POST", address: "/v1/shuttle/orders", body: body)
+    httpClient
+        .send(method: "POST", address: "/v1/shuttle/orders", body: body)
         .then((response) {
           updateOnSuccess("Ordered Successfully");
         })
@@ -79,7 +80,8 @@ abstract class _ShuttleFormStore extends BaseStore with Store {
 
     Map<String, dynamic> params = {'type': 'add'};
     Map<String, dynamic> body = {'amount': amountAdd, 'price': price};
-    HttpClient.send(
+    httpClient
+        .send(
             method: "POST",
             address: "/api/clear/shuttle",
             params: params,

@@ -1,6 +1,5 @@
 import 'package:clearApp/store/base_store.dart';
 import 'package:clearApp/util/convert_util.dart';
-import 'package:clearApp/util/http_client.dart';
 import 'package:clearApp/vo/racket/racket.dart';
 import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
 import 'package:mobx/mobx.dart';
@@ -64,7 +63,8 @@ abstract class _RacketStore extends BaseStore with Store {
     if (loading) return;
     loading = true;
 
-    HttpClient.send(method: "GET", address: "/v1/racket/rackets")
+    httpClient
+        .send(method: "GET", address: "/v1/racket/rackets")
         .then((response) {
           rackets = ConvertUtil.jsonArrayToObjectList(
               response['rackets'], (json) => Racket.fromJson(json));
@@ -90,7 +90,8 @@ abstract class _RacketStore extends BaseStore with Store {
 
     List<String> pathParams = [range];
 
-    HttpClient.send(
+    httpClient
+        .send(
             method: "GET",
             address: "/v1/racket/histories",
             params: params,

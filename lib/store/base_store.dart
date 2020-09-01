@@ -1,3 +1,5 @@
+import 'package:clearApp/contants/globals.dart';
+import 'package:clearApp/service/http_client.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 
@@ -11,6 +13,9 @@ class BaseStore {
   // constructor:---------------------------------------------------------------
 
   // store variables:-----------------------------------------------------------
+
+  // other variables:-----------------------------------------------------------
+  final httpClient = locator<HttpClient>();
 
   // dispose:-------------------------------------------------------------------
   dispose() {

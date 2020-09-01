@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import 'package:clearApp/util/http_client.dart';
 import 'game_data.dart';
 import 'events.dart';
 
@@ -65,23 +64,7 @@ class GameDataSubject extends ChangeNotifier {
     Logger().i('Event handling finished');
   }
 
-  Future<void> makeGame(GameData newGame) async {
-    Map<String, dynamic> response = await HttpClient.send(
-        method: "get", address: "TODO", body: newGame.toMap());
-    newGame.key = response['data'];
-    gameDataList.add(newGame);
-  }
+  Future<void> makeGame(GameData newGame) async {}
 
-  Future<void> getGames() async {
-    Map<String, dynamic> response =
-        await HttpClient.send(method: "get", address: "TODO");
-
-    gameDataList = new List<GameData>();
-
-    List<dynamic> jsonList = response['data'];
-    jsonList.forEach((element) {
-      Map<String, dynamic> _map = element;
-      gameDataList.add(GameData.fromMap(_map));
-    });
-  }
+  Future<void> getGames() async {}
 }

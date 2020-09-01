@@ -1,7 +1,6 @@
 import 'package:mobx/mobx.dart';
 
 import '../../util/convert_util.dart';
-import '../../util/http_client.dart';
 import '../../vo/shuttle_order_history/shuttle_order_history.dart';
 import '../base_store.dart';
 
@@ -68,7 +67,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
 
     List<String> pathParams = [range];
 
-    HttpClient.send(
+    httpClient
+        .send(
             method: "GET",
             address: "/v1/shuttle/orders",
             params: params,
@@ -85,7 +85,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
   Future receiveShuttle(List<int> id) async {
     Map<String, dynamic> body = {'id': id};
 
-    HttpClient.send(
+    httpClient
+        .send(
             method: "PATCH", address: "/v1/shuttle/orders/receive", body: body)
         .then((response) {
       updateOnSuccess("Received");
@@ -96,7 +97,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
   Future confirmDeposit(List<int> id) async {
     Map<String, dynamic> body = {'id': id};
 
-    HttpClient.send(
+    httpClient
+        .send(
             method: "PATCH", address: "/v1/shuttle/orders/confirm", body: body)
         .then((response) {
       updateOnSuccess("Confirmed");
@@ -107,7 +109,8 @@ abstract class _ShuttleStore extends BaseStore with Store {
   Future deleteOrder(List<int> id) async {
     Map<String, dynamic> body = {'id': id};
 
-    HttpClient.send(method: "PUT", address: "/v1/shuttle/orders", body: body)
+    httpClient
+        .send(method: "PUT", address: "/v1/shuttle/orders", body: body)
         .then((response) {
       updateOnSuccess("Deleted");
     }).catchError((e) => updateOnError(e.cause));
