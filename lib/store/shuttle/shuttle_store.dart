@@ -1,10 +1,9 @@
-import 'package:clearApp/exception/unexpected_conflict_exception.dart';
-import 'package:clearApp/store/error/error_store.dart';
-import 'package:clearApp/store/success/success_store.dart';
-import 'package:clearApp/util/convert_util.dart';
-import 'package:clearApp/util/http_client.dart';
-import 'package:clearApp/vo/shuttle_order_history/shuttle_order_history.dart';
 import 'package:mobx/mobx.dart';
+
+import '../../util/convert_util.dart';
+import '../../util/http_client.dart';
+import '../../vo/shuttle_order_history/shuttle_order_history.dart';
+import '../base_store.dart';
 
 part 'shuttle_store.g.dart';
 
@@ -12,10 +11,8 @@ enum TAB { Total, Not_Rcved, Admin }
 
 class ShuttleStore = _ShuttleStore with _$ShuttleStore;
 
-abstract class _ShuttleStore with Store {
+abstract class _ShuttleStore extends BaseStore with Store {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> disposers = [];
@@ -70,6 +67,7 @@ abstract class _ShuttleStore with Store {
     }
 
     List<String> pathParams = [range];
+
     HttpClient.send(
             method: "GET",
             address: "/v1/shuttle/orders",
@@ -84,7 +82,7 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future receiveShuttle(List<int> idList, bool isReceived) async {
+  Future receiveShuttle(List<int> idList) async {
     Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
@@ -95,7 +93,7 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future confirmDeposit(List<int> idList, bool isConfirmed) async {
+  Future confirmDeposit(List<int> idList) async {
     Map<String, dynamic> body = {'id': idList};
 
     HttpClient.send(
@@ -106,25 +104,20 @@ abstract class _ShuttleStore with Store {
   }
 
   @action
-  Future deleteOrder(
-      List<int> idList, bool isReceived, bool isConfirmed) async {
+  Future deleteOrder(List<int> idList) async {
     Map<String, dynamic> params = {'id': idList};
 
     HttpClient.send(
             method: "PUT", address: "/v1/shuttle/orders", params: params)
         .then((response) {
-          updateOnSuccess("Deleted");
-        })
-        .catchError((e) => updateOnError("Timeout (5min)"),
-            test: (e) => e is UnexpectedConflictException)
-        .catchError((e) => updateOnError(e.cause));
+      updateOnSuccess("Deleted");
+    }).catchError((e) => updateOnError(e.cause));
   }
 
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    super.dispose();
     for (final d in disposers) {
       d();
     }
@@ -141,15 +134,5 @@ abstract class _ShuttleStore with Store {
 
   List<ShuttleOrderHistory> filterNotRecieved(List<ShuttleOrderHistory> list) {
     return list.where((element) => element.isReceived == false).toList();
-  }
-
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
-  }
-
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
   }
 }

@@ -135,10 +135,10 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     setState(() {
       if (selected) {
         _selectedUsage = selectedUsage;
-        shuttleFormStore.setUsageString(usage);
+        shuttleFormStore.usageString = usage;
       } else {
         _selectedUsage = null;
-        shuttleFormStore.setUsageString('');
+        shuttleFormStore.usageString = '';
       }
     });
   }

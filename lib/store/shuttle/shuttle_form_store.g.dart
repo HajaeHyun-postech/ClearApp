@@ -140,17 +140,6 @@ mixin _$ShuttleFormStore on _ShuttleFormStore, Store {
       ActionController(name: '_ShuttleFormStore');
 
   @override
-  void setUsageString(String usage) {
-    final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
-        name: '_ShuttleFormStore.setUsageString');
-    try {
-      return super.setUsageString(usage);
-    } finally {
-      _$_ShuttleFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void incrementAmount() {
     final _$actionInfo = _$_ShuttleFormStoreActionController.startAction(
         name: '_ShuttleFormStore.incrementAmount');

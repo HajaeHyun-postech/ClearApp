@@ -1,17 +1,15 @@
-import 'package:clearApp/store/error/error_store.dart';
-import 'package:clearApp/store/success/success_store.dart';
-import 'package:clearApp/util/http_client.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+
+import '../../util/http_client.dart';
+import '../base_store.dart';
 
 part 'racket_form_store.g.dart';
 
 class RacketFormStore = _RacketFormStore with _$RacketFormStore;
 
-abstract class _RacketFormStore with Store {
+abstract class _RacketFormStore extends BaseStore with Store {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> disposers = [];
@@ -85,21 +83,11 @@ abstract class _RacketFormStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    super.dispose();
     for (final d in disposers) {
       d();
     }
   }
 
   // functions:-----------------------------------------------------------------
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
-  }
-
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
-  }
 }

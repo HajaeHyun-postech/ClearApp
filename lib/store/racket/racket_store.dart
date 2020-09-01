@@ -1,5 +1,4 @@
-import 'package:clearApp/store/error/error_store.dart';
-import 'package:clearApp/store/success/success_store.dart';
+import 'package:clearApp/store/base_store.dart';
 import 'package:clearApp/util/convert_util.dart';
 import 'package:clearApp/util/http_client.dart';
 import 'package:clearApp/vo/racket/racket.dart';
@@ -16,10 +15,8 @@ enum RacketMenuEnum {
 
 class RacketStore = _RacketStore with _$RacketStore;
 
-abstract class _RacketStore with Store {
+abstract class _RacketStore extends BaseStore with Store {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> disposers = [];
@@ -55,29 +52,16 @@ abstract class _RacketStore with Store {
   void refreshOnTabChange() {
     if (currentMenu == RacketMenuEnum.AllRacketStatus) {
       getRackets();
-      getBorrowingRacketId();
     } else if (currentMenu == RacketMenuEnum.AllHstr) {
-      getWholeBorrowHistories();
+      getHistories(range: "all");
     } else {
-      getUserBorrowHistories();
+      getHistories();
     }
   }
 
   @action
-  Future getBorrowingRacketId() async {
-    loading = true;
-    Map<String, dynamic> params = {'type': 'borrowing'};
-
-    HttpClient.send(method: "GET", address: "/api/clear/racket", params: params)
-        .then((response) {
-          borrowingRacketId = response['racketId'];
-        })
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
-  }
-
-  @action
   Future getRackets() async {
+    if (loading) return;
     loading = true;
 
     HttpClient.send(method: "GET", address: "/v1/racket/rackets")
@@ -90,31 +74,25 @@ abstract class _RacketStore with Store {
   }
 
   @action
-  Future getUserBorrowHistories() async {
+  Future getHistories(
+      {bool returned, bool overdue, String range = "me"}) async {
+    if (loading) return;
     loading = true;
 
-    List<String> pathParams = ["me"];
-    HttpClient.send(
-            method: "GET",
-            address: "/v1/racket/histories",
-            pathParams: pathParams)
-        .then((response) {
-          histories = ConvertUtil.jsonArrayToObjectList(
-              response, (json) => RacketCheckOutHistory.fromJson(json));
-        })
-        .catchError((e) => updateOnError(e.cause))
-        .whenComplete(() => loading = false);
-  }
+    Map<String, dynamic> params = {};
+    if (returned != null) {
+      params.putIfAbsent('returned', () => returned);
+    }
+    if (overdue != null) {
+      params.putIfAbsent('overdue', () => overdue);
+    }
 
-  @action
-  Future getWholeBorrowHistories() async {
-    loading = true;
-
-    List<String> pathParams = ["me"];
+    List<String> pathParams = [range];
 
     HttpClient.send(
             method: "GET",
             address: "/v1/racket/histories",
+            params: params,
             pathParams: pathParams)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
@@ -127,21 +105,11 @@ abstract class _RacketStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    super.dispose();
     for (final d in disposers) {
       d();
     }
   }
 
   // functions:-----------------------------------------------------------------
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
-  }
-
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
-  }
 }

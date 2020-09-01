@@ -75,27 +75,23 @@ mixin _$ShuttleStore on _ShuttleStore, Store {
       AsyncAction('_ShuttleStore.receiveShuttle');
 
   @override
-  Future<dynamic> receiveShuttle(List<int> idList, bool isReceived) {
-    return _$receiveShuttleAsyncAction
-        .run(() => super.receiveShuttle(idList, isReceived));
+  Future<dynamic> receiveShuttle(List<int> idList) {
+    return _$receiveShuttleAsyncAction.run(() => super.receiveShuttle(idList));
   }
 
   final _$confirmDepositAsyncAction =
       AsyncAction('_ShuttleStore.confirmDeposit');
 
   @override
-  Future<dynamic> confirmDeposit(List<int> idList, bool isConfirmed) {
-    return _$confirmDepositAsyncAction
-        .run(() => super.confirmDeposit(idList, isConfirmed));
+  Future<dynamic> confirmDeposit(List<int> idList) {
+    return _$confirmDepositAsyncAction.run(() => super.confirmDeposit(idList));
   }
 
   final _$deleteOrderAsyncAction = AsyncAction('_ShuttleStore.deleteOrder');
 
   @override
-  Future<dynamic> deleteOrder(
-      List<int> idList, bool isReceived, bool isConfirmed) {
-    return _$deleteOrderAsyncAction
-        .run(() => super.deleteOrder(idList, isReceived, isConfirmed));
+  Future<dynamic> deleteOrder(List<int> idList) {
+    return _$deleteOrderAsyncAction.run(() => super.deleteOrder(idList));
   }
 
   final _$_ShuttleStoreActionController =

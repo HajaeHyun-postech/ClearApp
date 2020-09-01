@@ -1,3 +1,4 @@
+import 'package:clearApp/store/base_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -5,17 +6,13 @@ import 'package:mobx/mobx.dart';
 
 import '../../util/http_client.dart';
 import '../../vo/user/user.dart';
-import '../error/error_store.dart';
-import '../success/success_store.dart';
 
 part 'login_store.g.dart';
 
 class LoginStore = _LoginStore with _$LoginStore;
 
-abstract class _LoginStore with Store {
+abstract class _LoginStore extends BaseStore with Store {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> disposers = [];
@@ -57,21 +54,11 @@ abstract class _LoginStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    super.dispose();
     for (final d in disposers) {
       d();
     }
   }
 
   // functions:-----------------------------------------------------------------
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
-  }
-
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
-  }
 }

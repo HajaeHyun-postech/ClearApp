@@ -254,26 +254,20 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                             secondActionCaption = 'Delete';
                                             firstTapAction = () =>
                                                 shuttleStore.confirmDeposit(
-                                                    list[index].idList,
-                                                    list[index].isConfirmed);
+                                                    list[index].idList);
                                             secondTapAction = () =>
                                                 shuttleStore.deleteOrder(
-                                                    list[index].idList,
-                                                    list[index].isReceived,
-                                                    list[index].isConfirmed);
+                                                    list[index].idList);
                                           } else {
                                             title = '${list[index].orderUsage}';
                                             firstActionCaption = 'Receive';
                                             secondActionCaption = 'Delete';
                                             firstTapAction = () =>
                                                 shuttleStore.receiveShuttle(
-                                                    list[index].idList,
-                                                    list[index].isReceived);
+                                                    list[index].idList);
                                             secondTapAction = () =>
                                                 shuttleStore.deleteOrder(
-                                                    list[index].idList,
-                                                    list[index].isReceived,
-                                                    list[index].isConfirmed);
+                                                    list[index].idList);
                                           }
                                           return HistoryTile(
                                             animation: animation,

@@ -1,16 +1,14 @@
-import 'package:clearApp/store/error/error_store.dart';
-import 'package:clearApp/store/success/success_store.dart';
-import 'package:clearApp/util/http_client.dart';
 import 'package:mobx/mobx.dart';
+
+import '../../util/http_client.dart';
+import '../base_store.dart';
 
 part 'shuttle_form_store.g.dart';
 
 class ShuttleFormStore = _ShuttleFormStore with _$ShuttleFormStore;
 
-abstract class _ShuttleFormStore with Store {
+abstract class _ShuttleFormStore extends BaseStore with Store {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
   List<ReactionDisposer> disposers = [];
@@ -47,10 +45,8 @@ abstract class _ShuttleFormStore with Store {
   Future getRemaining() async {
     if (loading) return;
     loading = true;
-    Map<String, dynamic> params = {'type': 'remaining'};
 
-    HttpClient.send(
-            method: "GET", address: "/api/clear/shuttle", params: params)
+    HttpClient.send(method: "GET", address: "/v1/shuttle/shuttles")
         .then((response) {
           remaining = response['remaining'];
         })
@@ -70,7 +66,7 @@ abstract class _ShuttleFormStore with Store {
     Map<String, dynamic> body = {'amount': amount, 'usage': usageString};
     HttpClient.send(method: "POST", address: "/v1/shuttle/orders", body: body)
         .then((response) {
-          updateOnSuccess("Order Successful");
+          updateOnSuccess("Ordered Successfully");
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
@@ -89,15 +85,10 @@ abstract class _ShuttleFormStore with Store {
             params: params,
             body: body)
         .then((response) {
-          updateOnSuccess("Add Successful");
+          updateOnSuccess("Added Successfully");
         })
         .catchError((e) => updateOnError(e.cause))
         .whenComplete(() => loading = false);
-  }
-
-  @action
-  void setUsageString(String usage) {
-    usageString = usage;
   }
 
   @action
@@ -123,21 +114,11 @@ abstract class _ShuttleFormStore with Store {
   // dispose:-------------------------------------------------------------------
   @action
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    super.dispose();
     for (final d in disposers) {
       d();
     }
   }
 
   // functions:-----------------------------------------------------------------
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
-  }
-
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
-  }
 }

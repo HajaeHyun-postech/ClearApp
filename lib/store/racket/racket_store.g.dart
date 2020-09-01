@@ -84,15 +84,6 @@ mixin _$RacketStore on _RacketStore, Store {
     });
   }
 
-  final _$getBorrowingRacketIdAsyncAction =
-      AsyncAction('_RacketStore.getBorrowingRacketId');
-
-  @override
-  Future<dynamic> getBorrowingRacketId() {
-    return _$getBorrowingRacketIdAsyncAction
-        .run(() => super.getBorrowingRacketId());
-  }
-
   final _$getRacketsAsyncAction = AsyncAction('_RacketStore.getRackets');
 
   @override
@@ -100,22 +91,13 @@ mixin _$RacketStore on _RacketStore, Store {
     return _$getRacketsAsyncAction.run(() => super.getRackets());
   }
 
-  final _$getUserBorrowHistoriesAsyncAction =
-      AsyncAction('_RacketStore.getUserBorrowHistories');
+  final _$getHistoriesAsyncAction = AsyncAction('_RacketStore.getHistories');
 
   @override
-  Future<dynamic> getUserBorrowHistories() {
-    return _$getUserBorrowHistoriesAsyncAction
-        .run(() => super.getUserBorrowHistories());
-  }
-
-  final _$getWholeBorrowHistoriesAsyncAction =
-      AsyncAction('_RacketStore.getWholeBorrowHistories');
-
-  @override
-  Future<dynamic> getWholeBorrowHistories() {
-    return _$getWholeBorrowHistoriesAsyncAction
-        .run(() => super.getWholeBorrowHistories());
+  Future<dynamic> getHistories(
+      {bool returned, bool overdue, String range = "me"}) {
+    return _$getHistoriesAsyncAction.run(() =>
+        super.getHistories(returned: returned, overdue: overdue, range: range));
   }
 
   final _$_RacketStoreActionController = ActionController(name: '_RacketStore');
