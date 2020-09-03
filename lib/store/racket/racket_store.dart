@@ -88,14 +88,11 @@ abstract class _RacketStore extends BaseStore with Store {
       params.putIfAbsent('overdue', () => overdue);
     }
 
-    List<String> pathParams = [range];
-
     httpClient
         .send(
             method: "GET",
-            address: "/v1/racket/histories",
-            params: params,
-            pathParams: pathParams)
+            address: "/v1/racket/histories/$range",
+            params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));

@@ -27,14 +27,9 @@ class HttpClient {
       @required String address,
       String host = "49.50.165.208",
       String port = "8096",
-      List<dynamic> pathParams = const [],
       Map<String, dynamic> params = const {},
       Map<String, dynamic> body = const {}}) async {
-    String url = 'http://$host:$port$address';
-    pathParams.forEach((value) {
-      url += '/$value';
-    });
-    url += '?';
+    String url = 'http://$host:$port$address?';
     params.forEach((key, value) {
       url += '$key=$value&';
     });
@@ -51,6 +46,7 @@ class HttpClient {
 
     var response =
         await _getHttpFunction(method, url, headers, jsonEncode(body)).call();
+
     dynamic responseBody = jsonDecode(response.body);
     var statusCode = response.statusCode;
 

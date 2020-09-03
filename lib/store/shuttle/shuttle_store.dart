@@ -65,14 +65,9 @@ abstract class _ShuttleStore extends BaseStore with Store {
       params.putIfAbsent('confirmed', () => confirmed);
     }
 
-    List<String> pathParams = [range];
-
     httpClient
         .send(
-            method: "GET",
-            address: "/v1/shuttle/orders",
-            params: params,
-            pathParams: pathParams)
+            method: "GET", address: "/v1/shuttle/orders/$range", params: params)
         .then((response) {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));

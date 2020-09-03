@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:clearApp/widget/popup_generator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';

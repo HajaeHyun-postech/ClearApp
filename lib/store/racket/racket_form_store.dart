@@ -68,12 +68,8 @@ abstract class _RacketFormStore extends BaseStore with Store {
     if (loading) return;
     loading = true;
 
-    List<int> pathParams = [racketId];
     httpClient
-        .send(
-            method: "PATCH",
-            address: "/v1/racket/histories",
-            pathParams: pathParams)
+        .send(method: "PATCH", address: "/v1/racket/histories/$racketId")
         .then((response) {
           updateOnSuccess("Return Successful");
         })
