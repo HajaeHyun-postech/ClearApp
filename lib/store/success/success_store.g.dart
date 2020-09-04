@@ -43,11 +43,11 @@ mixin _$SuccessStore on _SuccessStore, Store {
       ActionController(name: '_SuccessStore');
 
   @override
-  void reset(bool value) {
+  void showAndReset(bool value) {
     final _$actionInfo = _$_SuccessStoreActionController.startAction(
-        name: '_SuccessStore.reset');
+        name: '_SuccessStore.showAndReset');
     try {
-      return super.reset(value);
+      return super.showAndReset(value);
     } finally {
       _$_SuccessStoreActionController.endAction(_$actionInfo);
     }

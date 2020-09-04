@@ -61,13 +61,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
     super.didChangeDependencies();
     shuttleStore = Provider.of<ShuttleStore>(context);
 
-    shuttleStore.disposers
-      ..add(reaction((_) => shuttleStore.successStore.success, (success) {
-        if (success) {
-          shuttleStore.refreshOnTabChange();
-        }
-      }));
-
     _tabs = [
       Tab(
         child: Align(

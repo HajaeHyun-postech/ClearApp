@@ -1,3 +1,6 @@
+import 'package:clearApp/contants/globals.dart';
+import 'package:clearApp/routes.dart';
+import 'package:clearApp/service/navigation_service.dart';
 import 'package:clearApp/store/base_client_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -23,8 +26,6 @@ abstract class _LoginStore extends BaseClientStore with Store {
   // other variables:-----------------------------------------------------------
   final GlobalKey<FormBuilderState> fbKey = new GlobalKey<FormBuilderState>();
 
-  User user;
-
   // actions:-------------------------------------------------------------------
   @action
   Future login() async {
@@ -39,9 +40,10 @@ abstract class _LoginStore extends BaseClientStore with Store {
       httpClient
           .send(method: "POST", address: "/jwt/token", body: body)
           .then((response) {
-            String token = response['token'];
-            httpClient.accessToken = token;
-            user = User.fromJson(JwtDecoder.decode(token));
+            httpClient.accessToken = response['token'];
+            locator<NavigationService>().pushNamedAndRemoveAll(
+                Routes.homescreen,
+                arguments: User.fromJson(JwtDecoder.decode(response['token'])));
             updateOnSuccess("Login Success");
           })
           .catchError((e) => updateOnError(e.cause))

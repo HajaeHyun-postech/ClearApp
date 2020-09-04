@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:clearApp/contants/globals.dart';
-import 'package:clearApp/service/http_client.dart';
+import 'package:clearApp/service/flush_service.dart';
+import 'package:clearApp/service/flush_service_impl.dart';
+import 'package:clearApp/service/http_client_service.dart';
+import 'package:clearApp/service/http_client_service_impl.dart';
 import 'package:clearApp/service/navigation_service.dart';
 import 'package:clearApp/service/navigation_service_impl.dart';
 import 'package:clearApp/widget/app_theme.dart';
@@ -21,9 +25,9 @@ void main() async {
 }
 
 void setupLocator() {
-  locator.registerSingleton<HttpClient>(HttpClient());
-  locator
-      .registerLazySingleton<NavigationService>(() => NavigationServiceImpl());
+  locator.registerSingleton<HttpClientService>(HttpClientServiceImpl());
+  locator.registerSingleton<NavigationService>(NavigationServiceImpl());
+  locator.registerSingleton<FlushService>(FlushServiceImpl());
 }
 
 class MyApp extends StatelessWidget {
@@ -38,17 +42,20 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
+
     return MaterialApp(
       title: 'Clear Application',
       debugShowCheckedModeBanner: false,
-      navigatorKey: locator<NavigationService>().navigatorKey,
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
+      navigatorKey: locator<NavigationService>().key,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: ClearAppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
       locale: Locale('en', 'KR'),
-      initialRoute: '/login',
+      initialRoute: Routes.login,
       routes: Routes.routes,
     );
   }

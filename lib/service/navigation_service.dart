@@ -1,15 +1,7 @@
-import 'package:flutter/cupertino.dart';
-
 abstract class NavigationService {
-  get navigatorKey;
+  get key;
 
-  Future<dynamic> pushNamed(String routeName);
+  Future<dynamic> pushNamed(String routeName, {Object arguments});
 
-  Future<dynamic> pushNamedAndRemoveAll(String routeName);
-
-  void showErrorToast(String desc);
-
-  void showSuccessToast(String desc);
-
-  void showInfoToast(String desc);
+  Future<dynamic> pushNamedAndRemoveAll(String routeName, {Object arguments});
 }

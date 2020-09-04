@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/cupertino.dart';
 
 class PopupGenerator {
@@ -78,7 +77,7 @@ class PopupGenerator {
             ),
             actions: <Widget>[
               new CupertinoButton(
-                  onPressed: () => cancelCallback, child: new Text('Cacncel')),
+                  onPressed: () => cancelCallback, child: new Text('Cancel')),
               new CupertinoButton(
                   onPressed: () => okCallback, child: new Text('OK')),
             ],

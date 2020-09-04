@@ -42,11 +42,11 @@ mixin _$ErrorStore on _ErrorStore, Store {
   final _$_ErrorStoreActionController = ActionController(name: '_ErrorStore');
 
   @override
-  void reset(bool value) {
-    final _$actionInfo =
-        _$_ErrorStoreActionController.startAction(name: '_ErrorStore.reset');
+  void showAndReset(bool value) {
+    final _$actionInfo = _$_ErrorStoreActionController.startAction(
+        name: '_ErrorStore.showAndReset');
     try {
-      return super.reset(value);
+      return super.showAndReset(value);
     } finally {
       _$_ErrorStoreActionController.endAction(_$actionInfo);
     }

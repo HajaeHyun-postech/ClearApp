@@ -30,7 +30,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   bool _isSelected = false;
-  LoginStore loginStore;
 
   @override
   void initState() {
@@ -40,24 +39,6 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loginStore = Provider.of<LoginStore>(context);
-
-    loginStore.disposers
-      ..add(reaction((_) => loginStore.successStore.success, (success) {
-        if (success) {
-          ToastGenerator.successToast(
-              context, loginStore.successStore.successMessage);
-          Navigator.pushNamedAndRemoveUntil(
-              context, Routes.homescreen, (Route<dynamic> route) => false,
-              arguments: loginStore.user);
-        }
-      }))
-      ..add(reaction((_) => loginStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, loginStore.errorStore.errorMessage);
-        }
-      }));
   }
 
   void _radio() {

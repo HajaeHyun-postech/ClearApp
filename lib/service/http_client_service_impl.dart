@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clearApp/routes.dart';
+import 'package:clearApp/service/http_client_service.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,11 +18,13 @@ import '../exception/unexpected_conflict_exception.dart';
 import '../exception/unknown_status_code_exception.dart';
 import 'navigation_service.dart';
 
-class HttpClient {
+class HttpClientServiceImpl implements HttpClientService {
   String _accessToken = "";
 
+  @override
   set accessToken(token) => _accessToken = token;
 
+  @override
   Future<dynamic> send(
       {@required String method,
       @required String address,
