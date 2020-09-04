@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:clearApp/contants/globals.dart';
 import 'package:clearApp/service/http_client.dart';
 import 'package:clearApp/service/navigation_service.dart';
+import 'package:clearApp/service/navigation_service_impl.dart';
 import 'package:clearApp/widget/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,8 @@ void main() async {
 
 void setupLocator() {
   locator.registerSingleton<HttpClient>(HttpClient());
-  locator.registerLazySingleton<NavigationService>(() => NavigationService());
+  locator
+      .registerLazySingleton<NavigationService>(() => NavigationServiceImpl());
 }
 
 class MyApp extends StatelessWidget {

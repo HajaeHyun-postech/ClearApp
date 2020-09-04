@@ -1,3 +1,4 @@
+import 'package:clearApp/ui/game_menu/game_home.dart';
 import 'package:flutter/material.dart';
 
 import 'ui/fitness_app/fitness_app_home_screen.dart';
@@ -23,7 +24,7 @@ class Routes {
     login: (BuildContext context) => LoginScreenWithProvider(),
     homescreen: (BuildContext context) => NavigationHomeScreenWithProvider(),
     shuttlecockMenu: (BuildContext context) => ShuttleMenuScreenWithProvider(),
-    gamesMenu: (BuildContext context) => RacketMenuHomeScreenWithProvider(),
+    gamesMenu: (BuildContext context) => GameHomeWithProvider(),
     racketMenu: (BuildContext context) => RacketMenuHomeScreenWithProvider(),
     scoresMenu: (BuildContext context) => HotelHomeScreen(),
     gatchaMenu: (BuildContext context) => FitnessAppHomeScreen(),
