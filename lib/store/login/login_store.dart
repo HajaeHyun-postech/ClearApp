@@ -1,4 +1,4 @@
-import 'package:clearApp/store/base_store.dart';
+import 'package:clearApp/store/base_client_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -10,7 +10,7 @@ part 'login_store.g.dart';
 
 class LoginStore = _LoginStore with _$LoginStore;
 
-abstract class _LoginStore extends BaseStore with Store {
+abstract class _LoginStore extends BaseClientStore with Store {
   // other stores:--------------------------------------------------------------
 
   // disposers:-----------------------------------------------------------------

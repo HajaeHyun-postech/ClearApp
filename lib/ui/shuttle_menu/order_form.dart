@@ -49,25 +49,15 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     shuttleFormStore = Provider.of<ShuttleFormStore>(context);
 
     shuttleFormStore.disposers
-      ..add(when((_) => shuttleFormStore.invalidAmount == true, () {
-        _remainingController.forward();
-        Future.delayed(Duration(milliseconds: 600),
-            () => shuttleFormStore.invalidAmount = false);
+      ..add(reaction((_) => shuttleFormStore.invalidAmount, (value) {
+        if (value) _remainingController.forward();
       }))
       ..add(reaction((_) => shuttleFormStore.amount,
           (_) => shuttleFormStore.getRemaining()))
       ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
         if (success) {
           widget.onSuccess();
-          ToastGenerator.successToast(
-              context, shuttleFormStore.successStore.successMessage);
           Navigator.of(context).pop();
-        }
-      }))
-      ..add(reaction((_) => shuttleFormStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, shuttleFormStore.errorStore.errorMessage);
         }
       }));
   }

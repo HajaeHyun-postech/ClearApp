@@ -65,14 +65,6 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
       ..add(reaction((_) => shuttleStore.successStore.success, (success) {
         if (success) {
           shuttleStore.refreshOnTabChange();
-          ToastGenerator.successToast(
-              context, shuttleStore.successStore.successMessage);
-        }
-      }))
-      ..add(reaction((_) => shuttleStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, shuttleStore.errorStore.errorMessage);
         }
       }));
 

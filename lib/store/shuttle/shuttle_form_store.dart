@@ -1,12 +1,12 @@
 import 'package:mobx/mobx.dart';
 
-import '../base_store.dart';
+import '../base_client_store.dart';
 
 part 'shuttle_form_store.g.dart';
 
 class ShuttleFormStore = _ShuttleFormStore with _$ShuttleFormStore;
 
-abstract class _ShuttleFormStore extends BaseStore with Store {
+abstract class _ShuttleFormStore extends BaseClientStore with Store {
   // other stores:--------------------------------------------------------------
 
   // disposers:-----------------------------------------------------------------
@@ -15,6 +15,13 @@ abstract class _ShuttleFormStore extends BaseStore with Store {
   // constructor:---------------------------------------------------------------
   _ShuttleFormStore() {
     getRemaining();
+
+    disposers.add(reaction((_) => invalidAmount, (value) {
+      if (value) {
+        Future.delayed(
+            Duration(milliseconds: 600), () => invalidAmount = false);
+      }
+    }));
   }
 
   // store variables:-----------------------------------------------------------

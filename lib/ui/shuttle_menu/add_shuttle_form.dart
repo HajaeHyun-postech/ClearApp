@@ -39,14 +39,6 @@ class _AddShuttleFormState extends State<AddShuttleForm>
       ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
         if (success) {
           shuttleFormStore.getRemaining();
-          ToastGenerator.successToast(
-              context, shuttleFormStore.successStore.successMessage);
-        }
-      }))
-      ..add(reaction((_) => shuttleFormStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, shuttleFormStore.errorStore.errorMessage);
         }
       }));
   }

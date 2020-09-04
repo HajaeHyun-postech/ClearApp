@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../base_store.dart';
+import '../base_client_store.dart';
 
 part 'racket_form_store.g.dart';
 
 class RacketFormStore = _RacketFormStore with _$RacketFormStore;
 
-abstract class _RacketFormStore extends BaseStore with Store {
+abstract class _RacketFormStore extends BaseClientStore with Store {
   // other stores:--------------------------------------------------------------
 
   // disposers:-----------------------------------------------------------------

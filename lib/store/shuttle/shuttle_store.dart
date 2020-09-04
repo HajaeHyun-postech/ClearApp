@@ -2,7 +2,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../util/convert_util.dart';
 import '../../vo/shuttle_order_history/shuttle_order_history.dart';
-import '../base_store.dart';
+import '../base_client_store.dart';
 
 part 'shuttle_store.g.dart';
 
@@ -10,7 +10,7 @@ enum TAB { Total, Not_Rcved, Admin }
 
 class ShuttleStore = _ShuttleStore with _$ShuttleStore;
 
-abstract class _ShuttleStore extends BaseStore with Store {
+abstract class _ShuttleStore extends BaseClientStore with Store {
   // other stores:--------------------------------------------------------------
 
   // disposers:-----------------------------------------------------------------

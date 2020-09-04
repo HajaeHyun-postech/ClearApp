@@ -29,15 +29,7 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
       ..add(reaction((_) => racketFormStore.successStore.success, (success) {
         if (success) {
           widget.onSuccess();
-          ToastGenerator.successToast(
-              context, racketFormStore.successStore.successMessage);
           Navigator.of(context).pop();
-        }
-      }))
-      ..add(reaction((_) => racketFormStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, racketFormStore.errorStore.errorMessage);
         }
       }));
   }

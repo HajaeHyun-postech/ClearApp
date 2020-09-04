@@ -3,7 +3,7 @@ import 'package:clearApp/service/http_client.dart';
 import 'package:clearApp/store/error/error_store.dart';
 import 'package:clearApp/store/success/success_store.dart';
 
-class BaseStore {
+class BaseClientStore {
   // other stores:--------------------------------------------------------------
   final ErrorStore errorStore = ErrorStore();
   final SuccessStore successStore = SuccessStore();

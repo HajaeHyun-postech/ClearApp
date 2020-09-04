@@ -88,14 +88,6 @@ class _RacketScrollView extends State<RacketScrollView>
       ..add(reaction((_) => racketStore.successStore.success, (success) {
         if (success) {
           racketStore.refreshOnTabChange();
-          ToastGenerator.successToast(
-              context, racketStore.successStore.successMessage);
-        }
-      }))
-      ..add(reaction((_) => racketStore.errorStore.error, (error) {
-        if (error) {
-          ToastGenerator.errorToast(
-              context, racketStore.errorStore.errorMessage);
         }
       }));
 

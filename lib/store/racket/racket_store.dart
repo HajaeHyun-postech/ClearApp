@@ -1,4 +1,4 @@
-import 'package:clearApp/store/base_store.dart';
+import 'package:clearApp/store/base_client_store.dart';
 import 'package:clearApp/util/convert_util.dart';
 import 'package:clearApp/vo/racket/racket.dart';
 import 'package:clearApp/vo/racket_check_out_history/racket_check_out_history.dart';
@@ -14,7 +14,7 @@ enum RacketMenuEnum {
 
 class RacketStore = _RacketStore with _$RacketStore;
 
-abstract class _RacketStore extends BaseStore with Store {
+abstract class _RacketStore extends BaseClientStore with Store {
   // other stores:--------------------------------------------------------------
 
   // disposers:-----------------------------------------------------------------
