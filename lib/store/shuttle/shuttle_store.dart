@@ -18,6 +18,7 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
+    super.addSuccessCallback([refreshOnTabChange]);
     refreshOnTabChange();
   }
 
@@ -72,7 +73,7 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => ShuttleOrderHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
@@ -84,8 +85,8 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
         .send(
             method: "PATCH", address: "/v1/shuttle/orders/receive", body: body)
         .then((response) {
-      updateOnSuccess("Received");
-    }).catchError((e) => updateOnError(e.cause));
+      success("Received");
+    }).catchError((e) => error(e.cause));
   }
 
   @action
@@ -96,8 +97,8 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
         .send(
             method: "PATCH", address: "/v1/shuttle/orders/confirm", body: body)
         .then((response) {
-      updateOnSuccess("Confirmed");
-    }).catchError((e) => updateOnError(e.cause));
+      success("Confirmed");
+    }).catchError((e) => error(e.cause));
   }
 
   @action
@@ -107,8 +108,8 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
     httpClient
         .send(method: "PUT", address: "/v1/shuttle/orders", body: body)
         .then((response) {
-      updateOnSuccess("Deleted");
-    }).catchError((e) => updateOnError(e.cause));
+      success("Deleted");
+    }).catchError((e) => error(e.cause));
   }
 
   // dispose:-------------------------------------------------------------------

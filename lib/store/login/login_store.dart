@@ -44,9 +44,9 @@ abstract class _LoginStore extends BaseClientStore with Store {
             locator<NavigationService>().pushNamedAndRemoveAll(
                 Routes.homescreen,
                 arguments: User.fromJson(JwtDecoder.decode(response['token'])));
-            updateOnSuccess("Login Success");
+            success("Login Success");
           })
-          .catchError((e) => updateOnError(e.cause))
+          .catchError((e) => error(e.cause))
           .whenComplete(() => loading = false);
     } else {
       loading = false;

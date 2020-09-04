@@ -70,7 +70,7 @@ abstract class _RacketStore extends BaseClientStore with Store {
               response['rackets'], (json) => Racket.fromJson(json));
           isBorrowLimit = response['isBorrowLimit'];
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
@@ -97,7 +97,7 @@ abstract class _RacketStore extends BaseClientStore with Store {
           histories = ConvertUtil.jsonArrayToObjectList(
               response, (json) => RacketCheckOutHistory.fromJson(json));
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 

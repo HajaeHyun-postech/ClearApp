@@ -5,8 +5,8 @@ import 'package:clearApp/store/success/success_store.dart';
 
 class BaseClientStore {
   // other stores:--------------------------------------------------------------
-  final ErrorStore errorStore = ErrorStore();
-  final SuccessStore successStore = SuccessStore();
+  final ErrorStore _errorStore = ErrorStore();
+  final SuccessStore _successStore = SuccessStore();
 
   // disposers:-----------------------------------------------------------------
 
@@ -16,21 +16,33 @@ class BaseClientStore {
 
   // other variables:-----------------------------------------------------------
   final httpClient = locator<HttpClientService>();
+  List<Function> _successCallback = List();
+  List<Function> _errorCallback = List();
 
   // dispose:-------------------------------------------------------------------
   dispose() {
-    errorStore.dispose();
-    successStore.dispose();
+    _errorStore.dispose();
+    _successStore.dispose();
   }
 
   // functions:-----------------------------------------------------------------
-  void updateOnError(String message) {
-    errorStore.errorMessage = message;
-    errorStore.error = true;
+  void addSuccessCallback(List<Function> f) {
+    _successCallback.addAll(f);
   }
 
-  void updateOnSuccess(String message) {
-    successStore.successMessage = message;
-    successStore.success = true;
+  void addErrorCallback(List<Function> f) {
+    _errorCallback.addAll(f);
+  }
+
+  void error(String message) {
+    _errorStore.errorMessage = message;
+    _errorStore.error = true;
+    _errorCallback.forEach((f) => f.call());
+  }
+
+  void success(String message) {
+    _successStore.successMessage = message;
+    _successStore.success = true;
+    _successCallback.forEach((f) => f.call());
   }
 }

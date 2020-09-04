@@ -21,7 +21,7 @@ abstract class _RacketFormStore extends BaseClientStore with Store {
         buttonText = "Retun Now";
         buttonColor = Color(0xFFCFCFC4);
       } else {
-        buttonTapEvent = (id) => updateOnError("Borrow Limit");
+        buttonTapEvent = (id) => error("Borrow Limit");
         buttonText = "Borrow Limit (1 per person)";
         buttonColor = Colors.black;
       }
@@ -31,7 +31,7 @@ abstract class _RacketFormStore extends BaseClientStore with Store {
         buttonText = "Borrow";
         buttonColor = Color(0xFFCFCFC4);
       } else {
-        buttonTapEvent = (id) => updateOnError("Not Available");
+        buttonTapEvent = (id) => error("Not Available");
         buttonText = "Not Available";
         buttonColor = Colors.green;
       }
@@ -57,9 +57,9 @@ abstract class _RacketFormStore extends BaseClientStore with Store {
     httpClient
         .send(method: "POST", address: "/v1/racket/histories", body: body)
         .then((response) {
-          updateOnSuccess("Borrow Successful");
+          success("Borrow Successful");
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
@@ -71,9 +71,9 @@ abstract class _RacketFormStore extends BaseClientStore with Store {
     httpClient
         .send(method: "PATCH", address: "/v1/racket/histories/$racketId")
         .then((response) {
-          updateOnSuccess("Return Successful");
+          success("Return Successful");
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 

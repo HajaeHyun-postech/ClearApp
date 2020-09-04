@@ -57,14 +57,14 @@ abstract class _ShuttleFormStore extends BaseClientStore with Store {
         .then((response) {
           remaining = response['remaining'];
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
   @action
   Future buyShuttle() async {
     if (usageString == '') {
-      updateOnError("Usage가 없습니다");
+      error("Usage가 없습니다");
       return;
     }
     if (loading) return;
@@ -74,9 +74,9 @@ abstract class _ShuttleFormStore extends BaseClientStore with Store {
     httpClient
         .send(method: "POST", address: "/v1/shuttle/orders", body: body)
         .then((response) {
-          updateOnSuccess("Ordered Successfully");
+          success("Ordered Successfully");
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
@@ -94,9 +94,9 @@ abstract class _ShuttleFormStore extends BaseClientStore with Store {
             params: params,
             body: body)
         .then((response) {
-          updateOnSuccess("Added Successfully");
+          success("Added Successfully");
         })
-        .catchError((e) => updateOnError(e.cause))
+        .catchError((e) => error(e.cause))
         .whenComplete(() => loading = false);
   }
 
