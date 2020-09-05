@@ -1,20 +1,18 @@
-import 'package:clearApp/store/racket/racket_store.dart';
-import 'package:clearApp/ui/racket_menu/racket_data_tile.dart';
-import 'package:clearApp/ui/racket_menu/racket_history_tile.dart';
-import 'package:clearApp/widget/app_theme.dart';
-import 'package:clearApp/widget/appbar.dart';
-import 'package:clearApp/widget/toast_generator.dart';
-import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:clearApp/vo/user/user.dart';
-import 'package:selection_menu/selection_menu.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:selection_menu/selection_menu.dart';
 
+import '../../store/racket/racket_store.dart';
+import '../../vo/user/user.dart';
+import '../../widget/app_theme.dart';
+import '../../widget/appbar.dart';
 import 'custom_filter.dart';
+import 'racket_data_tile.dart';
+import 'racket_history_tile.dart';
 
 class RacketMenu {
   final RacketMenuEnum eventType;
@@ -22,45 +20,21 @@ class RacketMenu {
   RacketMenu({this.eventType, this.menu});
 }
 
-class RacketMenuHomeScreenWithProvider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Provider<RacketStore>(
-      create: (_) => RacketStore(),
-      child:
-          RacketMenuHomeScreen(user: ModalRoute.of(context).settings.arguments),
-    );
-  }
-}
-
-class RacketMenuHomeScreen extends StatelessWidget {
-  final User user;
-
-  const RacketMenuHomeScreen({Key key, this.user}) : super(key: key);
+class RacketMenuHome extends StatefulWidget {
+  const RacketMenuHome({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: RacketScrollView(user: user),
-    );
-  }
+  _RacketMenuHomeState createState() => _RacketMenuHomeState();
 }
 
-class RacketScrollView extends StatefulWidget {
-  final User user;
-
-  RacketScrollView({Key key, this.user}) : super(key: key);
-  @override
-  _RacketScrollView createState() => _RacketScrollView();
-}
-
-class _RacketScrollView extends State<RacketScrollView>
+class _RacketMenuHomeState extends State<RacketMenuHome>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   SelectionMenuController selectionMenuController;
   RacketStore racketStore;
   List<RacketMenu> menus;
   AnimationController animationController;
+  User user;
 
   void onItemSelected(RacketMenu menu) {
     if (racketStore.currentMenu != menu.eventType) {
@@ -82,19 +56,13 @@ class _RacketScrollView extends State<RacketScrollView>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    user = ModalRoute.of(context).settings.arguments;
     racketStore = Provider.of<RacketStore>(context);
-
-    racketStore.disposers
-      ..add(reaction((_) => racketStore.successStore.success, (success) {
-        if (success) {
-          racketStore.refreshOnTabChange();
-        }
-      }));
 
     menus = [
       RacketMenu(eventType: RacketMenuEnum.AllRacketStatus, menu: "Borrow"),
       RacketMenu(eventType: RacketMenuEnum.MyRacketHstr, menu: "My"),
-      if (widget.user.isAdmin)
+      if (user.isAdmin)
         RacketMenu(eventType: RacketMenuEnum.AllHstr, menu: "All")
     ];
   }
@@ -107,7 +75,8 @@ class _RacketScrollView extends State<RacketScrollView>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+        body: Column(
       children: <Widget>[
         Stack(
           children: <Widget>[
@@ -190,7 +159,7 @@ class _RacketScrollView extends State<RacketScrollView>
                                         final isReturn = racket.user == null
                                             ? false
                                             : racket.user.studentId ==
-                                                widget.user.studentId;
+                                                user.studentId;
 
                                         final isAvailable = racket.isAvailable;
 
@@ -228,6 +197,6 @@ class _RacketScrollView extends State<RacketScrollView>
               )),
         ),
       ],
-    );
+    ));
   }
 }

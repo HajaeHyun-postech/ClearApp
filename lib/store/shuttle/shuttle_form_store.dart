@@ -1,3 +1,5 @@
+import 'package:clearApp/contants/globals.dart';
+import 'package:clearApp/service/navigation_service.dart';
 import 'package:mobx/mobx.dart';
 
 import '../base_client_store.dart';
@@ -14,14 +16,14 @@ abstract class _ShuttleFormStore extends BaseClientStore with Store {
 
   // constructor:---------------------------------------------------------------
   _ShuttleFormStore() {
-    getRemaining();
+    super.successCallback = [() => locator<NavigationService>().pop()];
 
-    disposers.add(reaction((_) => invalidAmount, (value) {
-      if (value) {
-        Future.delayed(
-            Duration(milliseconds: 600), () => invalidAmount = false);
-      }
-    }));
+    disposers
+      ..add(reaction((_) => invalidAmount, (value) => invalidAmount = false,
+          delay: 600))
+      ..add(reaction((_) => amount, (_) => getRemaining()));
+
+    getRemaining();
   }
 
   // store variables:-----------------------------------------------------------

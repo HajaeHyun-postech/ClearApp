@@ -1,39 +1,25 @@
-import 'package:clearApp/ui/shuttle_menu/add_shuttle_form.dart';
-import 'package:clearApp/vo/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:md2_tab_indicator/md2_tab_indicator.dart';
-import 'package:mobx/mobx.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:md2_tab_indicator/md2_tab_indicator.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../store/shuttle/shuttle_form_store.dart';
 import '../../store/shuttle/shuttle_store.dart';
 import '../../vo/shuttle_order_history/shuttle_order_history.dart';
+import '../../vo/user/user.dart';
 import '../../widget/app_theme.dart';
 import '../../widget/appbar.dart';
-import '../../widget/toast_generator.dart';
+import 'add_shuttle_form.dart';
 import 'history_tile.dart';
 import 'order_form.dart';
 
-class ShuttleMenuScreenWithProvider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Provider<ShuttleStore>(
-      create: (_) => ShuttleStore(),
-      child: ShuttleMenuScreen(user: ModalRoute.of(context).settings.arguments),
-    );
-  }
-}
-
 class ShuttleMenuScreen extends StatefulWidget {
-  final User user;
-
-  const ShuttleMenuScreen({Key key, this.user}) : super(key: key);
+  const ShuttleMenuScreen({Key key}) : super(key: key);
 
   @override
   ShuttleMenuScreenState createState() => ShuttleMenuScreenState();
@@ -45,8 +31,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   ScrollController _scrollController = ScrollController();
   TabController _tabController;
   ShuttleStore shuttleStore;
-
   List<Widget> _tabs;
+  User user;
 
   @override
   void initState() {
@@ -59,7 +45,8 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    shuttleStore = Provider.of<ShuttleStore>(context);
+    user = ModalRoute.of(context).settings.arguments;
+    shuttleStore = context.read<ShuttleStore>();
 
     _tabs = [
       Tab(
@@ -74,7 +61,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
           child: Text('NOT RCVED'),
         ),
       ),
-      if (widget.user.isAdmin)
+      if (user.isAdmin)
         Tab(
           child: Align(
             alignment: Alignment.center,
@@ -158,10 +145,7 @@ class ShuttleMenuScreenState extends State<ShuttleMenuScreen>
                                                 )
                                               : Builder(
                                                   builder: (_) {
-                                                    return OrderForm(
-                                                        onSuccess: () =>
-                                                            shuttleStore
-                                                                .refreshOnTabChange());
+                                                    return OrderForm();
                                                   },
                                                 ));
                                     },

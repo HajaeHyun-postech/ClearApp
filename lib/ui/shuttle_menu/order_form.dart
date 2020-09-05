@@ -19,10 +19,6 @@ enum UsageLists {
 }
 
 class OrderForm extends StatefulWidget {
-  final Function onSuccess;
-
-  const OrderForm({Key key, this.onSuccess}) : super(key: key);
-
   @override
   OrderFormState createState() => OrderFormState();
 }
@@ -48,22 +44,16 @@ class OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     super.didChangeDependencies();
     shuttleFormStore = Provider.of<ShuttleFormStore>(context);
 
+    //TODO : move logic..!!!
     shuttleFormStore.disposers
       ..add(reaction((_) => shuttleFormStore.invalidAmount, (value) {
         if (value) _remainingController.forward();
-      }))
-      ..add(reaction((_) => shuttleFormStore.amount,
-          (_) => shuttleFormStore.getRemaining()))
-      ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
-        if (success) {
-          widget.onSuccess();
-          Navigator.of(context).pop();
-        }
       }));
   }
 
   @override
   void dispose() {
+    //widget.onDispose();
     _scrollController.dispose();
     shuttleFormStore.dispose();
     super.dispose();

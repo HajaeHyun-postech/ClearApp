@@ -8,6 +8,11 @@ class NavigationServiceImpl implements NavigationService {
   get key => navigatorKey;
 
   @override
+  void pop({Object arguments}) {
+    return navigatorKey.currentState.pop();
+  }
+
+  @override
   Future pushNamed(String routeName, {Object arguments}) {
     return navigatorKey.currentState.pushNamed(routeName, arguments: arguments);
   }

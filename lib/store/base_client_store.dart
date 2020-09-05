@@ -26,13 +26,8 @@ class BaseClientStore {
   }
 
   // functions:-----------------------------------------------------------------
-  void addSuccessCallback(List<Function> f) {
-    _successCallback.addAll(f);
-  }
-
-  void addErrorCallback(List<Function> f) {
-    _errorCallback.addAll(f);
-  }
+  set successCallback(List<Function> f) => _successCallback.addAll(f);
+  set errorCallback(List<Function> f) => _errorCallback.addAll(f);
 
   void error(String message) {
     _errorStore.errorMessage = message;

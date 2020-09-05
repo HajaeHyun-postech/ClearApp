@@ -10,9 +10,9 @@ import '../../widget/toast_generator.dart';
 
 class BorrowForm extends StatefulWidget {
   final Racket racket;
-  final Function onSuccess;
+  final Function onDispose;
 
-  BorrowForm(this.racket, {this.onSuccess});
+  BorrowForm(this.racket, {this.onDispose});
   @override
   _BorrowFormState createState() => _BorrowFormState();
 }
@@ -24,19 +24,12 @@ class _BorrowFormState extends State<BorrowForm> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     racketFormStore = Provider.of<RacketFormStore>(context);
-
-    racketFormStore.disposers
-      ..add(reaction((_) => racketFormStore.successStore.success, (success) {
-        if (success) {
-          widget.onSuccess();
-          Navigator.of(context).pop();
-        }
-      }));
   }
 
   @override
   void dispose() {
     racketFormStore.dispose();
+    widget.onDispose();
     super.dispose();
   }
 

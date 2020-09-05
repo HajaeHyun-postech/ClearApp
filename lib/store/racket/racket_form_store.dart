@@ -1,3 +1,5 @@
+import 'package:clearApp/contants/globals.dart';
+import 'package:clearApp/service/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
@@ -36,6 +38,7 @@ abstract class _RacketFormStore extends BaseClientStore with Store {
         buttonColor = Colors.green;
       }
     }
+    super.successCallback = [() => locator<NavigationService>().pop()];
   }
 
   // store variables:-----------------------------------------------------------

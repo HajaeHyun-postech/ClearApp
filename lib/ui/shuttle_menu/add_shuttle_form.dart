@@ -34,13 +34,6 @@ class _AddShuttleFormState extends State<AddShuttleForm>
   void didChangeDependencies() {
     super.didChangeDependencies();
     shuttleFormStore = Provider.of<ShuttleFormStore>(context);
-
-    shuttleFormStore.disposers
-      ..add(reaction((_) => shuttleFormStore.successStore.success, (success) {
-        if (success) {
-          shuttleFormStore.getRemaining();
-        }
-      }));
   }
 
   @override

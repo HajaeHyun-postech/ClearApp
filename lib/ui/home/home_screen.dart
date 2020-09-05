@@ -38,7 +38,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
     return Scaffold(
       backgroundColor: ClearAppTheme.white,
       body: FutureBuilder<bool>(
@@ -87,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   callBack: () {
                                     Navigator.pushNamed(
                                         context, homeList[index].navigateScreen,
-                                        arguments: user);
+                                        arguments: context.read<User>());
                                   },
                                 );
                               },

@@ -22,6 +22,8 @@ abstract class _RacketStore extends BaseClientStore with Store {
 
   // constructor:---------------------------------------------------------------
   _RacketStore() {
+    super.successCallback = [() => refreshOnTabChange()];
+
     refreshOnTabChange();
   }
 

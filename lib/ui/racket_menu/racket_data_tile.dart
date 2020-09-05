@@ -127,7 +127,7 @@ class RacketDataTile extends StatelessWidget {
                                     isAvailable: isAvailable),
                                 child: BorrowForm(
                                   racket,
-                                  onSuccess: racketStore.refreshOnTabChange,
+                                  onDispose: racketStore.refreshOnTabChange,
                                 )),
                           ),
                         )),

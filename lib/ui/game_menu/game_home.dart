@@ -5,26 +5,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class GameHomeWithProvider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Provider<GameStore>(
-      create: (_) => GameStore(),
-      child: GameHome(user: ModalRoute.of(context).settings.arguments),
-    );
-  }
-}
-
 class GameHome extends StatefulWidget {
-  final User user;
-
-  const GameHome({Key key, this.user}) : super(key: key);
+  const GameHome({Key key}) : super(key: key);
 
   @override
   GameHomeState createState() => GameHomeState();
 }
 
 class GameHomeState extends State<GameHome> {
+  User user;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    user = ModalRoute.of(context).settings.arguments;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

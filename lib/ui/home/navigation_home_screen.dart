@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../vo/user/user.dart';
 import '../../widget/app_theme.dart';
 import '../feedback_screen.dart';
 import '../help_screen.dart';
@@ -9,15 +7,6 @@ import '../invite_friend_screen.dart';
 import 'drawer/drawer_user_controller.dart';
 import 'drawer/home_drawer.dart';
 import 'home_screen.dart';
-
-class NavigationHomeScreenWithProvider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Provider<User>.value(
-        value: ModalRoute.of(context).settings.arguments,
-        child: NavigationHomeScreen());
-  }
-}
 
 class NavigationHomeScreen extends StatefulWidget {
   @override

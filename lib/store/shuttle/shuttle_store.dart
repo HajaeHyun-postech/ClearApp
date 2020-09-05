@@ -18,7 +18,7 @@ abstract class _ShuttleStore extends BaseClientStore with Store {
 
   // constructor:---------------------------------------------------------------
   _ShuttleStore() {
-    super.addSuccessCallback([refreshOnTabChange]);
+    super.successCallback = [refreshOnTabChange];
     refreshOnTabChange();
   }
 

@@ -31,16 +31,6 @@ class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   bool _isSelected = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   void _radio() {
     setState(() {
       _isSelected = !_isSelected;
@@ -66,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, width: 1440, height: 2560, allowFontScaling: true);
     final loginStore = Provider.of<LoginStore>(context);
-
     return WillPopScope(
       child: new Scaffold(
         backgroundColor: Colors.white,

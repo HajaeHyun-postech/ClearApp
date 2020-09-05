@@ -41,10 +41,10 @@ abstract class _LoginStore extends BaseClientStore with Store {
           .send(method: "POST", address: "/jwt/token", body: body)
           .then((response) {
             httpClient.accessToken = response['token'];
+            success("Login Success");
             locator<NavigationService>().pushNamedAndRemoveAll(
                 Routes.homescreen,
                 arguments: User.fromJson(JwtDecoder.decode(response['token'])));
-            success("Login Success");
           })
           .catchError((e) => error(e.cause))
           .whenComplete(() => loading = false);
